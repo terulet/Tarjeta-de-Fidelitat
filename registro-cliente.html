@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Mi Tarjeta · La Gelateria de Roses</title>
+
+<!-- PWA / Añadir a pantalla de inicio -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#033E3C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mi Tarjeta">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root{
+    --teal:#0B7E7C; --teal-deep:#055552; --teal-darker:#033E3C;
+    --gold:#F0B429; --gold-bright:#FFD45E; --gold-deep:#C4910E;
+    --cream:#FFFCF5; --ink:#1B3634; --ink-soft:#5C7B79;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{ height:100%; }
+  body{
+    background:
+      radial-gradient(circle at 15% 0%, rgba(255,212,94,0.10), transparent 45%),
+      radial-gradient(circle at 90% 100%, rgba(255,212,94,0.07), transparent 50%),
+      linear-gradient(160deg, var(--teal-darker) 0%, var(--teal-deep) 55%, var(--teal) 100%);
+    min-height:100vh;
+    font-family:'Inter', sans-serif;
+    color:var(--cream);
+    display:flex; justify-content:center; align-items:center;
+    padding:30px 20px;
+    padding-top:max(30px, env(safe-area-inset-top));
+    padding-bottom:max(30px, env(safe-area-inset-bottom));
+  }
+  .app{ width:100%; max-width:400px; }
+
+  .lang-switch{ display:flex; justify-content:center; gap:6px; margin-bottom:22px; }
+  .lang-btn{
+    background:transparent; border:1px solid rgba(240,180,41,0.35);
+    color:rgba(255,252,245,0.6); font-size:11.5px; font-weight:600; letter-spacing:.04em;
+    padding:6px 12px; border-radius:20px; cursor:pointer;
+  }
+  .lang-btn.active{ background:var(--gold); border-color:var(--gold); color:var(--teal-darker); }
+
+  header{ text-align:center; margin-bottom:26px; }
+  .crest{ width:56px; height:56px; margin:0 auto 12px; }
+  .crest svg{ width:100%; height:100%; }
+  .eyebrow{ font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--gold-bright); font-weight:600; margin-bottom:8px; }
+  h1{ font-family:'Cormorant Garamond', serif; font-weight:700; font-size:30px; color:var(--cream); line-height:1.1; }
+  h1 span{ color:var(--gold); font-style:italic; }
+
+  .card{
+    background:var(--cream); border-radius:22px; padding:28px 24px;
+    box-shadow:0 20px 50px rgba(3,62,60,0.35); border:1px solid rgba(240,180,41,0.4);
+    color:var(--ink); text-align:center;
+  }
+  .screen{ display:none; }
+  .screen.active{ display:block; }
+
+  /* --- FORM --- */
+  .form-intro{ font-size:14px; color:var(--ink-soft); margin-bottom:20px; line-height:1.5; }
+  input[type=tel]{
+    width:100%; font-family:'Inter', sans-serif; font-size:20px; font-weight:600; letter-spacing:.03em;
+    padding:16px; border-radius:14px; border:1.5px solid rgba(11,126,124,0.18);
+    background:#FAF6EB; color:var(--ink); outline:none; text-align:center; margin-bottom:14px;
+  }
+  input[type=tel]:focus{ border-color:var(--gold-deep); }
+  .btn{
+    padding:15px; border-radius:14px; border:none; font-family:'Inter', sans-serif;
+    font-weight:700; font-size:15px; cursor:pointer; width:100%;
+    background:var(--teal-darker); color:var(--gold-bright);
+  }
+  .btn:active{ transform:scale(0.98); }
+  .legal{ font-size:11px; color:var(--ink-soft); margin-top:14px; line-height:1.5; }
+
+  /* --- QR SCREEN --- */
+  .qr-wrap{
+    display:inline-block; padding:16px; background:#fff; border-radius:16px;
+    border:1.5px solid rgba(11,126,124,0.15); margin-bottom:16px;
+  }
+  .qr-phone{ font-family:'Inter', sans-serif; font-weight:700; letter-spacing:.06em; font-size:15px; color:var(--teal-darker); margin-bottom:6px; }
+  .qr-note{ font-size:12.5px; color:var(--ink-soft); margin-bottom:20px; line-height:1.5; }
+
+  .install-banner{
+    display:none; margin-top:18px; padding:14px; border-radius:14px;
+    background:linear-gradient(135deg, rgba(240,180,41,0.15), rgba(240,180,41,0.05));
+    border:1.5px solid rgba(240,180,41,0.4); font-size:12.5px; text-align:left;
+  }
+  .install-banner.show{ display:block; }
+  .install-banner b{ display:block; font-family:'Cormorant Garamond', serif; font-size:15px; margin-bottom:6px; color:var(--teal-darker); }
+  .install-steps{ margin:0; padding-left:18px; color:var(--ink-soft); line-height:1.6; }
+  .install-steps b{ display:inline; font-family:'Inter',sans-serif; font-size:12.5px; color:var(--ink); }
+
+  footer{ text-align:center; margin-top:20px; font-size:11px; color:rgba(255,252,245,0.4); }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="lang-switch" id="langSwitch"></div>
+
+  <header>
+    <div class="crest">
+      <svg viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="18" r="9" stroke="#F0B429" stroke-width="3"/>
+        <circle cx="38" cy="30" r="9" stroke="#F0B429" stroke-width="3"/>
+        <circle cx="62" cy="30" r="9" stroke="#F0B429" stroke-width="3"/>
+        <path d="M30 38 L70 38 L50 78 Z" stroke="#F0B429" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M40 48 L60 48 L50 64 Z" stroke="#F0B429" stroke-width="3" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="eyebrow" data-i18n="eyebrow">La Gelateria de Roses</div>
+    <h1 data-i18n="title">Mi Tarjeta <span data-i18n="titleSpan">fidelidad</span></h1>
+  </header>
+
+  <div class="card">
+
+    <!-- FORMULARIO -->
+    <div class="screen active" id="screenForm">
+      <div class="form-intro" data-i18n="formIntro">Escribe tu móvil para crear tu tarjeta. Cada vez que compres, te sellamos aquí — sin papel, sin perderla.</div>
+      <input type="tel" id="phoneInput" placeholder="6XX XXX XXX" inputmode="numeric" maxlength="9">
+      <button class="btn" onclick="crearTarjeta()" data-i18n="formBtn">Crear mi tarjeta</button>
+      <div class="legal" data-i18n="legal">Solo usamos tu móvil para tu tarjeta de fidelidad.</div>
+    </div>
+
+    <!-- QR -->
+    <div class="screen" id="screenQr">
+      <div class="qr-wrap"><div id="qrcode"></div></div>
+      <div class="qr-phone" id="qrPhone"></div>
+      <div class="qr-note" data-i18n="qrNote">Enséñanos esta pantalla cada vez que compres. Añádela a tu pantalla de inicio para tenerla siempre a mano.</div>
+
+      <div class="install-banner" id="installBanner">
+        <b data-i18n="installTitle">📲 Añadir a pantalla de inicio</b>
+        <div id="installSteps"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer data-i18n="footer">La Gelateria de Roses · Tarjeta digital</footer>
+</div>
+
+<script>
+  let lang = 'es';
+
+  const STRINGS = {
+    es:{
+      eyebrow:'La Gelateria de Roses', title:'Mi Tarjeta ', titleSpan:'fidelidad',
+      formIntro:'Escribe tu móvil para crear tu tarjeta. Cada vez que compres, te sellamos aquí — sin papel, sin perderla.',
+      formBtn:'Crear mi tarjeta', legal:'Solo usamos tu móvil para tu tarjeta de fidelidad.',
+      qrNote:'Enséñanos esta pantalla cada vez que compres. Añádela a tu pantalla de inicio para tenerla siempre a mano.',
+      installTitle:'📲 Añadir a pantalla de inicio',
+      installIos:'En Safari, toca <b>Compartir</b> (el cuadrado con flecha) y luego <b>"Añadir a pantalla de inicio"</b>.',
+      installAndroid:'Toca el menú <b>⋮</b> de arriba y luego <b>"Añadir a pantalla de inicio"</b> o <b>"Instalar app"</b>.',
+      footer:'La Gelateria de Roses · Tarjeta digital',
+      movilIncompleto:'Escribe un móvil completo'
+    },
+    ca:{
+      eyebrow:'La Gelateria de Roses', title:'La Meva Targeta ', titleSpan:'fidelitat',
+      formIntro:'Escriu el teu mòbil per crear la teva targeta. Cada vegada que compris, et segellem aquí — sense paper, sense perdre-la.',
+      formBtn:'Crear la meva targeta', legal:'Només fem servir el teu mòbil per a la teva targeta de fidelitat.',
+      qrNote:'Ensenya\'ns aquesta pantalla cada vegada que compris. Afegeix-la a la pantalla d\'inici per tenir-la sempre a mà.',
+      installTitle:'📲 Afegir a la pantalla d\'inici',
+      installIos:'A Safari, toca <b>Compartir</b> (el quadrat amb fletxa) i després <b>"Afegir a la pantalla d\'inici"</b>.',
+      installAndroid:'Toca el menú <b>⋮</b> de dalt i després <b>"Afegir a la pantalla d\'inici"</b> o <b>"Instal·lar app"</b>.',
+      footer:'La Gelateria de Roses · Targeta digital',
+      movilIncompleto:'Escriu un mòbil complet'
+    },
+    fr:{
+      eyebrow:'La Gelateria de Roses', title:'Ma Carte ', titleSpan:'fidélité',
+      formIntro:'Saisissez votre mobile pour créer votre carte. À chaque achat, on vous tamponne ici — sans papier, sans la perdre.',
+      formBtn:'Créer ma carte', legal:'Nous utilisons votre mobile uniquement pour votre carte de fidélité.',
+      qrNote:'Montrez-nous cet écran à chaque achat. Ajoutez-le à votre écran d\'accueil pour l\'avoir toujours sous la main.',
+      installTitle:'📲 Ajouter à l\'écran d\'accueil',
+      installIos:'Sur Safari, appuyez sur <b>Partager</b> (le carré avec la flèche) puis <b>"Sur l\'écran d\'accueil"</b>.',
+      installAndroid:'Appuyez sur le menu <b>⋮</b> en haut puis <b>"Ajouter à l\'écran d\'accueil"</b> ou <b>"Installer l\'appli"</b>.',
+      footer:'La Gelateria de Roses · Carte digitale',
+      movilIncompleto:'Saisissez un mobile complet'
+    },
+    en:{
+      eyebrow:'La Gelateria de Roses', title:'My Loyalty ', titleSpan:'card',
+      formIntro:'Enter your phone to create your card. Every time you buy, we stamp it here — no paper, no losing it.',
+      formBtn:'Create my card', legal:'We only use your phone number for your loyalty card.',
+      qrNote:'Show us this screen every time you buy. Add it to your home screen to always have it handy.',
+      installTitle:'📲 Add to Home Screen',
+      installIos:'On Safari, tap <b>Share</b> (the square with the arrow) then <b>"Add to Home Screen"</b>.',
+      installAndroid:'Tap the <b>⋮</b> menu at the top then <b>"Add to Home Screen"</b> or <b>"Install app"</b>.',
+      footer:'La Gelateria de Roses · Digital card',
+      movilIncompleto:'Enter a complete phone number'
+    }
+  };
+
+  function buildLangSwitch(){
+    const el = document.getElementById('langSwitch');
+    el.innerHTML = '';
+    [['es','ES'],['ca','CA'],['fr','FR'],['en','EN']].forEach(([code,label])=>{
+      const b = document.createElement('button');
+      b.className = 'lang-btn' + (code===lang ? ' active':'');
+      b.textContent = label;
+      b.onclick = ()=>{ lang = code; applyLang(); renderInstallSteps(); };
+      el.appendChild(b);
+    });
+  }
+  function applyLang(){
+    const t = STRINGS[lang];
+    document.querySelectorAll('[data-i18n]').forEach(node=>{
+      const key = node.getAttribute('data-i18n');
+      if(t[key]) node.textContent = t[key];
+    });
+    document.querySelector('h1').innerHTML = t.title + '<span>' + t.titleSpan + '</span>';
+    buildLangSwitch();
+  }
+
+  function renderInstallSteps(){
+    const t = STRINGS[lang];
+    const isIos = /iPhone|iPad|iPod/.test(navigator.userAgent);
+    document.getElementById('installSteps').innerHTML =
+      '<div class="install-steps">' + (isIos ? t.installIos : t.installAndroid) + '</div>';
+  }
+
+  // TODO: cuando tengas Firebase configurado, sustituir estas dos funciones
+  // por lecturas/escrituras a Firestore (colección "clientes", doc = móvil).
+  function db(){ return JSON.parse(localStorage.getItem('gelateria_clientes') || '{}'); }
+  function saveDb(data){ localStorage.setItem('gelateria_clientes', JSON.stringify(data)); }
+
+  function crearTarjeta(){
+    const t = STRINGS[lang];
+    const phone = document.getElementById('phoneInput').value.trim();
+    if(phone.length < 6){ alert(t.movilIncompleto); return; }
+
+    const data = db();
+    if(!data[phone]){
+      data[phone] = { sellos:0, visitas:0, reseñaPedida:false, creado:new Date().toISOString() };
+      saveDb(data);
+    }
+    localStorage.setItem('mi_telefono', phone);
+    mostrarQr(phone);
+  }
+
+  function mostrarQr(phone){
+    document.getElementById('screenForm').classList.remove('active');
+    document.getElementById('screenQr').classList.add('active');
+    document.getElementById('qrcode').innerHTML = '';
+    new QRCode(document.getElementById('qrcode'), { text:phone, width:200, height:200, colorDark:'#033E3C', colorLight:'#ffffff' });
+    document.getElementById('qrPhone').textContent = phone;
+
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    if(!isStandalone){
+      document.getElementById('installBanner').classList.add('show');
+      renderInstallSteps();
+    }
+  }
+
+  // Si el cliente ya tiene tarjeta en este móvil, saltar directo al QR
+  (function init(){
+    buildLangSwitch();
+    applyLang();
+    const miTelefono = localStorage.getItem('mi_telefono');
+    if(miTelefono){
+      mostrarQr(miTelefono);
+    }
+  })();
+</script>
+
+</body>
+</html>
