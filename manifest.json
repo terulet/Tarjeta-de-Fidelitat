@@ -2,7 +2,7 @@
   "name": "La Gelateria de Roses - Mi Tarjeta",
   "short_name": "Mi Tarjeta",
   "description": "Tu tarjeta de fidelidad de La Gelateria de Roses",
-  "start_url": "./registro-cliente.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#033E3C",
   "theme_color": "#033E3C",
