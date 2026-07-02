@@ -136,11 +136,18 @@
   }
   .qr-note{ font-size:12.5px; color:var(--ink-soft); margin-bottom:14px; line-height:1.5; }
 
-  .review-cta{
-    display:none; font-size:12.5px; font-weight:600; color:var(--teal); text-decoration:none;
-    margin-bottom:6px;
-  }
-  .review-cta.show{ display:inline-block; }
+  .review-card{ display:none; margin:4px auto 16px; max-width:320px;
+    background:linear-gradient(150deg, rgba(255,212,94,0.22), rgba(240,180,41,0.10));
+    border:1.5px solid var(--gold); border-radius:18px; padding:18px 16px 16px; text-align:center; }
+  .review-card.show{ display:block; animation:fadeUp .4s ease both; }
+  .review-stars{ font-size:19px; letter-spacing:3px; margin-bottom:8px; }
+  .review-title{ font-family:'Cormorant Garamond', serif; font-weight:700; font-size:20px;
+    color:var(--teal-darker); line-height:1.15; margin-bottom:7px; }
+  .review-text{ font-size:12.5px; color:var(--ink-soft); line-height:1.5; margin-bottom:14px; }
+  .review-btn{ display:block; text-decoration:none; background:var(--teal-darker); color:var(--gold-bright);
+    font-family:'Inter', sans-serif; font-weight:700; font-size:15px; padding:13px; border-radius:13px; }
+  .review-btn:active{ transform:scale(.98); }
+  .review-foot{ font-size:11px; color:var(--ink-soft); margin-top:9px; }
 
   .install-banner{
     display:none; margin-top:14px; padding:13px; border-radius:14px;
@@ -271,7 +278,13 @@
       <div class="qr-wrap"><div id="qrcode"></div></div>
       <div class="qr-note" id="tQrNote"></div>
 
-      <a class="review-cta" id="reviewCta" target="_blank" rel="noopener">⭐ <span id="tReviewCta"></span></a>
+      <div class="review-card" id="reviewCard">
+        <div class="review-stars">⭐⭐⭐⭐⭐</div>
+        <div class="review-title" id="tReviewTitle"></div>
+        <div class="review-text" id="tReviewText"></div>
+        <a class="review-btn" id="reviewCta" target="_blank" rel="noopener"><span id="tReviewBtn"></span></a>
+        <div class="review-foot" id="tReviewFoot"></div>
+      </div>
 
       <div class="install-banner" id="installBanner">
         <b id="tInstallTitle"></b>
@@ -340,7 +353,10 @@
       walletHow:'Enséñanos esta pantalla en el mostrador cuando quieras canjearlo. No caduca.',
       premio:'Premio: {p}',
       qrNote:'Enséñanos este QR cada vez que compres.',
-      reviewCta:'¿Nos dejas una reseña?',
+      reviewTitle:'¿Disfrutas de tus helados con nosotros?',
+      reviewText:'Somos una heladería de Roses de toda la vida. Nosotros te cuidamos en cada visita — tú puedes ayudarnos con solo una reseña. Es lo que nos permite seguir aquí.',
+      reviewBtn:'Dejar mi reseña →',
+      reviewFoot:'Solo 10 segundos, y nos haces el día 🍦',
       installTitle:'📲 Añadir a pantalla de inicio',
       installIos:'En Safari, toca <b>Compartir</b> (el cuadrado con flecha) y luego <b>"Añadir a pantalla de inicio"</b>.',
       installAndroid:'Toca el menú <b>⋮</b> de arriba y luego <b>"Añadir a pantalla de inicio"</b> o <b>"Instalar app"</b>.',
@@ -370,7 +386,10 @@
       walletHow:'Ensenya\'ns aquesta pantalla al taulell quan el vulguis bescanviar. No caduca.',
       premio:'Premi: {p}',
       qrNote:'Ensenya\'ns aquest QR cada vegada que compris.',
-      reviewCta:'Ens deixes una ressenya?',
+      reviewTitle:'Gaudeixes dels teus gelats amb nosaltres?',
+      reviewText:'Som una gelateria de Roses de tota la vida. Nosaltres et cuidem cada visita — tu ens pots ajudar amb només una ressenya. És el que ens permet seguir aquí.',
+      reviewBtn:'Deixar la meva ressenya →',
+      reviewFoot:'Només 10 segons, i ens fas el dia 🍦',
       installTitle:'📲 Afegir a la pantalla d\'inici',
       installIos:'A Safari, toca <b>Compartir</b> (el quadrat amb fletxa) i després <b>"Afegir a la pantalla d\'inici"</b>.',
       installAndroid:'Toca el menú <b>⋮</b> de dalt i després <b>"Afegir a la pantalla d\'inici"</b> o <b>"Instal·lar app"</b>.',
@@ -400,7 +419,10 @@
       walletHow:'Montrez-nous cet écran au comptoir quand vous voulez l\'utiliser. Sans date limite.',
       premio:'Récompense : {p}',
       qrNote:'Montrez-nous ce QR à chaque achat.',
-      reviewCta:'Un petit avis Google ?',
+      reviewTitle:'Vous vous régalez avec nos glaces ?',
+      reviewText:'Nous sommes un glacier de Roses depuis toujours. Nous prenons soin de vous à chaque visite — vous pouvez nous aider avec un simple avis. C\'est ce qui nous permet de rester ouverts.',
+      reviewBtn:'Laisser mon avis →',
+      reviewFoot:'Seulement 10 secondes, et vous nous faites la journée 🍦',
       installTitle:'📲 Ajouter à l\'écran d\'accueil',
       installIos:'Sur Safari, appuyez sur <b>Partager</b> (le carré avec la flèche) puis <b>« Sur l\'écran d\'accueil »</b>.',
       installAndroid:'Appuyez sur le menu <b>⋮</b> en haut puis <b>« Ajouter à l\'écran d\'accueil »</b> ou <b>« Installer l\'appli »</b>.',
@@ -430,7 +452,10 @@
       walletHow:'Show us this screen at the counter whenever you want to redeem. It never expires.',
       premio:'Reward: {p}',
       qrNote:'Show us this QR every time you buy.',
-      reviewCta:'Leave us a review?',
+      reviewTitle:'Enjoying your ice cream with us?',
+      reviewText:'We\'re a lifelong ice cream shop in Roses. We look after you on every visit — you can help us back with just a review. It\'s what keeps us going.',
+      reviewBtn:'Leave my review →',
+      reviewFoot:'Just 10 seconds, and you make our day 🍦',
       installTitle:'📲 Add to Home Screen',
       installIos:'On Safari, tap <b>Share</b> (the square with the arrow) then <b>"Add to Home Screen"</b>.',
       installAndroid:'Tap the <b>⋮</b> menu at the top then <b>"Add to Home Screen"</b> or <b>"Install app"</b>.',
@@ -460,7 +485,10 @@
       walletHow:'Zeig uns diesen Bildschirm an der Theke, wann immer du einlösen willst. Verfällt nie.',
       premio:'Prämie: {p}',
       qrNote:'Zeig uns diesen QR-Code bei jedem Einkauf.',
-      reviewCta:'Lässt du uns eine Bewertung da?',
+      reviewTitle:'Schmeckt dir dein Eis bei uns?',
+      reviewText:'Wir sind eine alteingesessene Eisdiele in Roses. Wir kümmern uns bei jedem Besuch um dich — du kannst uns mit nur einer Bewertung helfen. Das hält uns am Leben.',
+      reviewBtn:'Meine Bewertung abgeben →',
+      reviewFoot:'Nur 10 Sekunden, und du machst uns den Tag 🍦',
       installTitle:'📲 Zum Home-Bildschirm hinzufügen',
       installIos:'In Safari auf <b>Teilen</b> tippen (Quadrat mit Pfeil), dann <b>„Zum Home-Bildschirm"</b>.',
       installAndroid:'Oben auf das Menü <b>⋮</b> tippen, dann <b>„Zum Startbildschirm hinzufügen"</b> oder <b>„App installieren"</b>.',
@@ -490,7 +518,10 @@
       walletHow:'Laat dit scherm zien aan de toonbank wanneer je wilt inwisselen. Verloopt nooit.',
       premio:'Beloning: {p}',
       qrNote:'Laat deze QR zien bij elke aankoop.',
-      reviewCta:'Laat je een review achter?',
+      reviewTitle:'Geniet je van je ijsje bij ons?',
+      reviewText:'Wij zijn al jaren een ijssalon in Roses. Wij verwennen je bij elk bezoek — jij kunt ons helpen met slechts een review. Daardoor kunnen we blijven bestaan.',
+      reviewBtn:'Mijn review achterlaten →',
+      reviewFoot:'Slechts 10 seconden, en je maakt onze dag 🍦',
       installTitle:'📲 Zet op je beginscherm',
       installIos:'In Safari, tik op <b>Delen</b> (vierkant met pijl) en dan <b>"Zet op beginscherm"</b>.',
       installAndroid:'Tik op het menu <b>⋮</b> bovenaan en dan <b>"Toevoegen aan startscherm"</b> of <b>"App installeren"</b>.',
@@ -521,7 +552,7 @@
   let currentCardId = null, currentData = null;
   let prevSellos = null, prevMonedero = null;
   let qrRendered = null;
-  let cfg = { objetivoSellos: 10, premioTexto: '', reviewUrl: '' };
+  let cfg = { objetivoSellos: 10, premioTexto: '', reviewUrl: 'https://g.page/r/CaVSamGk-7L3EBM/review' };
 
   function detectLang(){
     const nav = (navigator.language || 'es').slice(0,2).toLowerCase();
@@ -569,7 +600,10 @@
     $('tExisteText').textContent = t('existeText');
     $('btnVolver').textContent = t('existeBack');
     $('tQrNote').textContent = t('qrNote');
-    $('tReviewCta').textContent = t('reviewCta');
+    $('tReviewTitle').textContent = t('reviewTitle');
+    $('tReviewText').textContent = t('reviewText');
+    $('tReviewBtn').textContent = t('reviewBtn');
+    $('tReviewFoot').textContent = t('reviewFoot');
     $('tInstallTitle').textContent = t('installTitle');
     renderInstallSteps();
     $('btnDelete').textContent = t('deleteLink');
@@ -676,12 +710,12 @@
       w.classList.remove('show');
     }
 
-    // Reseña
-    if(cfg.reviewUrl){
+    // Reseña: tarjeta destacada, solo a partir de la 3ª visita (cliente ya fiel)
+    if(cfg.reviewUrl && (d.visitas || 0) >= 3){
       $('reviewCta').href = cfg.reviewUrl;
-      $('reviewCta').classList.add('show');
+      $('reviewCard').classList.add('show');
     } else {
-      $('reviewCta').classList.remove('show');
+      $('reviewCard').classList.remove('show');
     }
 
     // Celebraciones (solo en cambios reales, no en la primera carga)
