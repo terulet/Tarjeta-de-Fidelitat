@@ -15,7 +15,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.4/html5-qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="firebase-config.js"></script>
 
@@ -596,46 +596,44 @@
     });
   }
 
-  /* ══════ CÁMARA + ESCÁNER USB ══════ */
+  /* ══════ CÁMARA + ESCÁNER USB (html5-qrcode) ══════ */
   const video = $('video');
-  let stream = null, scanning = false, facing = 'environment', lastHit = 0;
-  const canvas = document.createElement('canvas');
-  const cctx = canvas.getContext('2d', { willReadFrequently: true });
+  let html5QrcodeScanner = null;
+  let facing = 'environment';
+  let lastHit = 0;
 
   async function startCam(){
     stopCam();
     try{
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: facing, width: { ideal: 1280 }, height: { ideal: 960 } },
-        audio: false
-      });
-      video.srcObject = stream;
-      await video.play();
-      scanning = true;
+      if(!html5QrcodeScanner){
+        html5QrcodeScanner = new Html5QrcodeScanner(
+          "video",
+          { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.33 },
+          false
+        );
+      }
+      html5QrcodeScanner.render(
+        result => {
+          if(Date.now() - lastHit > 1500){
+            lastHit = Date.now();
+            beep();
+            procesarCodigo(result);
+          }
+        },
+        error => {} // Ignorar errores de no-detección
+      );
       $('camStatus').innerHTML = 'Apunta la cámara al <b>QR del cliente</b>';
-      requestAnimationFrame(scanLoop);
     }catch(e){
-      $('camStatus').innerHTML = '⚠️ Sin acceso a la cámara. Actívalo en Ajustes de Safari, o usa el <b>escáner USB</b>.';
+      $('camStatus').innerHTML = '⚠️ Sin acceso a la cámara. Usa el <b>escáner USB</b>.';
     }
   }
   function stopCam(){
-    scanning = false;
-    if(stream){ stream.getTracks().forEach(t => t.stop()); stream = null; }
-  }
-  function scanLoop(){
-    if(!scanning) return;
-    if(video.readyState === video.HAVE_ENOUGH_DATA){
-      canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-      cctx.drawImage(video, 0, 0);
-      const img = cctx.getImageData(0, 0, canvas.width, canvas.height);
-      const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'attemptBoth' });
-      if(code && code.data && Date.now() - lastHit > 1500){
-        lastHit = Date.now();
-        beep();
-        procesarCodigo(code.data);
-      }
+    if(html5QrcodeScanner){
+      try{
+        html5QrcodeScanner.clear().catch(() => {});
+        html5QrcodeScanner = null;
+      }catch(e){}
     }
-    requestAnimationFrame(scanLoop);
   }
   $('btnFlip').onclick = () => {
     facing = facing === 'environment' ? 'user' : 'environment';
@@ -658,7 +656,8 @@
     }
   });
 
-  /* ══════ PROCESAR CÓDIGO ══════ */
+
+    /* ══════ PROCESAR CÓDIGO ══════ */
   async function procesarCodigo(raw){
     const text = String(raw).trim();
     if(text.startsWith('GELROSES:')){
