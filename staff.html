@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Staff · La Gelateria de Roses</title>
+
+<link rel="manifest" href="manifest-staff.json">
+<meta name="theme-color" content="#032B29">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Gelateria Staff">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="firebase-config.js"></script>
+
+<style>
+  :root{
+    --bg:#032B29; --bg2:#06413E; --bg3:#0A5350;
+    --teal:#0B7E7C; --teal-darker:#033E3C;
+    --gold:#F0B429; --gold-bright:#FFD45E; --gold-deep:#C4910E;
+    --cream:#FFFCF5; --cream-soft:rgba(255,252,245,0.62);
+    --ok:#3FA372; --warn:#D9902A; --danger:#C4574E;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  html,body{ height:100%; }
+  body{
+    background:linear-gradient(170deg, var(--bg) 0%, #043835 60%, #054541 100%);
+    color:var(--cream); font-family:'Inter', sans-serif;
+    min-height:100vh; display:flex; flex-direction:column;
+  }
+  .view{ display:none; flex:1; }
+  .view.active{ display:flex; flex-direction:column; }
+
+  .topbar{
+    display:flex; align-items:center; gap:10px;
+    padding:14px 18px; padding-top:max(14px, env(safe-area-inset-top));
+  }
+  .topbar .crest{ width:30px; height:30px; flex:none; }
+  .topbar .crest svg{ width:100%; height:100%; }
+  .topbar .name{ font-family:'Cormorant Garamond', serif; font-size:18px; font-weight:700; }
+  .topbar .local{ margin-left:auto; font-size:11.5px; font-weight:600; letter-spacing:.05em;
+    color:var(--gold-bright); background:rgba(240,180,41,0.12); border:1px solid rgba(240,180,41,0.35);
+    padding:5px 11px; border-radius:20px; }
+
+  .content{ flex:1; overflow-y:auto; padding:6px 18px 96px; width:100%; max-width:620px; margin:0 auto; }
+
+  .center-wrap{ flex:1; display:flex; align-items:center; justify-content:center; padding:24px; overflow-y:auto; }
+  .panel{
+    background:var(--bg2); border:1px solid rgba(240,180,41,0.25); border-radius:20px;
+    padding:26px 22px; width:100%; max-width:400px;
+  }
+  .panel h2{ font-family:'Cormorant Garamond', serif; font-size:24px; margin-bottom:4px; }
+  .panel .sub{ font-size:12.5px; color:var(--cream-soft); margin-bottom:14px; line-height:1.5; }
+  label{ display:block; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--cream-soft); margin:13px 0 6px; }
+  input, select, textarea{
+    width:100%; font-family:'Inter', sans-serif; font-size:16px; font-weight:600;
+    padding:13px 14px; border-radius:12px; border:1.5px solid rgba(255,252,245,0.14);
+    background:rgba(3,43,41,0.6); color:var(--cream); outline:none;
+  }
+  input:focus, select:focus{ border-color:var(--gold); }
+  .btn{
+    display:block; width:100%; padding:15px; margin-top:14px; border:none; border-radius:14px;
+    font-family:'Inter', sans-serif; font-weight:800; font-size:15px; cursor:pointer;
+    background:var(--gold); color:var(--teal-darker);
+  }
+  .btn:active{ transform:scale(.98); }
+  .btn[disabled]{ opacity:.5; }
+  .btn-dark{ background:var(--bg3); color:var(--cream); border:1px solid rgba(255,252,245,0.15); }
+  .btn-danger{ background:var(--danger); color:#fff; }
+  .err{ color:#FF9B93; font-size:12.5px; margin-top:10px; display:none; }
+  .err.show{ display:block; }
+
+  .tabbar{
+    position:fixed; left:0; right:0; bottom:0; z-index:30;
+    display:flex; background:rgba(3,32,30,0.96); backdrop-filter:blur(10px);
+    border-top:1px solid rgba(240,180,41,0.25);
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .tab{
+    flex:1; padding:10px 4px 9px; background:none; border:none; cursor:pointer;
+    color:var(--cream-soft); font-family:'Inter',sans-serif; font-size:10.5px; font-weight:700;
+    letter-spacing:.03em; display:flex; flex-direction:column; align-items:center; gap:3px;
+  }
+  .tab .ic{ font-size:21px; line-height:1; }
+  .tab.active{ color:var(--gold-bright); }
+
+  .section{ display:none; }
+  .section.active{ display:block; animation:fadeIn .25s ease; }
+  @keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
+
+  .cam-box{
+    position:relative; border-radius:20px; overflow:hidden; background:#021d1c;
+    border:1.5px solid rgba(240,180,41,0.3); aspect-ratio:4/3;
+  }
+  .cam-box video{ width:100%; height:100%; object-fit:cover; }
+  .cam-frame{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; }
+  .cam-frame div{
+    width:58%; aspect-ratio:1; border-radius:22px;
+    border:2.5px solid rgba(255,212,94,0.85);
+    box-shadow:0 0 0 2000px rgba(2,29,28,0.42);
+  }
+  .cam-actions{ position:absolute; top:10px; right:10px; }
+  .cam-btn{
+    width:42px; height:42px; border-radius:50%; border:1px solid rgba(255,252,245,0.3);
+    background:rgba(3,43,41,0.7); color:var(--cream); font-size:18px; cursor:pointer;
+  }
+  .cam-status{ text-align:center; font-size:13px; color:var(--cream-soft); margin-top:12px; line-height:1.5; }
+  .cam-status b{ color:var(--gold-bright); }
+  .usb-hint{ text-align:center; font-size:11px; color:rgba(255,252,245,0.35); margin-top:6px; }
+
+  .sheet-mask{ position:fixed; inset:0; z-index:40; background:rgba(2,25,24,0.7); display:none; }
+  .sheet-mask.show{ display:block; }
+  .sheet{
+    position:fixed; left:0; right:0; bottom:0; z-index:41; display:none;
+    background:var(--bg2); border-radius:24px 24px 0 0; border-top:2px solid var(--gold);
+    max-height:88vh; overflow-y:auto;
+    padding:20px 20px calc(24px + env(safe-area-inset-bottom));
+  }
+  .sheet.show{ display:block; animation:sheetUp .28s cubic-bezier(.2,1.1,.4,1); }
+  @keyframes sheetUp{ from{ transform:translateY(60px); opacity:0; } to{ transform:none; opacity:1; } }
+  .sheet-inner{ max-width:560px; margin:0 auto; }
+  .sheet-head{ display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; }
+  .sheet-name{ font-family:'Cormorant Garamond', serif; font-size:26px; font-weight:700; line-height:1.1; }
+  .sheet-phone{ font-size:13px; color:var(--cream-soft); margin-top:3px; }
+  .sheet-close{ margin-left:auto; width:38px; height:38px; border-radius:50%; border:1px solid rgba(255,252,245,0.2);
+    background:var(--bg3); color:var(--cream); font-size:17px; cursor:pointer; flex:none; }
+
+  .minibar{ display:flex; gap:6px; margin-bottom:8px; }
+  .minibar i{ flex:1; height:14px; border-radius:8px; background:rgba(255,252,245,0.10);
+    border:1px solid rgba(255,252,245,0.08); }
+  .minibar i.f{ background:linear-gradient(135deg, var(--gold-bright), var(--gold)); border-color:var(--gold-deep); }
+  .sheet-meta{ display:flex; gap:14px; font-size:12px; color:var(--cream-soft); margin-bottom:14px; flex-wrap:wrap; }
+  .sheet-meta b{ color:var(--cream); }
+
+  .chip{ display:flex; align-items:center; gap:10px; font-size:12.5px; line-height:1.45;
+    padding:11px 13px; border-radius:12px; margin-bottom:10px; }
+  .chip button{ margin-left:auto; flex:none; border:none; border-radius:9px; padding:8px 12px;
+    font-family:'Inter',sans-serif; font-weight:700; font-size:12px; cursor:pointer;
+    background:rgba(255,252,245,0.14); color:var(--cream); }
+  .chip.warn{ background:rgba(217,144,42,0.15); border:1px solid rgba(217,144,42,0.5); color:#FFD9A0; }
+  .chip.info{ background:rgba(240,180,41,0.10); border:1px solid rgba(240,180,41,0.4); color:var(--gold-bright); }
+
+  .stepper{ display:flex; align-items:center; justify-content:center; gap:18px; margin:14px 0 4px; }
+  .stepper button{
+    width:58px; height:58px; border-radius:50%; border:1.5px solid rgba(240,180,41,0.5);
+    background:var(--bg3); color:var(--gold-bright); font-size:26px; font-weight:800; cursor:pointer;
+  }
+  .stepper .n{ font-size:44px; font-weight:800; min-width:64px; text-align:center; color:var(--gold-bright); }
+  .stepper-label{ text-align:center; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--cream-soft); margin-top:12px; }
+
+  .btn-sellar{ background:var(--gold); color:var(--teal-darker); font-size:17px; padding:17px; }
+  .btn-sellar.confirm{ background:var(--warn); color:#fff; }
+  .btn-canjear{ background:linear-gradient(135deg, #0B7E7C, #0A5350); color:var(--gold-bright);
+    border:1.5px solid var(--gold); }
+
+  .manage-toggle{ background:none; border:none; color:var(--cream-soft); font-size:12.5px; font-weight:600;
+    margin:16px auto 0; display:block; cursor:pointer; text-decoration:underline; font-family:'Inter',sans-serif; }
+  .manage{ display:none; margin-top:12px; border-top:1px solid rgba(255,252,245,0.1); padding-top:4px; }
+  .manage.show{ display:block; }
+  .manage .btn{ margin-top:10px; padding:13px; font-size:13.5px; }
+
+  .search-row{ display:flex; gap:8px; }
+  .search-row select{ width:112px; flex:none; padding:13px 6px; font-size:14px; }
+  .search-row input{ flex:1; }
+  .result-item{
+    display:flex; align-items:center; gap:12px; padding:14px; margin-top:10px;
+    background:var(--bg2); border:1px solid rgba(240,180,41,0.25); border-radius:14px; cursor:pointer;
+  }
+  .result-item .rn{ font-weight:700; font-size:15px; }
+  .result-item .rp{ font-size:12px; color:var(--cream-soft); }
+  .result-item .rs{ margin-left:auto; font-size:13px; font-weight:700; color:var(--gold-bright); white-space:nowrap; }
+  .empty{ text-align:center; font-size:13px; color:var(--cream-soft); padding:26px 10px; line-height:1.6; }
+
+  .stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px; }
+  .stat{ background:var(--bg2); border:1px solid rgba(240,180,41,0.25); border-radius:14px; padding:14px 10px; text-align:center; }
+  .stat .v{ font-size:26px; font-weight:800; color:var(--gold-bright); }
+  .stat .l{ font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--cream-soft); margin-top:3px; }
+  .evt{ display:flex; align-items:center; gap:10px; padding:11px 4px; border-bottom:1px solid rgba(255,252,245,0.07); font-size:13px; }
+  .evt .t{ color:var(--cream-soft); font-size:11.5px; min-width:42px; }
+  .evt .ic{ font-size:16px; }
+  .evt .who{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .evt .amt{ font-weight:800; color:var(--gold-bright); }
+  .evt .loc{ font-size:10.5px; color:var(--cream-soft); }
+
+  .settings-block{ background:var(--bg2); border:1px solid rgba(255,252,245,0.1); border-radius:16px; padding:16px; margin-bottom:14px; }
+  .settings-block h3{ font-family:'Cormorant Garamond', serif; font-size:18px; margin-bottom:2px; }
+  .settings-block .sub{ font-size:11.5px; color:var(--cream-soft); line-height:1.5; }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+  .modal{ position:fixed; inset:0; z-index:60; display:none; align-items:center; justify-content:center;
+    padding:24px; background:rgba(2,25,24,0.8); }
+  .modal.show{ display:flex; }
+  .modal-box{ background:var(--bg2); border:1.5px solid var(--gold); border-radius:20px;
+    padding:24px 20px; width:100%; max-width:360px; text-align:center; }
+  .modal-box h3{ font-family:'Cormorant Garamond', serif; font-size:21px; margin-bottom:6px; }
+  .modal-box p{ font-size:12.5px; color:var(--cream-soft); line-height:1.5; }
+  .modal-box input{ text-align:center; font-size:22px; letter-spacing:.3em; margin-top:12px; }
+  .modal-box input.normal{ text-align:left; font-size:14px; letter-spacing:normal; }
+  .modal-box .btn{ margin-top:12px; }
+  #qrTransferBox{ background:#fff; border-radius:14px; padding:14px; display:inline-block; margin-top:14px; }
+
+  .toast{
+    position:fixed; left:50%; bottom:88px; transform:translateX(-50%) translateY(140px);
+    background:var(--teal-darker); color:var(--cream); border:1px solid var(--gold);
+    font-size:13.5px; font-weight:600; padding:12px 20px; border-radius:30px;
+    z-index:90; transition:transform .3s ease; max-width:88vw; text-align:center;
+  }
+  .toast.show{ transform:translateX(-50%) translateY(0); }
+  .toast.bad{ border-color:var(--danger); }
+
+  .celebration{ position:fixed; inset:0; z-index:70; display:none; align-items:center; justify-content:center;
+    padding:30px; background:rgba(3,43,41,0.9); }
+  .celebration.show{ display:flex; }
+  .celebration-box{ text-align:center; animation:celebIn .5s cubic-bezier(.2,1.5,.4,1) both; }
+  @keyframes celebIn{ from{ transform:scale(.5); opacity:0; } to{ transform:scale(1); opacity:1; } }
+  .celebration-box .big{ font-size:86px; line-height:1; }
+  .celebration-box h2{ font-family:'Cormorant Garamond', serif; font-size:32px; color:var(--gold-bright); margin-top:10px; }
+  .celebration-box p{ font-size:15px; color:var(--cream); margin-top:6px; max-width:420px; }
+
+  @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="view active" id="viewLogin">
+  <div class="center-wrap">
+    <div class="panel">
+      <h2>La Gelateria · Staff</h2>
+      <div class="sub">Acceso del personal al sistema de fidelización.</div>
+      <label for="loginEmail">Email</label>
+      <input type="email" id="loginEmail" autocomplete="username" inputmode="email">
+      <label for="loginPass">Contraseña</label>
+      <input type="password" id="loginPass" autocomplete="current-password">
+      <div class="err" id="loginErr">Email o contraseña incorrectos.</div>
+      <button class="btn" id="btnLogin">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ASISTENTE PRIMERA VEZ -->
+<div class="view" id="viewWizard">
+  <div class="center-wrap">
+    <div class="panel">
+      <h2>Configuración inicial</h2>
+      <div class="sub">Solo se hace una vez. Después podrás cambiarlo todo desde Ajustes.</div>
+      <label>Nombre de este local</label>
+      <input type="text" id="wizLocal" placeholder="Local 1 · Passeig" maxlength="30">
+      <div class="grid2">
+        <div>
+          <label>Sellos para premio</label>
+          <input type="number" id="wizObjetivo" value="10" min="3" max="20" inputmode="numeric">
+        </div>
+        <div>
+          <label>Tope sellos/día</label>
+          <input type="number" id="wizTope" value="6" min="1" max="30" inputmode="numeric">
+        </div>
+      </div>
+      <label>Premio al completar</label>
+      <input type="text" id="wizPremio" placeholder="1 helado gratis (bola pequeña)" maxlength="80">
+      <label>Minutos entre sellados (anti doble escaneo)</label>
+      <input type="number" id="wizCooldown" value="2" min="0" max="120" inputmode="numeric">
+      <label>PIN de encargado (canjes y ajustes)</label>
+      <input type="password" id="wizPin1" placeholder="4 a 6 dígitos" inputmode="numeric" maxlength="6">
+      <label>Repite el PIN</label>
+      <input type="password" id="wizPin2" inputmode="numeric" maxlength="6">
+      <div class="err" id="wizErr"></div>
+      <button class="btn" id="btnWizard">Guardar y empezar</button>
+    </div>
+  </div>
+</div>
+
+<!-- NOMBRE DE LOCAL (dispositivo nuevo) -->
+<div class="view" id="viewLocal">
+  <div class="center-wrap">
+    <div class="panel">
+      <h2>¿En qué local está este dispositivo?</h2>
+      <div class="sub">Cada sello quedará registrado con este nombre.</div>
+      <label>Nombre del local</label>
+      <input type="text" id="localInput" placeholder="Local 1 · Passeig" maxlength="30">
+      <button class="btn" id="btnLocal">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRINCIPAL -->
+<div class="view" id="viewMain">
+  <div class="topbar">
+    <div class="crest">
+      <svg viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="18" r="9" stroke="#F0B429" stroke-width="4"/>
+        <circle cx="38" cy="30" r="9" stroke="#F0B429" stroke-width="4"/>
+        <circle cx="62" cy="30" r="9" stroke="#F0B429" stroke-width="4"/>
+        <path d="M30 38 L70 38 L50 78 Z" stroke="#F0B429" stroke-width="4" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="name">La Gelateria · Staff</div>
+    <div class="local" id="localBadge"></div>
+  </div>
+
+  <div class="content">
+
+    <div class="section active" id="secValidar">
+      <div class="cam-box">
+        <video id="video" playsinline muted></video>
+        <div class="cam-frame"><div></div></div>
+        <div class="cam-actions">
+          <button class="cam-btn" id="btnFlip" title="Cambiar cámara">🔄</button>
+        </div>
+      </div>
+      <div class="cam-status" id="camStatus">Apunta la cámara al <b>QR del cliente</b></div>
+      <div class="usb-hint">Con escáner USB conectado: dispara directamente, sin tocar nada.</div>
+    </div>
+
+    <div class="section" id="secBuscar">
+      <label>Buscar cliente por móvil</label>
+      <div class="search-row">
+        <select id="searchPrefix"></select>
+        <input type="tel" id="searchInput" placeholder="612 345 678" inputmode="numeric" maxlength="14">
+      </div>
+      <button class="btn" id="btnBuscar">Buscar</button>
+      <div id="searchResults"></div>
+    </div>
+
+    <div class="section" id="secHoy">
+      <div class="stats">
+        <div class="stat"><div class="v" id="statSellos">–</div><div class="l">Sellos</div></div>
+        <div class="stat"><div class="v" id="statCanjes">–</div><div class="l">Canjes</div></div>
+        <div class="stat"><div class="v" id="statNuevos">–</div><div class="l">Tarjetas nuevas</div></div>
+      </div>
+      <div id="evtList"><div class="empty">Sin actividad todavía hoy.</div></div>
+    </div>
+
+    <div class="section" id="secAjustes">
+      <div class="settings-block">
+        <h3>Este dispositivo</h3>
+        <label>Nombre del local</label>
+        <input type="text" id="setLocal" maxlength="30">
+      </div>
+      <div class="settings-block">
+        <h3>Programa de fidelidad</h3>
+        <div class="sub">Los cambios se aplican a todos los locales al momento.</div>
+        <div class="grid2">
+          <div>
+            <label>Sellos para premio</label>
+            <input type="number" id="setObjetivo" min="3" max="20" inputmode="numeric">
+          </div>
+          <div>
+            <label>Tope sellos/día</label>
+            <input type="number" id="setTope" min="1" max="30" inputmode="numeric">
+          </div>
+        </div>
+        <label>Premio al completar</label>
+        <input type="text" id="setPremio" maxlength="80">
+        <label>Minutos entre sellados</label>
+        <input type="number" id="setCooldown" min="0" max="120" inputmode="numeric">
+        <label>Enlace de reseñas de Google (opcional)</label>
+        <input type="text" id="setReview" placeholder="https://g.page/r/...">
+      </div>
+      <button class="btn" id="btnGuardarAjustes">Guardar cambios</button>
+      <button class="btn btn-dark" id="btnCambiarPin">Cambiar PIN de encargado</button>
+      <button class="btn btn-dark" id="btnLogout">Cerrar sesión</button>
+      <div class="empty" style="padding-top:16px;">Tarjeta de Fidelidad v2.0 · La Gelateria de Roses</div>
+    </div>
+
+  </div>
+
+  <nav class="tabbar">
+    <button class="tab active" data-tab="Validar"><span class="ic">📷</span>Validar</button>
+    <button class="tab" data-tab="Buscar"><span class="ic">🔍</span>Buscar</button>
+    <button class="tab" data-tab="Hoy"><span class="ic">📊</span>Hoy</button>
+    <button class="tab" data-tab="Ajustes"><span class="ic">⚙️</span>Ajustes</button>
+  </nav>
+</div>
+
+<!-- FICHA DE CLIENTE -->
+<div class="sheet-mask" id="sheetMask"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-inner">
+    <div class="sheet-head">
+      <div>
+        <div class="sheet-name" id="shName"></div>
+        <div class="sheet-phone" id="shPhone"></div>
+      </div>
+      <button class="sheet-close" id="btnSheetClose">✕</button>
+    </div>
+
+    <div class="minibar" id="shBar"></div>
+    <div class="sheet-meta">
+      <span><b id="shSellos"></b> sellos</span>
+      <span>🎁 <b id="shMonedero"></b> premios</span>
+      <span><b id="shVisitas"></b> visitas</span>
+    </div>
+
+    <div id="shChips"></div>
+
+    <div class="stepper-label">Sellos a añadir</div>
+    <div class="stepper">
+      <button id="stepMinus">−</button>
+      <div class="n" id="stepN">1</div>
+      <button id="stepPlus">+</button>
+    </div>
+
+    <button class="btn btn-sellar" id="btnSellar">SELLAR</button>
+    <button class="btn btn-canjear" id="btnCanjear" style="display:none;">🎁 Canjear premio</button>
+
+    <button class="manage-toggle" id="btnManage">Gestionar tarjeta…</button>
+    <div class="manage" id="manageBox">
+      <button class="btn btn-dark" id="btnTransferir">📲 Transferir a móvil nuevo</button>
+      <button class="btn btn-dark" id="btnAjustar">✏️ Ajustar sellos (con motivo)</button>
+      <button class="btn btn-danger" id="btnEliminar">🗑 Eliminar tarjeta (RGPD)</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PIN -->
+<div class="modal" id="modalPin">
+  <div class="modal-box">
+    <h3>PIN de encargado</h3>
+    <p id="pinText"></p>
+    <input type="password" id="pinInput" inputmode="numeric" maxlength="6" autocomplete="off">
+    <div class="err" id="pinErr">PIN incorrecto.</div>
+    <button class="btn" id="pinOk">Confirmar</button>
+    <button class="btn btn-dark" id="pinCancel">Cancelar</button>
+  </div>
+</div>
+
+<!-- MODAL AJUSTAR -->
+<div class="modal" id="modalAjuste">
+  <div class="modal-box">
+    <h3>Ajustar sellos</h3>
+    <p>Suma o resta sellos manualmente. Queda registrado con tu usuario y el motivo.</p>
+    <div class="stepper">
+      <button id="ajMinus">−</button>
+      <div class="n" id="ajN">+1</div>
+      <button id="ajPlus">+</button>
+    </div>
+    <input type="text" class="normal" id="ajMotivo" placeholder="Motivo (obligatorio)" maxlength="60">
+    <button class="btn" id="ajOk">Aplicar ajuste</button>
+    <button class="btn btn-dark" id="ajCancel">Cancelar</button>
+  </div>
+</div>
+
+<!-- MODAL TRANSFERIR -->
+<div class="modal" id="modalTransfer">
+  <div class="modal-box">
+    <h3>Tarjeta transferida</h3>
+    <p>Que el cliente escanee este QR <b>con la cámara de su móvil nuevo</b>: su tarjeta se abrirá allí con todos los sellos y premios. El QR antiguo queda anulado.</p>
+    <div id="qrTransferBox"></div>
+    <button class="btn" id="transferOk">Listo</button>
+  </div>
+</div>
+
+<!-- MODAL CAMBIAR PIN -->
+<div class="modal" id="modalNewPin">
+  <div class="modal-box">
+    <h3>Nuevo PIN</h3>
+    <p>Escribe el nuevo PIN de encargado (4 a 6 dígitos).</p>
+    <input type="password" id="newPin1" inputmode="numeric" maxlength="6" placeholder="Nuevo PIN">
+    <input type="password" id="newPin2" inputmode="numeric" maxlength="6" placeholder="Repite el PIN">
+    <div class="err" id="newPinErr"></div>
+    <button class="btn" id="newPinOk">Guardar PIN</button>
+    <button class="btn btn-dark" id="newPinCancel">Cancelar</button>
+  </div>
+</div>
+
+<div class="celebration" id="celebration">
+  <div class="celebration-box">
+    <div class="big">🍦</div>
+    <h2>¡Tarjeta completa!</h2>
+    <p id="celebP"></p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+  import {
+    initializeFirestore, persistentLocalCache,
+    doc, getDoc, getDocs, setDoc, updateDoc, onSnapshot,
+    collection, query, where, orderBy, limit,
+    addDoc, writeBatch, serverTimestamp, runTransaction, Timestamp
+  } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+  import {
+    getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut
+  } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+  const $ = id => document.getElementById(id);
+  const PREFIXES = [
+    ['34','\u{1F1EA}\u{1F1F8} +34'],['33','\u{1F1EB}\u{1F1F7} +33'],['49','\u{1F1E9}\u{1F1EA} +49'],
+    ['31','\u{1F1F3}\u{1F1F1} +31'],['32','\u{1F1E7}\u{1F1EA} +32'],['44','\u{1F1EC}\u{1F1E7} +44'],
+    ['41','\u{1F1E8}\u{1F1ED} +41'],['39','\u{1F1EE}\u{1F1F9} +39'],['351','\u{1F1F5}\u{1F1F9} +351'],
+    ['43','\u{1F1E6}\u{1F1F9} +43'],['353','\u{1F1EE}\u{1F1EA} +353'],['45','\u{1F1E9}\u{1F1F0} +45'],
+    ['46','\u{1F1F8}\u{1F1EA} +46'],['48','\u{1F1F5}\u{1F1F1} +48'],['420','\u{1F1E8}\u{1F1FF} +420'],
+    ['352','\u{1F1F1}\u{1F1FA} +352'],['1','\u{1F1FA}\u{1F1F8} +1']
+  ];
+
+  /* ══════ ESTADO ══════ */
+  let db, auth, user = null;
+  let cfg = { objetivoSellos:10, premioTexto:'', cooldownMin:2, topeDiario:6, reviewUrl:'' };
+  let unsubCfg = null, unsubHoy = null, unsubNuevos = null;
+  let currentTab = 'Validar';
+  let sheetCard = null;
+  let stepVal = 1, ajVal = 1;
+  let confirmArmed = false;
+
+  /* ══════ UTILS ══════ */
+  let toastTimer;
+  function toast(msg, bad){
+    const el = $('toast');
+    el.textContent = msg;
+    el.classList.toggle('bad', !!bad);
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+  }
+  function showView(id){
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    $(id).classList.add('active');
+  }
+  async function sha256(str){
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+  function fechaHoy(){
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+  function prettyPhone(tel){
+    for(const [p] of PREFIXES){
+      if(tel.startsWith(p) && tel.length > p.length + 5){
+        return '+' + p + ' ' + tel.slice(p.length).replace(/(\d{3})(?=\d)/g, '$1 ').trim();
+      }
+    }
+    return '+' + tel;
+  }
+  function getLocal(){ return localStorage.getItem('gelateria_local') || 'Local'; }
+  function beep(){
+    try{
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.frequency.value = 950; o.connect(g); g.connect(ctx.destination);
+      g.gain.setValueAtTime(0.12, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.12);
+      o.start(); o.stop(ctx.currentTime + 0.13);
+    }catch(e){}
+  }
+  function genToken(){
+    const alphabet = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+    const arr = new Uint32Array(6);
+    crypto.getRandomValues(arr);
+    let out = '';
+    for(let i = 0; i < 6; i++) out += alphabet[arr[i] % alphabet.length];
+    return out;
+  }
+  function logEvento(tipo, telefono, nombre, cantidad, motivo){
+    addDoc(collection(db, 'eventos'), {
+      tipo, telefono, nombre: nombre || '', cantidad,
+      local: getLocal(), staff: user ? user.email : '',
+      motivo: motivo || '', ts: serverTimestamp()
+    }).catch(() => {});
+  }
+
+  /* ══════ PIN ══════ */
+  function askPin(texto){
+    return new Promise(resolve => {
+      $('pinText').textContent = texto || '';
+      $('pinInput').value = '';
+      $('pinErr').classList.remove('show');
+      $('modalPin').classList.add('show');
+      setTimeout(() => $('pinInput').focus(), 80);
+      const done = val => {
+        $('modalPin').classList.remove('show');
+        $('pinOk').onclick = null; $('pinCancel').onclick = null;
+        resolve(val);
+      };
+      $('pinOk').onclick = async () => {
+        const pin = $('pinInput').value.trim();
+        if(pin.length < 4){ $('pinErr').textContent = 'Mínimo 4 dígitos.'; $('pinErr').classList.add('show'); return; }
+        try{
+          const snap = await getDoc(doc(db, 'config', 'staff'));
+          const hash = snap.exists() ? snap.data().pinHash : null;
+          if(hash && (await sha256(pin)) === hash){ done(true); }
+          else { $('pinErr').textContent = 'PIN incorrecto.'; $('pinErr').classList.add('show'); $('pinInput').value = ''; }
+        }catch(e){ $('pinErr').textContent = 'Sin conexión.'; $('pinErr').classList.add('show'); }
+      };
+      $('pinCancel').onclick = () => done(false);
+    });
+  }
+
+  /* ══════ CÁMARA + ESCÁNER USB ══════ */
+  const video = $('video');
+  let stream = null, scanning = false, facing = 'environment', lastHit = 0;
+  const canvas = document.createElement('canvas');
+  const cctx = canvas.getContext('2d', { willReadFrequently: true });
+
+  async function startCam(){
+    stopCam();
+    try{
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: facing, width: { ideal: 1280 }, height: { ideal: 960 } },
+        audio: false
+      });
+      video.srcObject = stream;
+      await video.play();
+      scanning = true;
+      $('camStatus').innerHTML = 'Apunta la cámara al <b>QR del cliente</b>';
+      requestAnimationFrame(scanLoop);
+    }catch(e){
+      $('camStatus').innerHTML = '⚠️ Sin acceso a la cámara. Actívalo en Ajustes de Safari, o usa el <b>escáner USB</b>.';
+    }
+  }
+  function stopCam(){
+    scanning = false;
+    if(stream){ stream.getTracks().forEach(t => t.stop()); stream = null; }
+  }
+  function scanLoop(){
+    if(!scanning) return;
+    if(video.readyState === video.HAVE_ENOUGH_DATA){
+      canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+      cctx.drawImage(video, 0, 0);
+      const img = cctx.getImageData(0, 0, canvas.width, canvas.height);
+      const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'dontInvert' });
+      if(code && code.data && Date.now() - lastHit > 1500){
+        lastHit = Date.now();
+        beep();
+        procesarCodigo(code.data);
+      }
+    }
+    requestAnimationFrame(scanLoop);
+  }
+  $('btnFlip').onclick = () => {
+    facing = facing === 'environment' ? 'user' : 'environment';
+    if(currentTab === 'Validar' && !sheetCard) startCam();
+  };
+
+  let usbBuf = '', usbLast = 0;
+  window.addEventListener('keydown', e => {
+    if(!user) return;
+    const ae = document.activeElement;
+    if(ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA' || ae.tagName === 'SELECT')) return;
+    const now = Date.now();
+    if(now - usbLast > 100) usbBuf = '';
+    usbLast = now;
+    if(e.key === 'Enter'){
+      if(usbBuf.length > 6){ e.preventDefault(); beep(); procesarCodigo(usbBuf); }
+      usbBuf = '';
+    } else if(e.key.length === 1){
+      usbBuf += e.key;
+    }
+  });
+
+  /* ══════ PROCESAR CÓDIGO ══════ */
+  async function procesarCodigo(raw){
+    const text = String(raw).trim();
+    if(text.startsWith('GELROSES:')){
+      const id = text.slice(9).trim();
+      if(!/^[0-9]{8,15}_[A-Z2-9]{6}$/.test(id)){ toast('QR no reconocido', true); return; }
+      try{
+        const snap = await getDoc(doc(db, 'clientes', id));
+        if(!snap.exists()){ toast('Tarjeta no encontrada o anulada', true); return; }
+        openSheet(snap.id, snap.data());
+      }catch(e){ toast('Sin conexión', true); }
+    } else if(/^[0-9]{6,15}$/.test(text)){
+      setTab('Buscar');
+      $('searchInput').value = text;
+      toast('QR de la versión antigua · busca y transfiérele la tarjeta nueva');
+    } else {
+      toast('QR no reconocido', true);
+    }
+  }
+
+  /* ══════ FICHA DE CLIENTE ══════ */
+  function openSheet(id, data){
+    sheetCard = { id, data };
+    stepVal = 1; confirmArmed = false;
+    stopCam();
+    renderSheet();
+    $('manageBox').classList.remove('show');
+    $('sheetMask').classList.add('show');
+    $('sheet').classList.add('show');
+  }
+  function closeSheet(){
+    sheetCard = null;
+    $('sheetMask').classList.remove('show');
+    $('sheet').classList.remove('show');
+    if(currentTab === 'Validar') startCam();
+  }
+  $('btnSheetClose').onclick = closeSheet;
+  $('sheetMask').onclick = closeSheet;
+
+  function renderSheet(){
+    if(!sheetCard) return;
+    const d = sheetCard.data;
+    const objetivo = cfg.objetivoSellos || 10;
+
+    $('shName').textContent = d.nombre || 'Cliente';
+    $('shPhone').textContent = prettyPhone(d.telefono);
+    $('shSellos').textContent = (d.sellos || 0) + '/' + objetivo;
+    $('shMonedero').textContent = d.monedero || 0;
+    $('shVisitas').textContent = d.visitas || 0;
+
+    const bar = $('shBar'); bar.innerHTML = '';
+    for(let i = 0; i < objetivo; i++){
+      const s = document.createElement('i');
+      if(i < (d.sellos || 0)) s.className = 'f';
+      bar.appendChild(s);
+    }
+
+    const chips = $('shChips'); chips.innerHTML = '';
+    const hoy = fechaHoy();
+    const hoyN = d.hoyFecha === hoy ? (d.hoyN || 0) : 0;
+    if(d.ultimoSello && cfg.cooldownMin > 0){
+      const mins = (Date.now() - d.ultimoSello.toDate().getTime()) / 60000;
+      if(mins >= 0 && mins < cfg.cooldownMin){
+        chips.insertAdjacentHTML('beforeend',
+          '<div class="chip warn">⏱ Sellado hace ' + (mins < 1 ? 'menos de 1 min' : Math.floor(mins) + ' min') + '. ¿Doble escaneo?</div>');
+      }
+    }
+    if(hoyN >= (cfg.topeDiario || 99)){
+      chips.insertAdjacentHTML('beforeend',
+        '<div class="chip warn">🚦 Ya lleva ' + hoyN + ' sellos hoy (tope: ' + cfg.topeDiario + ').</div>');
+    }
+    if((d.visitas || 0) >= 3 && !d.resenaPedida){
+      chips.insertAdjacentHTML('beforeend',
+        '<div class="chip info">⭐ 3ª visita o más — recuérdale la reseña de Google <button id="btnResenaHecha">Hecho</button></div>');
+      const b = $('btnResenaHecha');
+      if(b) b.onclick = async () => {
+        try{
+          await updateDoc(doc(db, 'clientes', sheetCard.id), { resenaPedida: true });
+          sheetCard.data.resenaPedida = true;
+          renderSheet();
+        }catch(e){ toast('Sin conexión', true); }
+      };
+    }
+
+    $('stepN').textContent = stepVal;
+    const bs = $('btnSellar');
+    bs.classList.remove('confirm');
+    bs.textContent = 'SELLAR +' + stepVal;
+    confirmArmed = false;
+
+    const bc = $('btnCanjear');
+    if((d.monedero || 0) > 0){
+      bc.style.display = 'block';
+      bc.textContent = '🎁 Canjear premio (' + d.monedero + ' disp.)' + (cfg.premioTexto ? ' · ' + cfg.premioTexto : '');
+    } else bc.style.display = 'none';
+  }
+
+  $('stepMinus').onclick = () => { const v = stepVal; stepVal = Math.max(1, stepVal - 1); if(v !== stepVal){ $('stepN').textContent = stepVal; $('btnSellar').textContent = 'SELLAR +' + stepVal; $('btnSellar').classList.remove('confirm'); confirmArmed = false; } };
+  $('stepPlus').onclick  = () => { const v = stepVal; stepVal = Math.min(9, stepVal + 1); if(v !== stepVal){ $('stepN').textContent = stepVal; $('btnSellar').textContent = 'SELLAR +' + stepVal; $('btnSellar').classList.remove('confirm'); confirmArmed = false; } };
+  $('btnManage').onclick = () => $('manageBox').classList.toggle('show');
+
+  /* ══════ SELLAR ══════ */
+  $('btnSellar').onclick = async () => {
+    if(!sheetCard) return;
+    const d = sheetCard.data;
+    const hoy = fechaHoy();
+    const hoyN = d.hoyFecha === hoy ? (d.hoyN || 0) : 0;
+    let necesitaConfirm = false;
+    if(d.ultimoSello && cfg.cooldownMin > 0){
+      const mins = (Date.now() - d.ultimoSello.toDate().getTime()) / 60000;
+      if(mins >= 0 && mins < cfg.cooldownMin) necesitaConfirm = true;
+    }
+    if(hoyN + stepVal > (cfg.topeDiario || 99)) necesitaConfirm = true;
+
+    const bs = $('btnSellar');
+    if(necesitaConfirm && !confirmArmed){
+      confirmArmed = true;
+      bs.classList.add('confirm');
+      bs.textContent = '⚠️ ¿Seguro? Toca otra vez';
+      setTimeout(() => {
+        if(confirmArmed && sheetCard){
+          confirmArmed = false;
+          bs.classList.remove('confirm');
+          bs.textContent = 'SELLAR +' + stepVal;
+        }
+      }, 4000);
+      return;
+    }
+
+    bs.disabled = true;
+    try{
+      const qty = stepVal;
+      const objetivo = cfg.objetivoSellos || 10;
+      const ref = doc(db, 'clientes', sheetCard.id);
+      const res = await runTransaction(db, async tx => {
+        const snap = await tx.get(ref);
+        if(!snap.exists()) throw new Error('no-card');
+        const c = snap.data();
+        let s = (c.sellos || 0) + qty, premios = 0;
+        while(s >= objetivo){ s -= objetivo; premios++; }
+        const f = fechaHoy();
+        const n = (c.hoyFecha === f ? (c.hoyN || 0) : 0) + qty;
+        tx.update(ref, {
+          sellos: s,
+          monedero: (c.monedero || 0) + premios,
+          totalSellos: (c.totalSellos || 0) + qty,
+          visitas: (c.visitas || 0) + 1,
+          ultimoSello: serverTimestamp(),
+          hoyFecha: f, hoyN: n
+        });
+        return { premios, data: Object.assign({}, c, {
+          sellos: s, monedero: (c.monedero || 0) + premios,
+          totalSellos: (c.totalSellos || 0) + qty, visitas: (c.visitas || 0) + 1,
+          hoyFecha: f, hoyN: n, ultimoSello: Timestamp.now()
+        }) };
+      });
+      logEvento('sello', d.telefono, d.nombre, qty);
+
+      sheetCard.data = res.data;
+      stepVal = 1;
+      renderSheet();
+      if(res.premios > 0){
+        $('celebP').textContent = (d.nombre ? d.nombre + ' ha' : 'Ha') + ' conseguido: ' + (cfg.premioTexto || 'su premio') + ' 🎁 Guardado en su monedero.';
+        $('celebration').classList.add('show');
+        setTimeout(() => $('celebration').classList.remove('show'), 3800);
+      } else {
+        toast('✅ +' + qty + (qty === 1 ? ' sello' : ' sellos'));
+      }
+    }catch(e){
+      console.error(e);
+      toast(e.message === 'no-card' ? 'La tarjeta ya no existe' : 'Error al sellar. Reintenta.', true);
+    }finally{
+      $('btnSellar').disabled = false;
+    }
+  };
+  $('celebration').onclick = () => $('celebration').classList.remove('show');
+
+  /* ══════ CANJEAR ══════ */
+  $('btnCanjear').onclick = async () => {
+    if(!sheetCard || (sheetCard.data.monedero || 0) < 1) return;
+    const ok = await askPin('Canjear 1 premio' + (cfg.premioTexto ? ': ' + cfg.premioTexto : ''));
+    if(!ok) return;
+    try{
+      const ref = doc(db, 'clientes', sheetCard.id);
+      const res = await runTransaction(db, async tx => {
+        const snap = await tx.get(ref);
+        if(!snap.exists()) throw new Error('no-card');
+        const c = snap.data();
+        if((c.monedero || 0) < 1) throw new Error('sin-premio');
+        tx.update(ref, { monedero: c.monedero - 1, canjes: (c.canjes || 0) + 1 });
+        return Object.assign({}, c, { monedero: c.monedero - 1, canjes: (c.canjes || 0) + 1 });
+      });
+      logEvento('canje', sheetCard.data.telefono, sheetCard.data.nombre, 1);
+      sheetCard.data = res;
+      renderSheet();
+      toast('🎁 Premio canjeado');
+    }catch(e){
+      toast(e.message === 'sin-premio' ? 'No tiene premios pendientes' : 'Error al canjear', true);
+    }
+  };
+
+  /* ══════ TRANSFERIR A MÓVIL NUEVO ══════ */
+  $('btnTransferir').onclick = async () => {
+    if(!sheetCard) return;
+    const ok = await askPin('Transferir la tarjeta a un móvil nuevo. El QR antiguo quedará anulado.');
+    if(!ok) return;
+    try{
+      const d = sheetCard.data;
+      const nuevoToken = genToken();
+      const nuevoId = d.telefono + '_' + nuevoToken;
+      const batch = writeBatch(db);
+      batch.set(doc(db, 'clientes', nuevoId), Object.assign({}, d, { token: nuevoToken }));
+      batch.delete(doc(db, 'clientes', sheetCard.id));
+      await batch.commit();
+      logEvento('transferencia', d.telefono, d.nombre, 0);
+      sheetCard = { id: nuevoId, data: Object.assign({}, d, { token: nuevoToken }) };
+      renderSheet();
+      const base = location.origin + location.pathname.replace(/staff\.html.*$/, '');
+      $('qrTransferBox').innerHTML = '';
+      new QRCode($('qrTransferBox'), {
+        text: base + '?c=' + nuevoId, width: 200, height: 200,
+        colorDark: '#033E3C', colorLight: '#ffffff'
+      });
+      $('modalTransfer').classList.add('show');
+    }catch(e){
+      console.error(e);
+      toast('Error al transferir', true);
+    }
+  };
+  $('transferOk').onclick = () => $('modalTransfer').classList.remove('show');
+
+  /* ══════ AJUSTE MANUAL ══════ */
+  function renderAj(){ $('ajN').textContent = (ajVal > 0 ? '+' : '') + ajVal; }
+  $('ajMinus').onclick = () => { ajVal = Math.max(-9, ajVal - 1); if(ajVal === 0) ajVal = -1; renderAj(); };
+  $('ajPlus').onclick  = () => { ajVal = Math.min(9, ajVal + 1); if(ajVal === 0) ajVal = 1; renderAj(); };
+  $('btnAjustar').onclick = async () => {
+    if(!sheetCard) return;
+    const ok = await askPin('Ajuste manual de sellos.');
+    if(!ok) return;
+    ajVal = 1; renderAj();
+    $('ajMotivo').value = '';
+    $('modalAjuste').classList.add('show');
+  };
+  $('ajCancel').onclick = () => $('modalAjuste').classList.remove('show');
+  $('ajOk').onclick = async () => {
+    if(!sheetCard) return;
+    const motivo = $('ajMotivo').value.trim();
+    if(!motivo){ toast('Escribe el motivo del ajuste', true); return; }
+    try{
+      const objetivo = cfg.objetivoSellos || 10;
+      const ref = doc(db, 'clientes', sheetCard.id);
+      const delta = ajVal;
+      const res = await runTransaction(db, async tx => {
+        const snap = await tx.get(ref);
+        if(!snap.exists()) throw new Error('no-card');
+        const c = snap.data();
+        let s = Math.max(0, (c.sellos || 0) + delta), premios = 0;
+        while(s >= objetivo){ s -= objetivo; premios++; }
+        tx.update(ref, {
+          sellos: s,
+          monedero: (c.monedero || 0) + premios,
+          totalSellos: Math.max(0, (c.totalSellos || 0) + delta)
+        });
+        return Object.assign({}, c, { sellos: s, monedero: (c.monedero || 0) + premios,
+          totalSellos: Math.max(0, (c.totalSellos || 0) + delta) });
+      });
+      logEvento('ajuste', sheetCard.data.telefono, sheetCard.data.nombre, delta, motivo);
+      sheetCard.data = res;
+      $('modalAjuste').classList.remove('show');
+      renderSheet();
+      toast('✏️ Ajuste aplicado (' + (delta > 0 ? '+' : '') + delta + ')');
+    }catch(e){
+      toast('Error al ajustar', true);
+    }
+  };
+
+  /* ══════ ELIMINAR TARJETA ══════ */
+  $('btnEliminar').onclick = async () => {
+    if(!sheetCard) return;
+    const ok = await askPin('ELIMINAR la tarjeta y todos los datos del cliente (RGPD). No se puede deshacer.');
+    if(!ok) return;
+    try{
+      const d = sheetCard.data;
+      const batch = writeBatch(db);
+      batch.delete(doc(db, 'clientes', sheetCard.id));
+      batch.delete(doc(db, 'telefonos', d.telefono));
+      await batch.commit();
+      logEvento('baja', d.telefono, d.nombre, 0);
+      closeSheet();
+      toast('🗑 Tarjeta eliminada');
+    }catch(e){
+      toast('Error al eliminar', true);
+    }
+  };
+
+  /* ══════ BUSCAR ══════ */
+  function buildPrefixes(){
+    const sel = $('searchPrefix');
+    PREFIXES.forEach(([val, label]) => {
+      const o = document.createElement('option');
+      o.value = val; o.textContent = label;
+      sel.appendChild(o);
+    });
+    sel.value = '34';
+  }
+  async function buscar(){
+    let nat = $('searchInput').value.replace(/\D/g, '');
+    const prefix = $('searchPrefix').value;
+    const results = $('searchResults');
+    if(nat.length < 5){ results.innerHTML = '<div class="empty">Escribe el móvil del cliente.</div>'; return; }
+    if(nat.startsWith('0') && prefix !== '39' && prefix !== '34') nat = nat.replace(/^0+/, '');
+    // Si ya han escrito el número con prefijo incluido, respetarlo
+    const candidatos = [prefix + nat];
+    if(nat.length >= 10 && PREFIXES.some(([p]) => nat.startsWith(p))) candidatos.push(nat);
+    results.innerHTML = '<div class="empty">Buscando…</div>';
+    try{
+      let docs = [];
+      for(const tel of candidatos){
+        const q = query(collection(db, 'clientes'), where('telefono', '==', tel), limit(5));
+        const snap = await getDocs(q);
+        snap.forEach(s => docs.push(s));
+        if(docs.length) break;
+      }
+      if(!docs.length){
+        results.innerHTML = '<div class="empty">Sin resultados para ese móvil.<br>Puede crearse la tarjeta él mismo con el QR del cartel.</div>';
+        return;
+      }
+      results.innerHTML = '';
+      docs.forEach(s => {
+        const c = s.data();
+        const el = document.createElement('div');
+        el.className = 'result-item';
+        el.innerHTML = '<div><div class="rn">' + (c.nombre || 'Cliente') + '</div>' +
+          '<div class="rp">' + prettyPhone(c.telefono) + '</div></div>' +
+          '<div class="rs">' + (c.sellos || 0) + '/' + (cfg.objetivoSellos || 10) +
+          ((c.monedero || 0) > 0 ? ' · 🎁' + c.monedero : '') + '</div>';
+        el.onclick = () => openSheet(s.id, c);
+        results.appendChild(el);
+      });
+    }catch(e){
+      results.innerHTML = '<div class="empty">Error de conexión.</div>';
+    }
+  }
+  $('btnBuscar').onclick = buscar;
+  $('searchInput').addEventListener('keydown', e => { if(e.key === 'Enter') buscar(); });
+
+  /* ══════ HOY ══════ */
+  function startHoy(){
+    stopHoy();
+    const hoy0 = new Date(); hoy0.setHours(0, 0, 0, 0);
+    const t0 = Timestamp.fromDate(hoy0);
+    const qe = query(collection(db, 'eventos'), where('ts', '>=', t0), orderBy('ts', 'desc'), limit(150));
+    unsubHoy = onSnapshot(qe, snap => {
+      let sellos = 0, canjes = 0;
+      const list = $('evtList'); list.innerHTML = '';
+      const ICONS = { sello:'🍦', canje:'🎁', ajuste:'✏️', transferencia:'📲', baja:'🗑' };
+      snap.forEach(s => {
+        const e = s.data();
+        if(e.tipo === 'sello') sellos += e.cantidad || 0;
+        if(e.tipo === 'ajuste') sellos += Math.max(0, e.cantidad || 0);
+        if(e.tipo === 'canje') canjes += e.cantidad || 0;
+        const hora = e.ts ? e.ts.toDate().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) : '–';
+        const row = document.createElement('div');
+        row.className = 'evt';
+        row.innerHTML = '<span class="t">' + hora + '</span>' +
+          '<span class="ic">' + (ICONS[e.tipo] || '•') + '</span>' +
+          '<span class="who">' + (e.nombre ? e.nombre + ' · ' : '') + prettyPhone(e.telefono || '') +
+          (e.motivo ? ' — ' + e.motivo : '') + '</span>' +
+          '<span class="amt">' + (e.tipo === 'canje' ? '−1🎁' : (e.cantidad > 0 ? '+' + e.cantidad : e.cantidad || '')) + '</span>' +
+          '<span class="loc">' + (e.local || '') + '</span>';
+        list.appendChild(row);
+      });
+      if(snap.empty) list.innerHTML = '<div class="empty">Sin actividad todavía hoy.</div>';
+      $('statSellos').textContent = sellos;
+      $('statCanjes').textContent = canjes;
+    }, () => {});
+    const qn = query(collection(db, 'clientes'), where('creado', '>=', t0));
+    unsubNuevos = onSnapshot(qn, snap => { $('statNuevos').textContent = snap.size; }, () => {});
+  }
+  function stopHoy(){
+    if(unsubHoy){ unsubHoy(); unsubHoy = null; }
+    if(unsubNuevos){ unsubNuevos(); unsubNuevos = null; }
+  }
+
+  /* ══════ AJUSTES ══════ */
+  function fillAjustes(){
+    $('setLocal').value = getLocal();
+    $('setObjetivo').value = cfg.objetivoSellos || 10;
+    $('setTope').value = cfg.topeDiario || 6;
+    $('setPremio').value = cfg.premioTexto || '';
+    $('setCooldown').value = cfg.cooldownMin != null ? cfg.cooldownMin : 2;
+    $('setReview').value = cfg.reviewUrl || '';
+  }
+  $('btnGuardarAjustes').onclick = async () => {
+    const local = $('setLocal').value.trim();
+    if(local) localStorage.setItem('gelateria_local', local);
+    $('localBadge').textContent = getLocal();
+    try{
+      await setDoc(doc(db, 'config', 'publico'), {
+        objetivoSellos: Math.min(20, Math.max(3, parseInt($('setObjetivo').value) || 10)),
+        topeDiario: Math.min(30, Math.max(1, parseInt($('setTope').value) || 6)),
+        premioTexto: $('setPremio').value.trim().slice(0, 80),
+        cooldownMin: Math.min(120, Math.max(0, parseInt($('setCooldown').value) || 0)),
+        reviewUrl: $('setReview').value.trim()
+      }, { merge: true });
+      toast('✅ Ajustes guardados');
+    }catch(e){ toast('Error al guardar', true); }
+  };
+  $('btnCambiarPin').onclick = async () => {
+    const ok = await askPin('Escribe el PIN actual para cambiarlo.');
+    if(!ok) return;
+    $('newPin1').value = ''; $('newPin2').value = '';
+    $('newPinErr').classList.remove('show');
+    $('modalNewPin').classList.add('show');
+  };
+  $('newPinCancel').onclick = () => $('modalNewPin').classList.remove('show');
+  $('newPinOk').onclick = async () => {
+    const p1 = $('newPin1').value.trim(), p2 = $('newPin2').value.trim();
+    const err = $('newPinErr');
+    if(!/^[0-9]{4,6}$/.test(p1)){ err.textContent = 'El PIN debe tener de 4 a 6 dígitos.'; err.classList.add('show'); return; }
+    if(p1 !== p2){ err.textContent = 'Los PIN no coinciden.'; err.classList.add('show'); return; }
+    try{
+      await setDoc(doc(db, 'config', 'staff'), { pinHash: await sha256(p1) });
+      $('modalNewPin').classList.remove('show');
+      toast('✅ PIN actualizado');
+    }catch(e){ err.textContent = 'Sin conexión.'; err.classList.add('show'); }
+  };
+  $('btnLogout').onclick = () => signOut(auth);
+
+  /* ══════ TABS ══════ */
+  function setTab(name){
+    currentTab = name;
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    $('sec' + name).classList.add('active');
+    if(name === 'Validar' && !sheetCard) startCam(); else if(name !== 'Validar') stopCam();
+    if(name === 'Hoy') startHoy(); else stopHoy();
+    if(name === 'Ajustes') fillAjustes();
+  }
+  document.querySelectorAll('.tab').forEach(t => t.onclick = () => setTab(t.dataset.tab));
+
+  /* ══════ ASISTENTE / LOCAL ══════ */
+  $('btnWizard').onclick = async () => {
+    const err = $('wizErr');
+    const local = $('wizLocal').value.trim();
+    const premio = $('wizPremio').value.trim();
+    const p1 = $('wizPin1').value.trim(), p2 = $('wizPin2').value.trim();
+    if(!local){ err.textContent = 'Escribe el nombre del local.'; err.classList.add('show'); return; }
+    if(!premio){ err.textContent = 'Escribe el premio.'; err.classList.add('show'); return; }
+    if(!/^[0-9]{4,6}$/.test(p1)){ err.textContent = 'El PIN debe tener de 4 a 6 dígitos.'; err.classList.add('show'); return; }
+    if(p1 !== p2){ err.textContent = 'Los PIN no coinciden.'; err.classList.add('show'); return; }
+    $('btnWizard').disabled = true;
+    try{
+      await setDoc(doc(db, 'config', 'publico'), {
+        objetivoSellos: Math.min(20, Math.max(3, parseInt($('wizObjetivo').value) || 10)),
+        topeDiario: Math.min(30, Math.max(1, parseInt($('wizTope').value) || 6)),
+        premioTexto: premio.slice(0, 80),
+        cooldownMin: Math.min(120, Math.max(0, parseInt($('wizCooldown').value) || 0)),
+        reviewUrl: ''
+      });
+      await setDoc(doc(db, 'config', 'staff'), { pinHash: await sha256(p1) });
+      localStorage.setItem('gelateria_local', local);
+      entrar();
+    }catch(e){
+      err.textContent = 'Error al guardar. Revisa la conexión y las reglas de Firestore.';
+      err.classList.add('show');
+    }finally{
+      $('btnWizard').disabled = false;
+    }
+  };
+  $('btnLocal').onclick = () => {
+    const v = $('localInput').value.trim();
+    if(!v) return;
+    localStorage.setItem('gelateria_local', v);
+    entrar();
+  };
+
+  function entrar(){
+    $('localBadge').textContent = getLocal();
+    showView('viewMain');
+    setTab('Validar');
+  }
+
+  /* ══════ LOGIN + ARRANQUE ══════ */
+  $('btnLogin').onclick = async () => {
+    $('loginErr').classList.remove('show');
+    $('btnLogin').disabled = true;
+    try{
+      await signInWithEmailAndPassword(auth, $('loginEmail').value.trim(), $('loginPass').value);
+    }catch(e){
+      $('loginErr').classList.add('show');
+    }finally{
+      $('btnLogin').disabled = false;
+    }
+  };
+  $('loginPass').addEventListener('keydown', e => { if(e.key === 'Enter') $('btnLogin').click(); });
+
+  async function afterLogin(){
+    if(unsubCfg) unsubCfg();
+    unsubCfg = onSnapshot(doc(db, 'config', 'publico'), snap => {
+      if(snap.exists()){
+        cfg = Object.assign(cfg, snap.data());
+        if(sheetCard) renderSheet();
+      }
+    }, () => {});
+    try{
+      const snap = await getDoc(doc(db, 'config', 'publico'));
+      if(!snap.exists()){
+        showView('viewWizard');
+        return;
+      }
+      cfg = Object.assign(cfg, snap.data());
+    }catch(e){ /* seguimos con valores por defecto */ }
+    if(!localStorage.getItem('gelateria_local')){
+      showView('viewLocal');
+      return;
+    }
+    entrar();
+  }
+
+  buildPrefixes();
+
+  const CFG = window.FIREBASE_CONFIG || {};
+  if(!CFG.apiKey || CFG.apiKey.includes('PEGAR')){
+    document.querySelector('#viewLogin .panel').innerHTML =
+      '<h2>Falta configurar Firebase</h2><div class="sub">Pega tu bloque <b>firebaseConfig</b> en el archivo <b>firebase-config.js</b> del repositorio. Instrucciones completas en INSTRUCCIONES.md.</div>';
+  } else {
+    const app = initializeApp(CFG);
+    try{
+      db = initializeFirestore(app, { localCache: persistentLocalCache() });
+    }catch(e){
+      db = initializeFirestore(app, {});
+    }
+    auth = getAuth(app);
+    onAuthStateChanged(auth, u => {
+      user = u;
+      if(u){ afterLogin(); }
+      else {
+        stopCam(); stopHoy();
+        if(unsubCfg){ unsubCfg(); unsubCfg = null; }
+        showView('viewLogin');
+      }
+    });
+  }
+</script>
+
+</body>
+</html>

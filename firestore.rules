@@ -1,0 +1,72 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // El staff inicia sesión con email+contraseña (Firebase Auth).
+    // Los clientes NUNCA inician sesión: su "llave" es conocer el ID
+    // completo de su tarjeta (telefono_token), que solo existe en su QR.
+    function esStaff() {
+      return request.auth != null
+        && request.auth.token.firebase.sign_in_provider == 'password';
+    }
+
+    function tarjetaNuevaValida(cardId) {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['telefono','token','nombre','idioma','sellos','monedero',
+                               'totalSellos','visitas','canjes','resenaPedida',
+                               'consentimiento','creado','ultimoSello','hoyFecha','hoyN'])
+        && d.keys().hasAll(['telefono','token','nombre','idioma','sellos','monedero',
+                            'totalSellos','visitas','canjes','resenaPedida',
+                            'consentimiento','creado','ultimoSello','hoyFecha','hoyN'])
+        && d.telefono is string && d.telefono.matches('[0-9]{8,15}')
+        && d.token is string && d.token.matches('[A-Z2-9]{6}')
+        && cardId == d.telefono + '_' + d.token
+        && d.nombre is string && d.nombre.size() <= 40
+        && d.idioma is string && d.idioma.size() <= 3
+        && d.sellos == 0 && d.monedero == 0 && d.totalSellos == 0
+        && d.visitas == 0 && d.canjes == 0 && d.hoyN == 0
+        && d.resenaPedida == false
+        && d.consentimiento == true;
+    }
+
+    // ── Tarjetas ─────────────────────────────────────────────────────
+    match /clientes/{cardId} {
+      // Leer una tarjeta concreta exige conocer su ID completo (= tener el QR).
+      // Listar/buscar por teléfono, solo el staff.
+      allow get: if true;
+      allow list: if esStaff();
+      // Crear: el propio cliente al registrarse (con estructura estricta,
+      // siempre a cero) o el staff (transferencias a móvil nuevo).
+      allow create: if esStaff() || tarjetaNuevaValida(cardId);
+      // Sellar, canjear y ajustar: SOLO staff autenticado.
+      allow update: if esStaff();
+      // Borrar: staff, o quien tenga el ID completo (derecho de supresión RGPD).
+      allow delete: if true;
+    }
+
+    // ── Índice de teléfonos (solo dice si un móvil ya tiene tarjeta) ─
+    match /telefonos/{telefono} {
+      allow get: if true;
+      allow list: if esStaff();
+      allow create: if request.resource.data.keys().hasOnly(['existe'])
+                    && request.resource.data.existe == true;
+      allow update: if esStaff();
+      allow delete: if true;
+    }
+
+    // ── Log de actividad (inmutable) ─────────────────────────────────
+    match /eventos/{eventoId} {
+      allow read, create: if esStaff();
+      allow update, delete: if false;
+    }
+
+    // ── Configuración ────────────────────────────────────────────────
+    match /config/publico {
+      allow read: if true;          // la app del cliente necesita objetivo y premio
+      allow write: if esStaff();
+    }
+    match /config/staff {
+      allow read, write: if esStaff();   // aquí vive el hash del PIN
+    }
+  }
+}

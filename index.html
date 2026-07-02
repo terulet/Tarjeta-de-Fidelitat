@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <title>Mi Tarjeta · La Gelateria de Roses</title>
 
-<!-- PWA / Añadir a pantalla de inicio -->
+<!-- PWA -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#033E3C">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -15,13 +15,16 @@
 <link rel="icon" href="icon-192.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="firebase-config.js"></script>
+
 <style>
   :root{
     --teal:#0B7E7C; --teal-deep:#055552; --teal-darker:#033E3C;
     --gold:#F0B429; --gold-bright:#FFD45E; --gold-deep:#C4910E;
     --cream:#FFFCF5; --ink:#1B3634; --ink-soft:#5C7B79;
+    --danger:#B4423A;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html,body{ height:100%; }
@@ -33,71 +36,172 @@
     min-height:100vh;
     font-family:'Inter', sans-serif;
     color:var(--cream);
-    display:flex; justify-content:center; align-items:center;
-    padding:30px 20px;
-    padding-top:max(30px, env(safe-area-inset-top));
-    padding-bottom:max(30px, env(safe-area-inset-bottom));
+    display:flex; justify-content:center; align-items:flex-start;
+    padding:26px 18px;
+    padding-top:max(26px, env(safe-area-inset-top));
+    padding-bottom:max(26px, env(safe-area-inset-bottom));
   }
   .app{ width:100%; max-width:400px; }
 
-  .lang-switch{ display:flex; justify-content:center; gap:6px; margin-bottom:22px; }
+  .lang-switch{ display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin-bottom:20px; }
   .lang-btn{
     background:transparent; border:1px solid rgba(240,180,41,0.35);
     color:rgba(255,252,245,0.6); font-size:11.5px; font-weight:600; letter-spacing:.04em;
-    padding:6px 12px; border-radius:20px; cursor:pointer;
+    padding:6px 11px; border-radius:20px; cursor:pointer;
   }
   .lang-btn.active{ background:var(--gold); border-color:var(--gold); color:var(--teal-darker); }
 
-  header{ text-align:center; margin-bottom:26px; }
-  .crest{ width:56px; height:56px; margin:0 auto 12px; }
+  header{ text-align:center; margin-bottom:22px; }
+  .crest{ width:54px; height:54px; margin:0 auto 10px; }
   .crest svg{ width:100%; height:100%; }
-  .eyebrow{ font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--gold-bright); font-weight:600; margin-bottom:8px; }
-  h1{ font-family:'Cormorant Garamond', serif; font-weight:700; font-size:30px; color:var(--cream); line-height:1.1; }
+  .eyebrow{ font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--gold-bright); font-weight:600; margin-bottom:7px; }
+  h1{ font-family:'Cormorant Garamond', serif; font-weight:700; font-size:29px; color:var(--cream); line-height:1.1; }
   h1 span{ color:var(--gold); font-style:italic; }
 
   .card{
-    background:var(--cream); border-radius:22px; padding:28px 24px;
+    background:var(--cream); border-radius:22px; padding:26px 22px;
     box-shadow:0 20px 50px rgba(3,62,60,0.35); border:1px solid rgba(240,180,41,0.4);
-    color:var(--ink); text-align:center;
+    color:var(--ink); text-align:center; position:relative; overflow:hidden;
   }
   .screen{ display:none; }
-  .screen.active{ display:block; }
+  .screen.active{ display:block; animation:fadeUp .35s ease both; }
+  @keyframes fadeUp{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;} }
 
-  /* --- FORM --- */
-  .form-intro{ font-size:14px; color:var(--ink-soft); margin-bottom:20px; line-height:1.5; }
-  input[type=tel]{
-    width:100%; font-family:'Inter', sans-serif; font-size:20px; font-weight:600; letter-spacing:.03em;
-    padding:16px; border-radius:14px; border:1.5px solid rgba(11,126,124,0.18);
-    background:#FAF6EB; color:var(--ink); outline:none; text-align:center; margin-bottom:14px;
+  /* ── FORM ─────────────────────────────────────── */
+  .form-intro{ font-size:14px; color:var(--ink-soft); margin-bottom:18px; line-height:1.5; }
+  .field{ text-align:left; margin-bottom:13px; }
+  .field label{ display:block; font-size:11.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:6px; }
+  input[type=text], input[type=tel], select{
+    width:100%; font-family:'Inter', sans-serif; font-size:17px; font-weight:600;
+    padding:13px 14px; border-radius:13px; border:1.5px solid rgba(11,126,124,0.18);
+    background:#FAF6EB; color:var(--ink); outline:none;
   }
-  input[type=tel]:focus{ border-color:var(--gold-deep); }
+  input:focus, select:focus{ border-color:var(--gold-deep); }
+  .phone-row{ display:flex; gap:8px; }
+  .phone-row select{ width:118px; flex:none; padding:13px 6px; font-size:15px; }
+  .phone-row input{ flex:1; letter-spacing:.04em; }
+  .consent{ display:flex; gap:10px; align-items:flex-start; text-align:left; margin:14px 0 16px; }
+  .consent input{ width:20px; height:20px; margin-top:1px; accent-color:var(--teal); flex:none; }
+  .consent span{ font-size:12px; color:var(--ink-soft); line-height:1.5; }
+  .consent a{ color:var(--teal); font-weight:600; }
   .btn{
     padding:15px; border-radius:14px; border:none; font-family:'Inter', sans-serif;
     font-weight:700; font-size:15px; cursor:pointer; width:100%;
     background:var(--teal-darker); color:var(--gold-bright);
   }
   .btn:active{ transform:scale(0.98); }
-  .legal{ font-size:11px; color:var(--ink-soft); margin-top:14px; line-height:1.5; }
+  .btn[disabled]{ opacity:.55; }
+  .btn-ghost{ background:transparent; color:var(--teal-deep); border:1.5px solid rgba(11,126,124,0.3); }
 
-  /* --- QR SCREEN --- */
-  .qr-wrap{
-    display:inline-block; padding:16px; background:#fff; border-radius:16px;
-    border:1.5px solid rgba(11,126,124,0.15); margin-bottom:16px;
+  /* ── TARJETA VIVA ─────────────────────────────── */
+  .hello{ font-family:'Cormorant Garamond', serif; font-size:24px; font-weight:700; color:var(--teal-darker); margin-bottom:2px; }
+  .hello-sub{ font-size:12px; color:var(--ink-soft); margin-bottom:16px; }
+
+  .stamps{ display:grid; grid-template-columns:repeat(5,1fr); gap:9px; margin:0 auto 8px; max-width:280px; }
+  .stamp{
+    aspect-ratio:1; border-radius:50%;
+    border:2px dashed rgba(11,126,124,0.30);
+    display:flex; align-items:center; justify-content:center;
+    color:transparent; background:transparent;
+    transition:background .3s;
   }
-  .qr-phone{ font-family:'Inter', sans-serif; font-weight:700; letter-spacing:.06em; font-size:15px; color:var(--teal-darker); margin-bottom:6px; }
-  .qr-note{ font-size:12.5px; color:var(--ink-soft); margin-bottom:20px; line-height:1.5; }
+  .stamp svg{ width:62%; height:62%; }
+  .stamp.filled{
+    border:2px solid var(--gold-deep);
+    background:linear-gradient(150deg, var(--gold-bright), var(--gold));
+    color:var(--teal-darker);
+    box-shadow:0 3px 10px rgba(196,145,14,0.35);
+  }
+  .stamp.pop{ animation:stampPop .55s cubic-bezier(.2,1.6,.4,1) both; }
+  @keyframes stampPop{
+    0%{ transform:scale(0) rotate(-30deg); }
+    70%{ transform:scale(1.18) rotate(4deg); }
+    100%{ transform:scale(1) rotate(0); }
+  }
+  .stamps-label{ font-size:13px; font-weight:600; color:var(--teal-deep); margin-bottom:2px; }
+  .stamps-next{ font-size:11.5px; color:var(--ink-soft); margin-bottom:16px; }
+
+  .wallet{
+    display:none; margin:0 auto 16px; padding:12px 14px; border-radius:14px;
+    background:linear-gradient(135deg, rgba(240,180,41,0.20), rgba(240,180,41,0.08));
+    border:1.5px solid var(--gold); cursor:pointer; max-width:300px;
+  }
+  .wallet.show{ display:block; animation:fadeUp .4s ease both; }
+  .wallet b{ display:block; font-family:'Cormorant Garamond', serif; font-size:18px; color:var(--teal-darker); }
+  .wallet span{ font-size:11.5px; color:var(--ink-soft); line-height:1.4; display:block; margin-top:2px; }
+
+  .qr-wrap{
+    display:inline-block; padding:14px; background:#fff; border-radius:16px;
+    border:1.5px solid rgba(11,126,124,0.15); margin-bottom:10px;
+  }
+  .qr-note{ font-size:12.5px; color:var(--ink-soft); margin-bottom:14px; line-height:1.5; }
+
+  .review-cta{
+    display:none; font-size:12.5px; font-weight:600; color:var(--teal); text-decoration:none;
+    margin-bottom:6px;
+  }
+  .review-cta.show{ display:inline-block; }
 
   .install-banner{
-    display:none; margin-top:18px; padding:14px; border-radius:14px;
+    display:none; margin-top:14px; padding:13px; border-radius:14px;
     background:linear-gradient(135deg, rgba(240,180,41,0.15), rgba(240,180,41,0.05));
     border:1.5px solid rgba(240,180,41,0.4); font-size:12.5px; text-align:left;
   }
   .install-banner.show{ display:block; }
-  .install-banner b{ display:block; font-family:'Cormorant Garamond', serif; font-size:15px; margin-bottom:6px; color:var(--teal-darker); }
-  .install-steps{ margin:0; padding-left:18px; color:var(--ink-soft); line-height:1.6; }
+  .install-banner b{ display:block; font-family:'Cormorant Garamond', serif; font-size:15px; margin-bottom:5px; color:var(--teal-darker); }
+  .install-steps{ color:var(--ink-soft); line-height:1.55; }
   .install-steps b{ display:inline; font-family:'Inter',sans-serif; font-size:12.5px; color:var(--ink); }
 
-  footer{ text-align:center; margin-top:20px; font-size:11px; color:rgba(255,252,245,0.4); }
+  .delete-link{
+    display:inline-block; margin-top:16px; font-size:11px; color:var(--ink-soft);
+    text-decoration:underline; background:none; border:none; cursor:pointer; font-family:'Inter',sans-serif;
+  }
+
+  /* ── CELEBRACIÓN ──────────────────────────────── */
+  .celebration{
+    position:fixed; inset:0; z-index:60; display:none;
+    align-items:center; justify-content:center; padding:30px;
+    background:rgba(3,62,60,0.86); backdrop-filter:blur(4px);
+  }
+  .celebration.show{ display:flex; }
+  .celebration-box{
+    background:var(--cream); border-radius:24px; border:2px solid var(--gold);
+    padding:34px 26px; text-align:center; max-width:330px; width:100%;
+    animation:celebIn .5s cubic-bezier(.2,1.5,.4,1) both; position:relative; overflow:hidden;
+  }
+  @keyframes celebIn{ from{transform:scale(.6); opacity:0;} to{transform:scale(1); opacity:1;} }
+  .celebration-box .big{ font-size:52px; line-height:1; margin-bottom:12px; }
+  .celebration-box h2{ font-family:'Cormorant Garamond', serif; font-size:26px; color:var(--teal-darker); margin-bottom:8px; }
+  .celebration-box p{ font-size:14px; color:var(--ink-soft); line-height:1.5; }
+  .confetti{ position:absolute; top:-12px; width:9px; height:14px; border-radius:2px; animation:confFall 1.9s ease-in forwards; }
+  @keyframes confFall{
+    from{ transform:translateY(-20px) rotate(0deg); opacity:1; }
+    to{ transform:translateY(430px) rotate(var(--rot)); opacity:0; }
+  }
+
+  /* ── MODAL / TOAST ────────────────────────────── */
+  .modal{ position:fixed; inset:0; z-index:70; display:none; align-items:center; justify-content:center; padding:26px; background:rgba(3,62,60,0.8); }
+  .modal.show{ display:flex; }
+  .modal-box{ background:var(--cream); border-radius:20px; padding:24px 20px; max-width:330px; width:100%; text-align:center; color:var(--ink); }
+  .modal-box h3{ font-family:'Cormorant Garamond', serif; font-size:21px; color:var(--teal-darker); margin-bottom:8px; }
+  .modal-box p{ font-size:13px; color:var(--ink-soft); line-height:1.5; margin-bottom:16px; }
+  .modal-box .btn{ margin-bottom:9px; }
+  .btn-danger{ background:var(--danger); color:#fff; }
+
+  .toast{
+    position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(80px);
+    background:var(--teal-darker); color:var(--cream); border:1px solid var(--gold);
+    font-size:13px; font-weight:600; padding:11px 18px; border-radius:30px;
+    z-index:80; transition:transform .3s ease; max-width:88vw; text-align:center;
+  }
+  .toast.show{ transform:translateX(-50%) translateY(0); }
+
+  footer{ text-align:center; margin-top:18px; font-size:11px; color:rgba(255,252,245,0.4); }
+  footer a{ color:rgba(255,252,245,0.55); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
 </style>
 </head>
 <body>
@@ -115,157 +219,635 @@
         <path d="M40 48 L60 48 L50 64 Z" stroke="#F0B429" stroke-width="3" stroke-linejoin="round"/>
       </svg>
     </div>
-    <div class="eyebrow" data-i18n="eyebrow">La Gelateria de Roses</div>
-    <h1 data-i18n="title">Mi Tarjeta <span data-i18n="titleSpan">fidelidad</span></h1>
+    <div class="eyebrow">La Gelateria de Roses</div>
+    <h1><span id="titleA"></span><span id="titleB"></span></h1>
   </header>
 
   <div class="card">
 
-    <!-- FORMULARIO -->
-    <div class="screen active" id="screenForm">
-      <div class="form-intro" data-i18n="formIntro">Escribe tu móvil para crear tu tarjeta. Cada vez que compres, te sellamos aquí — sin papel, sin perderla.</div>
-      <input type="tel" id="phoneInput" placeholder="6XX XXX XXX" inputmode="numeric" maxlength="9">
-      <button class="btn" onclick="crearTarjeta()" data-i18n="formBtn">Crear mi tarjeta</button>
-      <div class="legal" data-i18n="legal">Solo usamos tu móvil para tu tarjeta de fidelidad.</div>
+    <!-- REGISTRO -->
+    <div class="screen" id="screenForm">
+      <div class="form-intro" id="tFormIntro"></div>
+      <div class="field">
+        <label id="tNameLabel" for="nameInput"></label>
+        <input type="text" id="nameInput" maxlength="40" autocomplete="given-name">
+      </div>
+      <div class="field">
+        <label id="tPhoneLabel" for="phoneInput"></label>
+        <div class="phone-row">
+          <select id="prefixSelect"></select>
+          <input type="tel" id="phoneInput" placeholder="6XX XXX XXX" inputmode="numeric" maxlength="12">
+        </div>
+      </div>
+      <label class="consent">
+        <input type="checkbox" id="consentCheck">
+        <span id="tConsent"></span>
+      </label>
+      <button class="btn" id="btnCrear"></button>
     </div>
 
-    <!-- QR -->
-    <div class="screen" id="screenQr">
+    <!-- MÓVIL YA REGISTRADO -->
+    <div class="screen" id="screenExiste">
+      <div style="font-size:44px; margin-bottom:10px;">🪪</div>
+      <div class="hello" id="tExisteTitle"></div>
+      <p class="form-intro" id="tExisteText" style="margin-top:8px;"></p>
+      <button class="btn btn-ghost" id="btnVolver"></button>
+    </div>
+
+    <!-- TARJETA VIVA -->
+    <div class="screen" id="screenCard">
+      <div class="hello" id="helloLine"></div>
+      <div class="hello-sub" id="phonePretty"></div>
+
+      <div class="stamps" id="stampsGrid"></div>
+      <div class="stamps-label" id="stampsLabel"></div>
+      <div class="stamps-next" id="stampsNext"></div>
+
+      <div class="wallet" id="walletBox">
+        <b id="walletTitle"></b>
+        <span id="walletText"></span>
+      </div>
+
       <div class="qr-wrap"><div id="qrcode"></div></div>
-      <div class="qr-phone" id="qrPhone"></div>
-      <div class="qr-note" data-i18n="qrNote">Enséñanos esta pantalla cada vez que compres. Añádela a tu pantalla de inicio para tenerla siempre a mano.</div>
+      <div class="qr-note" id="tQrNote"></div>
+
+      <a class="review-cta" id="reviewCta" target="_blank" rel="noopener">⭐ <span id="tReviewCta"></span></a>
 
       <div class="install-banner" id="installBanner">
-        <b data-i18n="installTitle">📲 Añadir a pantalla de inicio</b>
-        <div id="installSteps"></div>
+        <b id="tInstallTitle"></b>
+        <div class="install-steps" id="installSteps"></div>
       </div>
+
+      <button class="delete-link" id="btnDelete"></button>
+    </div>
+
+    <!-- FALTA CONFIGURACIÓN (solo desarrollo) -->
+    <div class="screen" id="screenSetup">
+      <div style="font-size:40px; margin-bottom:10px;">🔧</div>
+      <div class="hello">Falta configurar Firebase</div>
+      <p class="form-intro" style="margin-top:8px;">Pega tu bloque <b>firebaseConfig</b> en el archivo <b>firebase-config.js</b> del repositorio. Instrucciones completas en INSTRUCCIONES.md.</p>
     </div>
 
   </div>
 
-  <footer data-i18n="footer">La Gelateria de Roses · Tarjeta digital</footer>
+  <footer><span id="tFooter"></span> · <a href="privacidad.html" id="tFooterPriv"></a></footer>
 </div>
 
-<script>
-  let lang = 'es';
+<!-- Celebración premio -->
+<div class="celebration" id="celebration">
+  <div class="celebration-box" id="celebBox">
+    <div class="big">🍦</div>
+    <h2 id="celebTitle"></h2>
+    <p id="celebText"></p>
+  </div>
+</div>
 
-  const STRINGS = {
+<!-- Modal borrar tarjeta -->
+<div class="modal" id="modalDelete">
+  <div class="modal-box">
+    <h3 id="tDelTitle"></h3>
+    <p id="tDelText"></p>
+    <button class="btn btn-danger" id="btnDelConfirm"></button>
+    <button class="btn btn-ghost" id="btnDelCancel"></button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+  import {
+    initializeFirestore, persistentLocalCache,
+    doc, getDoc, setDoc, onSnapshot, writeBatch, serverTimestamp
+  } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+  /* ══════════ IDIOMAS ══════════ */
+  const LANGS = [['es','ES'],['ca','CA'],['fr','FR'],['en','EN'],['de','DE'],['nl','NL']];
+  const T = {
     es:{
-      eyebrow:'La Gelateria de Roses', title:'Mi Tarjeta ', titleSpan:'fidelidad',
-      formIntro:'Escribe tu móvil para crear tu tarjeta. Cada vez que compres, te sellamos aquí — sin papel, sin perderla.',
-      formBtn:'Crear mi tarjeta', legal:'Solo usamos tu móvil para tu tarjeta de fidelidad.',
-      qrNote:'Enséñanos esta pantalla cada vez que compres. Añádela a tu pantalla de inicio para tenerla siempre a mano.',
+      titleA:'Mi Tarjeta ', titleB:'fidelidad',
+      formIntro:'Crea tu tarjeta en 10 segundos. Cada vez que compres te sellamos aquí — sin papel, sin perderla.',
+      nameLabel:'Tu nombre (opcional)', namePh:'Marta',
+      phoneLabel:'Tu móvil',
+      consent:'Acepto que La Gelateria de Roses use mi móvil y nombre solo para gestionar mi tarjeta de fidelidad. <a href="privacidad.html" target="_blank">Política de privacidad</a>.',
+      formBtn:'Crear mi tarjeta',
+      existeTitle:'Este móvil ya tiene tarjeta',
+      existeText:'Para pasarla a este dispositivo, acércate al mostrador: te la transferimos en 10 segundos y conservas todos tus sellos y premios.',
+      existeBack:'Volver',
+      hello:'¡Hola!', helloName:'¡Hola, {n}!',
+      stampsLabel:'{s} de {o} sellos', stampsNext:'Te falta {r} para tu premio', stampsNext1:'¡Te falta solo 1 para tu premio!', stampsFull:'',
+      walletOne:'1 premio por canjear', walletMany:'{n} premios por canjear',
+      walletHow:'Enséñanos esta pantalla en el mostrador cuando quieras canjearlo. No caduca.',
+      premio:'Premio: {p}',
+      qrNote:'Enséñanos este QR cada vez que compres.',
+      reviewCta:'¿Nos dejas una reseña?',
       installTitle:'📲 Añadir a pantalla de inicio',
       installIos:'En Safari, toca <b>Compartir</b> (el cuadrado con flecha) y luego <b>"Añadir a pantalla de inicio"</b>.',
       installAndroid:'Toca el menú <b>⋮</b> de arriba y luego <b>"Añadir a pantalla de inicio"</b> o <b>"Instalar app"</b>.',
-      footer:'La Gelateria de Roses · Tarjeta digital',
-      movilIncompleto:'Escribe un móvil completo'
+      deleteLink:'Eliminar mi tarjeta y mis datos',
+      delTitle:'¿Eliminar tu tarjeta?',
+      delText:'Se borrarán tu móvil, tu nombre, tus sellos y tus premios de forma definitiva. Esta acción no se puede deshacer.',
+      delBtn:'Sí, eliminar todo', cancel:'Cancelar',
+      footer:'La Gelateria de Roses · Tarjeta digital', footerPriv:'Privacidad',
+      errPhone:'Escribe un móvil válido', errConsent:'Marca la casilla de consentimiento para continuar', errNet:'Sin conexión. Inténtalo de nuevo.',
+      cardDeleted:'Tu tarjeta ha sido eliminada',
+      celebTitle:'¡Premio conseguido!', celebText:'Has completado tu tarjeta: {p}. Ya lo tienes guardado en tu monedero 🎁',
+      halfToast:'¡Ya llevas la mitad de la tarjeta! 🎉'
     },
     ca:{
-      eyebrow:'La Gelateria de Roses', title:'La Meva Targeta ', titleSpan:'fidelitat',
-      formIntro:'Escriu el teu mòbil per crear la teva targeta. Cada vegada que compris, et segellem aquí — sense paper, sense perdre-la.',
-      formBtn:'Crear la meva targeta', legal:'Només fem servir el teu mòbil per a la teva targeta de fidelitat.',
-      qrNote:'Ensenya\'ns aquesta pantalla cada vegada que compris. Afegeix-la a la pantalla d\'inici per tenir-la sempre a mà.',
+      titleA:'La Meva Targeta ', titleB:'fidelitat',
+      formIntro:'Crea la teva targeta en 10 segons. Cada vegada que compris et segellem aquí — sense paper, sense perdre-la.',
+      nameLabel:'El teu nom (opcional)', namePh:'Marta',
+      phoneLabel:'El teu mòbil',
+      consent:'Accepto que La Gelateria de Roses faci servir el meu mòbil i nom només per gestionar la meva targeta de fidelitat. <a href="privacidad.html" target="_blank">Política de privacitat</a>.',
+      formBtn:'Crear la meva targeta',
+      existeTitle:'Aquest mòbil ja té targeta',
+      existeText:'Per passar-la a aquest dispositiu, acosta\'t al taulell: te la transferim en 10 segons i conserves tots els segells i premis.',
+      existeBack:'Tornar',
+      hello:'Hola!', helloName:'Hola, {n}!',
+      stampsLabel:'{s} de {o} segells', stampsNext:'Et falten {r} per al teu premi', stampsNext1:'Només et falta 1 per al teu premi!', stampsFull:'',
+      walletOne:'1 premi per bescanviar', walletMany:'{n} premis per bescanviar',
+      walletHow:'Ensenya\'ns aquesta pantalla al taulell quan el vulguis bescanviar. No caduca.',
+      premio:'Premi: {p}',
+      qrNote:'Ensenya\'ns aquest QR cada vegada que compris.',
+      reviewCta:'Ens deixes una ressenya?',
       installTitle:'📲 Afegir a la pantalla d\'inici',
       installIos:'A Safari, toca <b>Compartir</b> (el quadrat amb fletxa) i després <b>"Afegir a la pantalla d\'inici"</b>.',
       installAndroid:'Toca el menú <b>⋮</b> de dalt i després <b>"Afegir a la pantalla d\'inici"</b> o <b>"Instal·lar app"</b>.',
-      footer:'La Gelateria de Roses · Targeta digital',
-      movilIncompleto:'Escriu un mòbil complet'
+      deleteLink:'Eliminar la meva targeta i les meves dades',
+      delTitle:'Eliminar la teva targeta?',
+      delText:'S\'esborraran el teu mòbil, el teu nom, els teus segells i els teus premis de manera definitiva. Aquesta acció no es pot desfer.',
+      delBtn:'Sí, eliminar-ho tot', cancel:'Cancel·lar',
+      footer:'La Gelateria de Roses · Targeta digital', footerPriv:'Privacitat',
+      errPhone:'Escriu un mòbil vàlid', errConsent:'Marca la casella de consentiment per continuar', errNet:'Sense connexió. Torna-ho a provar.',
+      cardDeleted:'La teva targeta s\'ha eliminat',
+      celebTitle:'Premi aconseguit!', celebText:'Has completat la targeta: {p}. Ja el tens guardat al teu moneder 🎁',
+      halfToast:'Ja portes la meitat de la targeta! 🎉'
     },
     fr:{
-      eyebrow:'La Gelateria de Roses', title:'Ma Carte ', titleSpan:'fidélité',
-      formIntro:'Saisissez votre mobile pour créer votre carte. À chaque achat, on vous tamponne ici — sans papier, sans la perdre.',
-      formBtn:'Créer ma carte', legal:'Nous utilisons votre mobile uniquement pour votre carte de fidélité.',
-      qrNote:'Montrez-nous cet écran à chaque achat. Ajoutez-le à votre écran d\'accueil pour l\'avoir toujours sous la main.',
+      titleA:'Ma Carte ', titleB:'fidélité',
+      formIntro:'Créez votre carte en 10 secondes. À chaque achat, on vous tamponne ici — sans papier, impossible à perdre.',
+      nameLabel:'Votre prénom (facultatif)', namePh:'Marie',
+      phoneLabel:'Votre mobile',
+      consent:'J\'accepte que La Gelateria de Roses utilise mon mobile et mon prénom uniquement pour gérer ma carte de fidélité. <a href="privacidad.html" target="_blank">Politique de confidentialité</a>.',
+      formBtn:'Créer ma carte',
+      existeTitle:'Ce mobile a déjà une carte',
+      existeText:'Pour la transférer sur cet appareil, passez au comptoir : on vous la transfère en 10 secondes et vous gardez tous vos tampons et récompenses.',
+      existeBack:'Retour',
+      hello:'Bonjour !', helloName:'Bonjour, {n} !',
+      stampsLabel:'{s} tampons sur {o}', stampsNext:'Plus que {r} avant votre récompense', stampsNext1:'Plus que 1 avant votre récompense !', stampsFull:'',
+      walletOne:'1 récompense à utiliser', walletMany:'{n} récompenses à utiliser',
+      walletHow:'Montrez-nous cet écran au comptoir quand vous voulez l\'utiliser. Sans date limite.',
+      premio:'Récompense : {p}',
+      qrNote:'Montrez-nous ce QR à chaque achat.',
+      reviewCta:'Un petit avis Google ?',
       installTitle:'📲 Ajouter à l\'écran d\'accueil',
-      installIos:'Sur Safari, appuyez sur <b>Partager</b> (le carré avec la flèche) puis <b>"Sur l\'écran d\'accueil"</b>.',
-      installAndroid:'Appuyez sur le menu <b>⋮</b> en haut puis <b>"Ajouter à l\'écran d\'accueil"</b> ou <b>"Installer l\'appli"</b>.',
-      footer:'La Gelateria de Roses · Carte digitale',
-      movilIncompleto:'Saisissez un mobile complet'
+      installIos:'Sur Safari, appuyez sur <b>Partager</b> (le carré avec la flèche) puis <b>« Sur l\'écran d\'accueil »</b>.',
+      installAndroid:'Appuyez sur le menu <b>⋮</b> en haut puis <b>« Ajouter à l\'écran d\'accueil »</b> ou <b>« Installer l\'appli »</b>.',
+      deleteLink:'Supprimer ma carte et mes données',
+      delTitle:'Supprimer votre carte ?',
+      delText:'Votre mobile, votre prénom, vos tampons et vos récompenses seront définitivement effacés. Cette action est irréversible.',
+      delBtn:'Oui, tout supprimer', cancel:'Annuler',
+      footer:'La Gelateria de Roses · Carte digitale', footerPriv:'Confidentialité',
+      errPhone:'Saisissez un mobile valide', errConsent:'Cochez la case de consentement pour continuer', errNet:'Pas de connexion. Réessayez.',
+      cardDeleted:'Votre carte a été supprimée',
+      celebTitle:'Récompense gagnée !', celebText:'Carte complète : {p}. Elle est rangée dans votre porte-monnaie 🎁',
+      halfToast:'Déjà la moitié de la carte ! 🎉'
     },
     en:{
-      eyebrow:'La Gelateria de Roses', title:'My Loyalty ', titleSpan:'card',
-      formIntro:'Enter your phone to create your card. Every time you buy, we stamp it here — no paper, no losing it.',
-      formBtn:'Create my card', legal:'We only use your phone number for your loyalty card.',
-      qrNote:'Show us this screen every time you buy. Add it to your home screen to always have it handy.',
+      titleA:'My Loyalty ', titleB:'card',
+      formIntro:'Create your card in 10 seconds. Every time you buy, we stamp it here — no paper, impossible to lose.',
+      nameLabel:'Your name (optional)', namePh:'Emma',
+      phoneLabel:'Your mobile',
+      consent:'I agree that La Gelateria de Roses uses my mobile and name only to manage my loyalty card. <a href="privacidad.html" target="_blank">Privacy policy</a>.',
+      formBtn:'Create my card',
+      existeTitle:'This mobile already has a card',
+      existeText:'To move it to this device, stop by the counter: we\'ll transfer it in 10 seconds and you keep all your stamps and rewards.',
+      existeBack:'Back',
+      hello:'Hello!', helloName:'Hello, {n}!',
+      stampsLabel:'{s} of {o} stamps', stampsNext:'{r} more to your reward', stampsNext1:'Just 1 more to your reward!', stampsFull:'',
+      walletOne:'1 reward to redeem', walletMany:'{n} rewards to redeem',
+      walletHow:'Show us this screen at the counter whenever you want to redeem. It never expires.',
+      premio:'Reward: {p}',
+      qrNote:'Show us this QR every time you buy.',
+      reviewCta:'Leave us a review?',
       installTitle:'📲 Add to Home Screen',
       installIos:'On Safari, tap <b>Share</b> (the square with the arrow) then <b>"Add to Home Screen"</b>.',
       installAndroid:'Tap the <b>⋮</b> menu at the top then <b>"Add to Home Screen"</b> or <b>"Install app"</b>.',
-      footer:'La Gelateria de Roses · Digital card',
-      movilIncompleto:'Enter a complete phone number'
+      deleteLink:'Delete my card and my data',
+      delTitle:'Delete your card?',
+      delText:'Your mobile, name, stamps and rewards will be permanently erased. This cannot be undone.',
+      delBtn:'Yes, delete everything', cancel:'Cancel',
+      footer:'La Gelateria de Roses · Digital card', footerPriv:'Privacy',
+      errPhone:'Enter a valid mobile number', errConsent:'Tick the consent box to continue', errNet:'No connection. Try again.',
+      cardDeleted:'Your card has been deleted',
+      celebTitle:'Reward earned!', celebText:'Card complete: {p}. It\'s saved in your wallet 🎁',
+      halfToast:'Halfway through your card! 🎉'
+    },
+    de:{
+      titleA:'Meine ', titleB:'Treuekarte',
+      formIntro:'Erstelle deine Karte in 10 Sekunden. Bei jedem Einkauf stempeln wir hier — ohne Papier, nie mehr verlieren.',
+      nameLabel:'Dein Name (optional)', namePh:'Anna',
+      phoneLabel:'Deine Handynummer',
+      consent:'Ich bin einverstanden, dass La Gelateria de Roses meine Handynummer und meinen Namen nur zur Verwaltung meiner Treuekarte verwendet. <a href="privacidad.html" target="_blank">Datenschutzerklärung</a>.',
+      formBtn:'Meine Karte erstellen',
+      existeTitle:'Diese Nummer hat schon eine Karte',
+      existeText:'Um sie auf dieses Gerät zu übertragen, komm kurz an die Theke: Wir übertragen sie in 10 Sekunden und du behältst alle Stempel und Prämien.',
+      existeBack:'Zurück',
+      hello:'Hallo!', helloName:'Hallo, {n}!',
+      stampsLabel:'{s} von {o} Stempeln', stampsNext:'Noch {r} bis zu deiner Prämie', stampsNext1:'Nur noch 1 bis zu deiner Prämie!', stampsFull:'',
+      walletOne:'1 Prämie einlösbar', walletMany:'{n} Prämien einlösbar',
+      walletHow:'Zeig uns diesen Bildschirm an der Theke, wann immer du einlösen willst. Verfällt nie.',
+      premio:'Prämie: {p}',
+      qrNote:'Zeig uns diesen QR-Code bei jedem Einkauf.',
+      reviewCta:'Lässt du uns eine Bewertung da?',
+      installTitle:'📲 Zum Home-Bildschirm hinzufügen',
+      installIos:'In Safari auf <b>Teilen</b> tippen (Quadrat mit Pfeil), dann <b>„Zum Home-Bildschirm"</b>.',
+      installAndroid:'Oben auf das Menü <b>⋮</b> tippen, dann <b>„Zum Startbildschirm hinzufügen"</b> oder <b>„App installieren"</b>.',
+      deleteLink:'Meine Karte und Daten löschen',
+      delTitle:'Karte löschen?',
+      delText:'Deine Handynummer, dein Name, deine Stempel und Prämien werden endgültig gelöscht. Das kann nicht rückgängig gemacht werden.',
+      delBtn:'Ja, alles löschen', cancel:'Abbrechen',
+      footer:'La Gelateria de Roses · Digitale Karte', footerPriv:'Datenschutz',
+      errPhone:'Gib eine gültige Handynummer ein', errConsent:'Bitte Einwilligung ankreuzen, um fortzufahren', errNet:'Keine Verbindung. Versuch es erneut.',
+      cardDeleted:'Deine Karte wurde gelöscht',
+      celebTitle:'Prämie geschafft!', celebText:'Karte voll: {p}. Sie liegt in deinem Prämien-Konto 🎁',
+      halfToast:'Schon die halbe Karte voll! 🎉'
+    },
+    nl:{
+      titleA:'Mijn ', titleB:'spaarkaart',
+      formIntro:'Maak je kaart in 10 seconden. Bij elke aankoop stempelen we hier — geen papier, nooit meer kwijt.',
+      nameLabel:'Je naam (optioneel)', namePh:'Emma',
+      phoneLabel:'Je mobiele nummer',
+      consent:'Ik ga akkoord dat La Gelateria de Roses mijn nummer en naam alleen gebruikt om mijn spaarkaart te beheren. <a href="privacidad.html" target="_blank">Privacybeleid</a>.',
+      formBtn:'Mijn kaart maken',
+      existeTitle:'Dit nummer heeft al een kaart',
+      existeText:'Om hem naar dit toestel over te zetten, kom even langs de toonbank: we zetten hem in 10 seconden over en je houdt al je stempels en beloningen.',
+      existeBack:'Terug',
+      hello:'Hallo!', helloName:'Hallo, {n}!',
+      stampsLabel:'{s} van {o} stempels', stampsNext:'Nog {r} tot je beloning', stampsNext1:'Nog maar 1 tot je beloning!', stampsFull:'',
+      walletOne:'1 beloning in te wisselen', walletMany:'{n} beloningen in te wisselen',
+      walletHow:'Laat dit scherm zien aan de toonbank wanneer je wilt inwisselen. Verloopt nooit.',
+      premio:'Beloning: {p}',
+      qrNote:'Laat deze QR zien bij elke aankoop.',
+      reviewCta:'Laat je een review achter?',
+      installTitle:'📲 Zet op je beginscherm',
+      installIos:'In Safari, tik op <b>Delen</b> (vierkant met pijl) en dan <b>"Zet op beginscherm"</b>.',
+      installAndroid:'Tik op het menu <b>⋮</b> bovenaan en dan <b>"Toevoegen aan startscherm"</b> of <b>"App installeren"</b>.',
+      deleteLink:'Mijn kaart en gegevens verwijderen',
+      delTitle:'Je kaart verwijderen?',
+      delText:'Je nummer, naam, stempels en beloningen worden definitief gewist. Dit kan niet ongedaan worden gemaakt.',
+      delBtn:'Ja, alles verwijderen', cancel:'Annuleren',
+      footer:'La Gelateria de Roses · Digitale kaart', footerPriv:'Privacy',
+      errPhone:'Vul een geldig mobiel nummer in', errConsent:'Vink het toestemmingsvakje aan om door te gaan', errNet:'Geen verbinding. Probeer opnieuw.',
+      cardDeleted:'Je kaart is verwijderd',
+      celebTitle:'Beloning verdiend!', celebText:'Kaart vol: {p}. Hij staat in je portemonnee 🎁',
+      halfToast:'Al op de helft van je kaart! 🎉'
     }
   };
 
+  const PREFIXES = [
+    ['34','🇪🇸 +34'],['33','🇫🇷 +33'],['49','🇩🇪 +49'],['31','🇳🇱 +31'],['32','🇧🇪 +32'],
+    ['44','🇬🇧 +44'],['41','🇨🇭 +41'],['39','🇮🇹 +39'],['351','🇵🇹 +351'],['43','🇦🇹 +43'],
+    ['353','🇮🇪 +353'],['45','🇩🇰 +45'],['46','🇸🇪 +46'],['48','🇵🇱 +48'],['420','🇨🇿 +420'],
+    ['352','🇱🇺 +352'],['1','🇺🇸 +1']
+  ];
+
+  /* ══════════ ESTADO ══════════ */
+  const $ = id => document.getElementById(id);
+  let lang = localStorage.getItem('gelateria_lang') || detectLang();
+  let db = null;
+  let unsubCard = null, unsubCfg = null;
+  let currentCardId = null, currentData = null;
+  let prevSellos = null, prevMonedero = null;
+  let qrRendered = null;
+  let cfg = { objetivoSellos: 10, premioTexto: '', reviewUrl: '' };
+
+  function detectLang(){
+    const nav = (navigator.language || 'es').slice(0,2).toLowerCase();
+    return T[nav] ? nav : 'es';
+  }
+  function t(key, vars){
+    let s = (T[lang] && T[lang][key]) || T.es[key] || '';
+    if(vars) for(const k in vars) s = s.replaceAll('{'+k+'}', vars[k]);
+    return s;
+  }
+
+  /* ══════════ UI BÁSICA ══════════ */
+  function showScreen(id){
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    $(id).classList.add('active');
+  }
+  let toastTimer = null;
+  function toast(msg){
+    const el = $('toast'); el.textContent = msg; el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+  }
   function buildLangSwitch(){
-    const el = document.getElementById('langSwitch');
-    el.innerHTML = '';
-    [['es','ES'],['ca','CA'],['fr','FR'],['en','EN']].forEach(([code,label])=>{
+    const el = $('langSwitch'); el.innerHTML = '';
+    LANGS.forEach(([code,label]) => {
       const b = document.createElement('button');
-      b.className = 'lang-btn' + (code===lang ? ' active':'');
+      b.className = 'lang-btn' + (code === lang ? ' active' : '');
       b.textContent = label;
-      b.onclick = ()=>{ lang = code; applyLang(); renderInstallSteps(); };
+      b.onclick = () => { lang = code; localStorage.setItem('gelateria_lang', code); applyLang(); };
       el.appendChild(b);
     });
   }
   function applyLang(){
-    const t = STRINGS[lang];
-    document.querySelectorAll('[data-i18n]').forEach(node=>{
-      const key = node.getAttribute('data-i18n');
-      if(t[key]) node.textContent = t[key];
-    });
-    document.querySelector('h1').innerHTML = t.title + '<span>' + t.titleSpan + '</span>';
     buildLangSwitch();
+    document.documentElement.lang = lang;
+    $('titleA').textContent = t('titleA');
+    $('titleB').textContent = t('titleB');
+    $('tFormIntro').textContent = t('formIntro');
+    $('tNameLabel').textContent = t('nameLabel');
+    $('nameInput').placeholder = t('namePh');
+    $('tPhoneLabel').textContent = t('phoneLabel');
+    $('tConsent').innerHTML = t('consent');
+    $('btnCrear').textContent = t('formBtn');
+    $('tExisteTitle').textContent = t('existeTitle');
+    $('tExisteText').textContent = t('existeText');
+    $('btnVolver').textContent = t('existeBack');
+    $('tQrNote').textContent = t('qrNote');
+    $('tReviewCta').textContent = t('reviewCta');
+    $('tInstallTitle').textContent = t('installTitle');
+    renderInstallSteps();
+    $('btnDelete').textContent = t('deleteLink');
+    $('tDelTitle').textContent = t('delTitle');
+    $('tDelText').textContent = t('delText');
+    $('btnDelConfirm').textContent = t('delBtn');
+    $('btnDelCancel').textContent = t('cancel');
+    $('tFooter').textContent = t('footer');
+    $('tFooterPriv').textContent = t('footerPriv');
+    if(currentData) renderCard(currentData, false);
   }
-
   function renderInstallSteps(){
-    const t = STRINGS[lang];
     const isIos = /iPhone|iPad|iPod/.test(navigator.userAgent);
-    document.getElementById('installSteps').innerHTML =
-      '<div class="install-steps">' + (isIos ? t.installIos : t.installAndroid) + '</div>';
+    $('installSteps').innerHTML = isIos ? t('installIos') : t('installAndroid');
   }
 
-  // TODO: cuando tengas Firebase configurado, sustituir estas dos funciones
-  // por lecturas/escrituras a Firestore (colección "clientes", doc = móvil).
-  function db(){ return JSON.parse(localStorage.getItem('gelateria_clientes') || '{}'); }
-  function saveDb(data){ localStorage.setItem('gelateria_clientes', JSON.stringify(data)); }
-
-  function crearTarjeta(){
-    const t = STRINGS[lang];
-    const phone = document.getElementById('phoneInput').value.trim();
-    if(phone.length < 6){ alert(t.movilIncompleto); return; }
-
-    const data = db();
-    if(!data[phone]){
-      data[phone] = { sellos:0, visitas:0, reseñaPedida:false, creado:new Date().toISOString() };
-      saveDb(data);
+  /* ══════════ HELPERS ══════════ */
+  function genToken(){
+    const alphabet = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+    const arr = new Uint32Array(6);
+    crypto.getRandomValues(arr);
+    let out = '';
+    for(let i = 0; i < 6; i++) out += alphabet[arr[i] % alphabet.length];
+    return out;
+  }
+  function prettyPhone(tel){
+    for(const [p] of PREFIXES){
+      if(tel.startsWith(p) && tel.length > p.length + 5){
+        const nat = tel.slice(p.length);
+        return '+' + p + ' ' + nat.replace(/(\d{3})(?=\d)/g, '$1 ').trim();
+      }
     }
-    localStorage.setItem('mi_telefono', phone);
-    mostrarQr(phone);
+    return '+' + tel;
   }
 
-  function mostrarQr(phone){
-    document.getElementById('screenForm').classList.remove('active');
-    document.getElementById('screenQr').classList.add('active');
-    document.getElementById('qrcode').innerHTML = '';
-    new QRCode(document.getElementById('qrcode'), { text:phone, width:200, height:200, colorDark:'#033E3C', colorLight:'#ffffff' });
-    document.getElementById('qrPhone').textContent = phone;
+  /* ══════════ TARJETA VIVA ══════════ */
+  function openCard(cardId){
+    currentCardId = cardId;
+    prevSellos = null; prevMonedero = null;
+    showScreen('screenCard');
 
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-    if(!isStandalone){
-      document.getElementById('installBanner').classList.add('show');
-      renderInstallSteps();
+    // QR (una sola vez por tarjeta)
+    if(qrRendered !== cardId){
+      $('qrcode').innerHTML = '';
+      new QRCode($('qrcode'), {
+        text: 'GELROSES:' + cardId, width: 190, height: 190,
+        colorDark: '#033E3C', colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+      qrRendered = cardId;
+    }
+
+    // Banner de instalación
+    const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    $('installBanner').classList.toggle('show', !standalone);
+
+    if(unsubCard) unsubCard();
+    unsubCard = onSnapshot(doc(db, 'clientes', cardId), snap => {
+      if(!snap.exists()){
+        // Tarjeta eliminada (por el cliente o transferida a otro móvil desde el mostrador)
+        unsubCard(); unsubCard = null;
+        localStorage.removeItem('gelateria_card');
+        currentCardId = null; currentData = null; qrRendered = null;
+        toast(t('cardDeleted'));
+        showScreen('screenForm');
+        return;
+      }
+      renderCard(snap.data(), true);
+    }, () => toast(t('errNet')));
+  }
+
+  function renderCard(d, animate){
+    currentData = d;
+    const objetivo = cfg.objetivoSellos || 10;
+
+    $('helloLine').textContent = d.nombre ? t('helloName', {n: d.nombre}) : t('hello');
+    $('phonePretty').textContent = prettyPhone(d.telefono);
+
+    // Sellos
+    const grid = $('stampsGrid');
+    grid.style.gridTemplateColumns = 'repeat(' + Math.min(objetivo, 5) + ',1fr)';
+    grid.innerHTML = '';
+    for(let i = 0; i < objetivo; i++){
+      const s = document.createElement('div');
+      s.className = 'stamp' + (i < d.sellos ? ' filled' : '');
+      s.innerHTML = '<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7.5" r="4.2" stroke="currentColor" stroke-width="2"/><path d="M6.8 12.6 L17.2 12.6 L12 21 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
+      if(animate && prevSellos !== null && i >= prevSellos && i < d.sellos){
+        s.classList.add('pop');
+        s.style.animationDelay = ((i - prevSellos) * 0.12) + 's';
+      }
+      grid.appendChild(s);
+    }
+    $('stampsLabel').textContent = t('stampsLabel', {s: d.sellos, o: objetivo});
+    const restan = objetivo - d.sellos;
+    $('stampsNext').textContent = restan === 1 ? t('stampsNext1') : t('stampsNext', {r: restan});
+
+    // Monedero
+    const w = $('walletBox');
+    if(d.monedero > 0){
+      w.classList.add('show');
+      $('walletTitle').textContent = '🎁 ' + (d.monedero === 1 ? t('walletOne') : t('walletMany', {n: d.monedero}));
+      $('walletText').textContent = (cfg.premioTexto ? t('premio', {p: cfg.premioTexto}) + ' · ' : '') + t('walletHow');
+    } else {
+      w.classList.remove('show');
+    }
+
+    // Reseña
+    if(cfg.reviewUrl){
+      $('reviewCta').href = cfg.reviewUrl;
+      $('reviewCta').classList.add('show');
+    } else {
+      $('reviewCta').classList.remove('show');
+    }
+
+    // Celebraciones (solo en cambios reales, no en la primera carga)
+    if(animate && prevMonedero !== null && d.monedero > prevMonedero){
+      celebrate();
+    } else if(animate && prevSellos !== null && prevSellos < 5 && d.sellos >= 5 && d.sellos < objetivo){
+      toast(t('halfToast'));
+    }
+
+    prevSellos = d.sellos;
+    prevMonedero = d.monedero;
+  }
+
+  function celebrate(){
+    $('celebTitle').textContent = t('celebTitle');
+    $('celebText').textContent = t('celebText', {p: cfg.premioTexto || '🍦'});
+    const box = $('celebBox');
+    box.querySelectorAll('.confetti').forEach(c => c.remove());
+    const colors = ['#F0B429','#FFD45E','#0B7E7C','#C4910E','#FFFCF5'];
+    for(let i = 0; i < 16; i++){
+      const c = document.createElement('span');
+      c.className = 'confetti';
+      c.style.left = (Math.random() * 96) + '%';
+      c.style.background = colors[i % colors.length];
+      c.style.setProperty('--rot', (Math.random() * 720 - 360) + 'deg');
+      c.style.animationDelay = (Math.random() * 0.5) + 's';
+      box.appendChild(c);
+    }
+    $('celebration').classList.add('show');
+    setTimeout(() => $('celebration').classList.remove('show'), 4200);
+  }
+  $('celebration').addEventListener('click', () => $('celebration').classList.remove('show'));
+
+  /* ══════════ REGISTRO ══════════ */
+  function buildPrefixes(){
+    const sel = $('prefixSelect');
+    PREFIXES.forEach(([val, label]) => {
+      const o = document.createElement('option');
+      o.value = val; o.textContent = label;
+      sel.appendChild(o);
+    });
+    sel.value = '34';
+  }
+
+  async function crearTarjeta(){
+    const btn = $('btnCrear');
+    const nombre = $('nameInput').value.trim().slice(0, 40);
+    const prefix = $('prefixSelect').value;
+    let nat = $('phoneInput').value.replace(/\D/g, '');
+    if(nat.startsWith('0') && prefix !== '39' && prefix !== '34') nat = nat.replace(/^0+/, '');
+    const telefono = prefix + nat;
+
+    if(nat.length < 6 || telefono.length < 8 || telefono.length > 15){ toast(t('errPhone')); return; }
+    if(!$('consentCheck').checked){ toast(t('errConsent')); return; }
+
+    btn.disabled = true;
+    try{
+      const telRef = doc(db, 'telefonos', telefono);
+      const telSnap = await getDoc(telRef);
+      if(telSnap.exists()){
+        showScreen('screenExiste');
+        return;
+      }
+      const token = genToken();
+      const cardId = telefono + '_' + token;
+      const batch = writeBatch(db);
+      batch.set(doc(db, 'clientes', cardId), {
+        telefono, token,
+        nombre, idioma: lang,
+        sellos: 0, monedero: 0, totalSellos: 0,
+        visitas: 0, canjes: 0,
+        resenaPedida: false, consentimiento: true,
+        creado: serverTimestamp(), ultimoSello: null,
+        hoyFecha: '', hoyN: 0
+      });
+      batch.set(telRef, { existe: true });
+      await batch.commit();
+      localStorage.setItem('gelateria_card', cardId);
+      openCard(cardId);
+    }catch(e){
+      console.error(e);
+      toast(t('errNet'));
+    }finally{
+      btn.disabled = false;
     }
   }
 
-  // Si el cliente ya tiene tarjeta en este móvil, saltar directo al QR
-  (function init(){
-    buildLangSwitch();
-    applyLang();
-    const miTelefono = localStorage.getItem('mi_telefono');
-    if(miTelefono){
-      mostrarQr(miTelefono);
+  /* ══════════ BORRAR TARJETA (RGPD) ══════════ */
+  $('btnDelete').onclick = () => $('modalDelete').classList.add('show');
+  $('btnDelCancel').onclick = () => $('modalDelete').classList.remove('show');
+  $('btnDelConfirm').onclick = async () => {
+    if(!currentCardId || !currentData) return;
+    $('btnDelConfirm').disabled = true;
+    try{
+      const batch = writeBatch(db);
+      batch.delete(doc(db, 'clientes', currentCardId));
+      batch.delete(doc(db, 'telefonos', currentData.telefono));
+      await batch.commit();
+      $('modalDelete').classList.remove('show');
+      // el onSnapshot detecta la eliminación y devuelve al registro
+    }catch(e){
+      console.error(e);
+      toast(t('errNet'));
+    }finally{
+      $('btnDelConfirm').disabled = false;
     }
-  })();
+  };
+
+  /* ══════════ ARRANQUE ══════════ */
+  $('btnCrear').onclick = crearTarjeta;
+  $('btnVolver').onclick = () => showScreen('screenForm');
+
+  // Limpieza de la v1 (localStorage antiguo)
+  localStorage.removeItem('mi_telefono');
+  localStorage.removeItem('gelateria_clientes');
+
+  buildPrefixes();
+  applyLang();
+
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+
+  const CFG = window.FIREBASE_CONFIG || {};
+  if(!CFG.apiKey || CFG.apiKey.includes('PEGAR')){
+    showScreen('screenSetup');
+  } else {
+    const app = initializeApp(CFG);
+    try{
+      db = initializeFirestore(app, { localCache: persistentLocalCache() });
+    }catch(e){
+      db = initializeFirestore(app, {});
+    }
+
+    // Config pública en vivo (objetivo, premio, reseña)
+    unsubCfg = onSnapshot(doc(db, 'config', 'publico'), snap => {
+      if(snap.exists()){
+        cfg = Object.assign(cfg, snap.data());
+        if(currentData) renderCard(currentData, false);
+      }
+    }, () => {});
+
+    // ¿Llega con una tarjeta en la URL? (transferencia desde el mostrador)
+    const params = new URLSearchParams(location.search);
+    const urlCard = params.get('c');
+
+    (async () => {
+      if(urlCard && /^[0-9]{8,15}_[A-Z2-9]{6}$/.test(urlCard)){
+        try{
+          const snap = await getDoc(doc(db, 'clientes', urlCard));
+          if(snap.exists()){
+            localStorage.setItem('gelateria_card', urlCard);
+            history.replaceState(null, '', location.pathname);
+            openCard(urlCard);
+            return;
+          }
+        }catch(e){ /* sigue el flujo normal */ }
+      }
+      const stored = localStorage.getItem('gelateria_card');
+      if(stored){
+        openCard(stored);
+      } else {
+        showScreen('screenForm');
+      }
+    })();
+  }
 </script>
 
 </body>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacidad · La Gelateria de Roses</title>
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --teal:#0B7E7C; --teal-darker:#033E3C; --gold:#F0B429; --gold-bright:#FFD45E; --cream:#FFFCF5; --ink:#1B3634; --ink-soft:#5C7B79; }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{
+    background:linear-gradient(160deg, var(--teal-darker), #055552 60%, var(--teal));
+    min-height:100vh; font-family:'Inter',sans-serif; color:var(--ink);
+    display:flex; justify-content:center; padding:30px 18px 50px;
+  }
+  .wrap{ width:100%; max-width:560px; }
+  .lang-switch{ display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin-bottom:20px; }
+  .lang-btn{ background:transparent; border:1px solid rgba(240,180,41,0.35); color:rgba(255,252,245,0.6);
+    font-size:11.5px; font-weight:600; padding:6px 11px; border-radius:20px; cursor:pointer; font-family:'Inter',sans-serif; }
+  .lang-btn.active{ background:var(--gold); border-color:var(--gold); color:var(--teal-darker); }
+  .card{ background:var(--cream); border-radius:22px; padding:30px 26px; border:1px solid rgba(240,180,41,0.4);
+    box-shadow:0 20px 50px rgba(3,62,60,0.35); }
+  h1{ font-family:'Cormorant Garamond',serif; font-size:26px; color:var(--teal-darker); margin-bottom:16px; }
+  h2{ font-family:'Cormorant Garamond',serif; font-size:17px; color:var(--teal-darker); margin:18px 0 6px; }
+  p, li{ font-size:13.5px; line-height:1.65; color:var(--ink-soft); }
+  ul{ padding-left:18px; }
+  b{ color:var(--ink); }
+  a{ color:var(--teal); }
+  .back{ display:inline-block; margin-top:22px; font-size:13px; font-weight:600; color:var(--teal); text-decoration:none; }
+  .block{ display:none; }
+  .block.active{ display:block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="lang-switch" id="langSwitch"></div>
+  <div class="card">
+
+    <div class="block active" data-lang="es">
+      <h1>Política de privacidad — Tarjeta de fidelidad</h1>
+      <h2>Responsable del tratamiento</h2>
+      <p><b>La Gelateria de Roses</b>, Roses (Girona), España. Contacto: <b>info@lagelateriaderoses.com</b>.</p>
+      <h2>Qué datos recogemos</h2>
+      <p>Tu número de móvil y, si quieres, tu nombre. Nada más. Además, registramos los sellos y premios de tu tarjeta y la fecha de cada sellado.</p>
+      <h2>Para qué los usamos</h2>
+      <p>Únicamente para gestionar tu tarjeta de fidelidad: acumular sellos, guardar tus premios y reconocerte cuando vienes. No enviamos publicidad, no llamamos y no cedemos tus datos a terceros con fines comerciales.</p>
+      <h2>Base legal</h2>
+      <p>Tu consentimiento, que das al crear la tarjeta y puedes retirar en cualquier momento.</p>
+      <h2>Dónde se guardan</h2>
+      <p>En Google Firebase (Google Ireland Ltd.), en servidores de la Unión Europea.</p>
+      <h2>Cuánto tiempo</h2>
+      <p>Mientras tengas la tarjeta activa. Si la eliminas, tus datos se borran de forma definitiva.</p>
+      <h2>Tus derechos</h2>
+      <p>Puedes acceder, rectificar o eliminar tus datos en cualquier momento: desde el botón <b>"Eliminar mi tarjeta"</b> de la propia app, en el mostrador de cualquiera de nuestros locales, o escribiéndonos. También puedes reclamar ante la AEPD (aepd.es).</p>
+    </div>
+
+    <div class="block" data-lang="ca">
+      <h1>Política de privacitat — Targeta de fidelitat</h1>
+      <h2>Responsable del tractament</h2>
+      <p><b>La Gelateria de Roses</b>, Roses (Girona), Espanya. Contacte: <b>info@lagelateriaderoses.com</b>.</p>
+      <h2>Quines dades recollim</h2>
+      <p>El teu número de mòbil i, si vols, el teu nom. Res més. També registrem els segells i premis de la teva targeta i la data de cada segellat.</p>
+      <h2>Per a què les fem servir</h2>
+      <p>Únicament per gestionar la teva targeta de fidelitat: acumular segells, guardar els teus premis i reconèixer-te quan véns. No enviem publicitat, no truquem i no cedim les teves dades a tercers amb finalitats comercials.</p>
+      <h2>Base legal</h2>
+      <p>El teu consentiment, que dones en crear la targeta i pots retirar en qualsevol moment.</p>
+      <h2>On es guarden</h2>
+      <p>A Google Firebase (Google Ireland Ltd.), en servidors de la Unió Europea.</p>
+      <h2>Quant de temps</h2>
+      <p>Mentre tinguis la targeta activa. Si l'elimines, les teves dades s'esborren de manera definitiva.</p>
+      <h2>Els teus drets</h2>
+      <p>Pots accedir, rectificar o eliminar les teves dades en qualsevol moment: des del botó <b>"Eliminar la meva targeta"</b> de la mateixa app, al taulell de qualsevol dels nostres locals, o escrivint-nos. També pots reclamar davant l'AEPD (aepd.es).</p>
+    </div>
+
+    <div class="block" data-lang="fr">
+      <h1>Politique de confidentialité — Carte de fidélité</h1>
+      <h2>Responsable du traitement</h2>
+      <p><b>La Gelateria de Roses</b>, Roses (Gérone), Espagne. Contact : <b>info@lagelateriaderoses.com</b>.</p>
+      <h2>Quelles données collectons-nous</h2>
+      <p>Votre numéro de mobile et, si vous le souhaitez, votre prénom. Rien de plus. Nous enregistrons aussi les tampons et récompenses de votre carte et la date de chaque tampon.</p>
+      <h2>Pourquoi</h2>
+      <p>Uniquement pour gérer votre carte de fidélité : cumuler des tampons, conserver vos récompenses et vous reconnaître. Pas de publicité, pas d'appels, aucune cession de vos données à des tiers à des fins commerciales.</p>
+      <h2>Base légale</h2>
+      <p>Votre consentement, donné à la création de la carte et révocable à tout moment.</p>
+      <h2>Où sont-elles stockées</h2>
+      <p>Sur Google Firebase (Google Ireland Ltd.), sur des serveurs de l'Union européenne.</p>
+      <h2>Combien de temps</h2>
+      <p>Tant que votre carte est active. Si vous la supprimez, vos données sont effacées définitivement.</p>
+      <h2>Vos droits</h2>
+      <p>Vous pouvez accéder à vos données, les rectifier ou les supprimer à tout moment : via le bouton <b>« Supprimer ma carte »</b> de l'app, au comptoir de nos boutiques, ou par écrit. Vous pouvez aussi saisir l'AEPD (aepd.es).</p>
+    </div>
+
+    <div class="block" data-lang="en">
+      <h1>Privacy policy — Loyalty card</h1>
+      <h2>Data controller</h2>
+      <p><b>La Gelateria de Roses</b>, Roses (Girona), Spain. Contact: <b>info@lagelateriaderoses.com</b>.</p>
+      <h2>What we collect</h2>
+      <p>Your mobile number and, optionally, your name. Nothing else. We also record your card's stamps and rewards and the date of each stamp.</p>
+      <h2>Why</h2>
+      <p>Only to run your loyalty card: collect stamps, keep your rewards and recognise you when you visit. No advertising, no calls, and we never share your data with third parties for commercial purposes.</p>
+      <h2>Legal basis</h2>
+      <p>Your consent, given when creating the card and revocable at any time.</p>
+      <h2>Where it's stored</h2>
+      <p>On Google Firebase (Google Ireland Ltd.), on European Union servers.</p>
+      <h2>For how long</h2>
+      <p>While your card is active. If you delete it, your data is permanently erased.</p>
+      <h2>Your rights</h2>
+      <p>You can access, correct or delete your data at any time: via the <b>"Delete my card"</b> button in the app, at the counter of any of our shops, or by writing to us. You may also complain to the Spanish DPA, AEPD (aepd.es).</p>
+    </div>
+
+    <div class="block" data-lang="de">
+      <h1>Datenschutzerklärung — Treuekarte</h1>
+      <h2>Verantwortlicher</h2>
+      <p><b>La Gelateria de Roses</b>, Roses (Girona), Spanien. Kontakt: <b>info@lagelateriaderoses.com</b>.</p>
+      <h2>Welche Daten wir erheben</h2>
+      <p>Deine Handynummer und, wenn du möchtest, deinen Namen. Sonst nichts. Außerdem speichern wir die Stempel und Prämien deiner Karte und das Datum jedes Stempels.</p>
+      <h2>Wofür</h2>
+      <p>Ausschließlich zur Verwaltung deiner Treuekarte: Stempel sammeln, Prämien aufbewahren und dich wiedererkennen. Keine Werbung, keine Anrufe, keine Weitergabe deiner Daten an Dritte zu kommerziellen Zwecken.</p>
+      <h2>Rechtsgrundlage</h2>
+      <p>Deine Einwilligung, die du beim Erstellen der Karte gibst und jederzeit widerrufen kannst.</p>
+      <h2>Wo die Daten liegen</h2>
+      <p>Bei Google Firebase (Google Ireland Ltd.), auf Servern in der Europäischen Union.</p>
+      <h2>Wie lange</h2>
+      <p>Solange deine Karte aktiv ist. Wenn du sie löschst, werden deine Daten endgültig gelöscht.</p>
+      <h2>Deine Rechte</h2>
+      <p>Du kannst deine Daten jederzeit einsehen, berichtigen oder löschen: über den Button <b>„Meine Karte löschen"</b> in der App, an der Theke unserer Läden oder schriftlich. Beschwerden: spanische Datenschutzbehörde AEPD (aepd.es).</p>
+    </div>
+
+    <div class="block" data-lang="nl">
+      <h1>Privacybeleid — Spaarkaart</h1>
+      <h2>Verwerkingsverantwoordelijke</h2>
+      <p><b>La Gelateria de Roses</b>, Roses (Girona), Spanje. Contact: <b>info@lagelateriaderoses.com</b>.</p>
+      <h2>Welke gegevens we verzamelen</h2>
+      <p>Je mobiele nummer en, als je wilt, je naam. Verder niets. We registreren ook de stempels en beloningen van je kaart en de datum van elke stempel.</p>
+      <h2>Waarvoor</h2>
+      <p>Alleen om je spaarkaart te beheren: stempels sparen, je beloningen bewaren en je herkennen. Geen reclame, geen telefoontjes, en we delen je gegevens nooit met derden voor commerciële doeleinden.</p>
+      <h2>Rechtsgrond</h2>
+      <p>Je toestemming, gegeven bij het aanmaken van de kaart en op elk moment in te trekken.</p>
+      <h2>Waar ze worden bewaard</h2>
+      <p>Bij Google Firebase (Google Ireland Ltd.), op servers in de Europese Unie.</p>
+      <h2>Hoe lang</h2>
+      <p>Zolang je kaart actief is. Als je hem verwijdert, worden je gegevens definitief gewist.</p>
+      <h2>Je rechten</h2>
+      <p>Je kunt je gegevens altijd inzien, corrigeren of verwijderen: via de knop <b>"Mijn kaart verwijderen"</b> in de app, aan de toonbank van onze winkels, of schriftelijk. Klachten: Spaanse toezichthouder AEPD (aepd.es).</p>
+    </div>
+
+    <a class="back" href="index.html">← La Gelateria de Roses</a>
+  </div>
+</div>
+
+<script>
+  const LANGS = [['es','ES'],['ca','CA'],['fr','FR'],['en','EN'],['de','DE'],['nl','NL']];
+  let lang = localStorage.getItem('gelateria_lang') || (navigator.language || 'es').slice(0,2);
+  if(!LANGS.some(([c]) => c === lang)) lang = 'es';
+  const sw = document.getElementById('langSwitch');
+  function render(){
+    sw.innerHTML = '';
+    LANGS.forEach(([code, label]) => {
+      const b = document.createElement('button');
+      b.className = 'lang-btn' + (code === lang ? ' active' : '');
+      b.textContent = label;
+      b.onclick = () => { lang = code; render(); };
+      sw.appendChild(b);
+    });
+    document.querySelectorAll('.block').forEach(el =>
+      el.classList.toggle('active', el.dataset.lang === lang));
+    document.documentElement.lang = lang;
+  }
+  render();
+</script>
+</body>
+</html>
