@@ -100,6 +100,13 @@
     border:1.5px solid rgba(240,180,41,0.3); aspect-ratio:4/3;
   }
   .cam-box video{ width:100%; height:100%; object-fit:cover; }
+  .cam-flash{ position:absolute; inset:0; background:#3FA372; opacity:0; pointer-events:none;
+    display:flex; align-items:center; justify-content:center; z-index:5; }
+  .cam-flash.go{ animation:flashGo .5s ease-out; }
+  .cam-flash .tick{ font-size:80px; color:#fff; transform:scale(0); }
+  .cam-flash.go .tick{ animation:tickPop .5s cubic-bezier(.2,1.6,.4,1); }
+  @keyframes flashGo{ 0%{opacity:.85;} 100%{opacity:0;} }
+  @keyframes tickPop{ 0%{transform:scale(0);} 60%{transform:scale(1.15);} 100%{transform:scale(1);} }
   .cam-frame{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; }
   .cam-frame div{
     width:58%; aspect-ratio:1; border-radius:22px;
@@ -310,6 +317,7 @@
     <div class="section active" id="secValidar">
       <div class="cam-box">
         <video id="video" playsinline muted></video>
+        <div class="cam-flash" id="camFlash"><span class="tick">✓</span></div>
         <div class="cam-frame"><div></div></div>
         <div class="cam-actions">
           <button class="cam-btn" id="btnFlip" title="Cambiar cámara">🔄</button>
@@ -547,11 +555,23 @@
     try{
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const o = ctx.createOscillator(), g = ctx.createGain();
-      o.frequency.value = 950; o.connect(g); g.connect(ctx.destination);
-      g.gain.setValueAtTime(0.12, ctx.currentTime);
-      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.12);
-      o.start(); o.stop(ctx.currentTime + 0.13);
+      o.type = 'sine';
+      o.frequency.setValueAtTime(880, ctx.currentTime);
+      o.frequency.setValueAtTime(1320, ctx.currentTime + 0.09);
+      o.connect(g); g.connect(ctx.destination);
+      g.gain.setValueAtTime(0.28, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.20);
+      o.start(); o.stop(ctx.currentTime + 0.21);
     }catch(e){}
+  }
+  // Confirmación instantánea de lectura: sonido + vibración + destello verde
+  function hitFeedback(){
+    beep();
+    try{ if(navigator.vibrate) navigator.vibrate([40, 30, 40]); }catch(e){}
+    const fl = document.getElementById('camFlash');
+    if(fl){ fl.classList.remove('go'); void fl.offsetWidth; fl.classList.add('go'); }
+    const st = document.getElementById('camStatus');
+    if(st) st.innerHTML = '✅ <b>Leído</b> — abriendo ficha…';
   }
   function genToken(){
     const alphabet = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
@@ -627,9 +647,9 @@
       $('camStatus').innerHTML = 'Apunta la cámara al <b>QR del cliente</b>';
 
       const onResult = (result, err) => {
-        if(result && Date.now() - lastHit > 1500){
+        if(result && Date.now() - lastHit > 2000){
           lastHit = Date.now();
-          beep();
+          hitFeedback();
           procesarCodigo(result.getText());
         }
       };
@@ -670,7 +690,7 @@
     if(now - usbLast > 100) usbBuf = '';
     usbLast = now;
     if(e.key === 'Enter'){
-      if(usbBuf.length > 6){ e.preventDefault(); beep(); procesarCodigo(usbBuf); }
+      if(usbBuf.length > 6){ e.preventDefault(); hitFeedback(); procesarCodigo(usbBuf); }
       usbBuf = '';
     } else if(e.key.length === 1){
       usbBuf += e.key;
