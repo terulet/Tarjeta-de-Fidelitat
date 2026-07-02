@@ -628,7 +628,7 @@
       canvas.width = video.videoWidth; canvas.height = video.videoHeight;
       cctx.drawImage(video, 0, 0);
       const img = cctx.getImageData(0, 0, canvas.width, canvas.height);
-      const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'dontInvert' });
+      const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'attemptBoth' });
       if(code && code.data && Date.now() - lastHit > 1500){
         lastHit = Date.now();
         beep();
