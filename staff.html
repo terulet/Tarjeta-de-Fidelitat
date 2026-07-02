@@ -15,7 +15,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+<script src="https://unpkg.com/@zxing/browser@0.1.5"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="firebase-config.js"></script>
 
@@ -596,50 +596,69 @@
     });
   }
 
-  /* ══════ CÁMARA + ESCÁNER USB ══════ */
+  /* ══════ CÁMARA + ESCÁNER USB (ZXing) ══════ */
   const video = $('video');
-  let stream = null, scanning = false, facing = 'environment', lastHit = 0;
-  const canvas = document.createElement('canvas');
-  const cctx = canvas.getContext('2d', { willReadFrequently: true });
+  let zxingReader = null, zxingControls = null, lastHit = 0;
+  let camDevices = [], camIndex = 0;
 
   async function startCam(){
     stopCam();
+    if(typeof ZXingBrowser === 'undefined'){
+      $('camStatus').innerHTML = '⚠️ No se pudo cargar el lector. Revisa la conexión o usa el <b>escáner USB</b>.';
+      return;
+    }
     try{
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: facing, width: { ideal: 1280 }, height: { ideal: 960 } },
-        audio: false
-      });
-      video.srcObject = stream;
-      await video.play();
-      scanning = true;
+      if(!zxingReader){
+        zxingReader = new ZXingBrowser.BrowserQRCodeReader(undefined, {
+          delayBetweenScanAttempts: 100,
+          delayBetweenScanSuccess: 1500
+        });
+      }
+      // Elegir cámara: preferimos la trasera
+      if(!camDevices.length){
+        try{
+          camDevices = await ZXingBrowser.BrowserCodeReader.listVideoInputDevices();
+        }catch(e){ camDevices = []; }
+        // Buscar la trasera por etiqueta
+        const back = camDevices.findIndex(d => /back|rear|tras|environment/i.test(d.label));
+        camIndex = back >= 0 ? back : (camDevices.length - 1); // en móvil la última suele ser la trasera
+      }
+      const deviceId = camDevices.length ? camDevices[camIndex].deviceId : undefined;
       $('camStatus').innerHTML = 'Apunta la cámara al <b>QR del cliente</b>';
-      requestAnimationFrame(scanLoop);
+
+      const onResult = (result, err) => {
+        if(result && Date.now() - lastHit > 1500){
+          lastHit = Date.now();
+          beep();
+          procesarCodigo(result.getText());
+        }
+      };
+
+      if(deviceId){
+        zxingControls = await zxingReader.decodeFromVideoDevice(deviceId, video, onResult);
+      } else {
+        // Sin lista de dispositivos: pedir la trasera por constraints
+        zxingControls = await zxingReader.decodeFromConstraints(
+          { video: { facingMode: { ideal: 'environment' } } }, video, onResult
+        );
+      }
     }catch(e){
+      console.error('ZXing error', e);
       $('camStatus').innerHTML = '⚠️ Sin acceso a la cámara. Actívalo en Ajustes de Safari, o usa el <b>escáner USB</b>.';
     }
   }
   function stopCam(){
-    scanning = false;
-    if(stream){ stream.getTracks().forEach(t => t.stop()); stream = null; }
-  }
-  function scanLoop(){
-    if(!scanning) return;
-    if(video.readyState === video.HAVE_ENOUGH_DATA){
-      canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-      cctx.drawImage(video, 0, 0);
-      const img = cctx.getImageData(0, 0, canvas.width, canvas.height);
-      const code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'attemptBoth' });
-      if(code && code.data && Date.now() - lastHit > 1500){
-        lastHit = Date.now();
-        beep();
-        procesarCodigo(code.data);
-      }
+    if(zxingControls){ try{ zxingControls.stop(); }catch(e){} zxingControls = null; }
+    if(video && video.srcObject){
+      try{ video.srcObject.getTracks().forEach(t => t.stop()); }catch(e){}
+      video.srcObject = null;
     }
-    requestAnimationFrame(scanLoop);
   }
   $('btnFlip').onclick = () => {
-    facing = facing === 'environment' ? 'user' : 'environment';
-    if(currentTab === 'Validar' && !sheetCard) startCam();
+    if(camDevices.length > 1){
+      camIndex = (camIndex + 1) % camDevices.length;
+      if(currentTab === 'Validar' && !sheetCard) startCam();
+    }
   };
 
   let usbBuf = '', usbLast = 0;
