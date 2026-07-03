@@ -3,54 +3,43 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     // El staff inicia sesión con email+contraseña (Firebase Auth).
-    // Los clientes NUNCA inician sesión: su "llave" es conocer el ID
-    // completo de su tarjeta (telefono_token), que solo existe en su QR.
+    // Los clientes NUNCA inician sesión.
     function esStaff() {
       return request.auth != null
         && request.auth.token.firebase.sign_in_provider == 'password';
     }
 
-    function tarjetaNuevaValida(cardId) {
-      let d = request.resource.data;
-      return d.keys().hasOnly(['telefono','token','nombre','idioma','sellos','monedero',
-                               'totalSellos','visitas','canjes','resenaPedida',
-                               'consentimiento','creado','ultimoSello','hoyFecha','hoyN'])
-        && d.keys().hasAll(['telefono','token','nombre','idioma','sellos','monedero',
-                            'totalSellos','visitas','canjes','resenaPedida',
-                            'consentimiento','creado','ultimoSello','hoyFecha','hoyN'])
-        && d.telefono is string && d.telefono.matches('[0-9]{8,15}')
-        && d.token is string && d.token.matches('[A-Z2-9]{6}')
-        && cardId == d.telefono + '_' + d.token
-        && d.nombre is string && d.nombre.size() <= 40
-        && d.idioma is string && d.idioma.size() <= 3
-        && d.sellos == 0 && d.monedero == 0 && d.totalSellos == 0
-        && d.visitas == 0 && d.canjes == 0 && d.hoyN == 0
-        && d.resenaPedida == false
-        && d.consentimiento == true;
-    }
-
     // ── Tarjetas ─────────────────────────────────────────────────────
     match /clientes/{cardId} {
-      // Leer una tarjeta concreta exige conocer su ID completo (= tener el QR).
-      // Listar/buscar por teléfono, solo el staff.
+      // Cualquiera con el ID completo (telefono_token) puede leer su tarjeta.
       allow get: if true;
+      // Buscar/listar: solo staff.
       allow list: if esStaff();
-      // Crear: el propio cliente al registrarse (con estructura estricta,
-      // siempre a cero) o el staff (transferencias a móvil nuevo).
-      allow create: if esStaff() || tarjetaNuevaValida(cardId);
-      // Sellar, canjear y ajustar: SOLO staff autenticado.
+      // Crear: el propio cliente al registrarse, o el staff (transferencias).
+      // Validamos lo esencial y que arranque a cero, sin bloquear por campos extra.
+      allow create: if esStaff() || (
+           request.resource.data.telefono is string
+        && request.resource.data.token is string
+        && request.resource.data.sellos == 0
+        && request.resource.data.monedero == 0
+        && request.resource.data.consentimiento == true
+        && cardId == request.resource.data.telefono + '_' + request.resource.data.token
+      );
+      // Sellar, canjear, ajustar: solo staff.
       allow update: if esStaff();
-      // Borrar: staff, o quien tenga el ID completo (derecho de supresión RGPD).
+      // Borrar: staff, o el propio cliente (derecho de supresión RGPD).
       allow delete: if true;
     }
 
-    // ── Índice de teléfonos (solo dice si un móvil ya tiene tarjeta) ─
+    // ── Índice de teléfonos: guarda el cardId para recuperar la tarjeta ─
     match /telefonos/{telefono} {
       allow get: if true;
       allow list: if esStaff();
-      allow create: if request.resource.data.keys().hasOnly(['existe'])
-                    && request.resource.data.existe == true;
-      allow update: if esStaff();
+      allow create: if request.resource.data.cardId is string
+                    && request.resource.data.cardId.matches(telefono + '_[A-Z2-9]{6}');
+      allow update: if esStaff()
+                    || (request.resource.data.cardId is string
+                        && request.resource.data.cardId.matches(telefono + '_[A-Z2-9]{6}'));
       allow delete: if true;
     }
 
@@ -62,11 +51,11 @@ service cloud.firestore {
 
     // ── Configuración ────────────────────────────────────────────────
     match /config/publico {
-      allow read: if true;          // la app del cliente necesita objetivo y premio
+      allow read: if true;
       allow write: if esStaff();
     }
     match /config/staff {
-      allow read, write: if esStaff();   // aquí vive el hash del PIN
+      allow read, write: if esStaff();
     }
   }
 }

@@ -775,9 +775,16 @@
     try{
       const telRef = doc(db, 'telefonos', telefono);
       const telSnap = await getDoc(telRef);
-      if(telSnap.exists()){
-        showScreen('screenExiste');
-        return;
+      if(telSnap.exists() && telSnap.data().cardId){
+        // Ya hay tarjeta para este móvil: la recuperamos y la abrimos aquí mismo.
+        const existingId = telSnap.data().cardId;
+        const cSnap = await getDoc(doc(db, 'clientes', existingId));
+        if(cSnap.exists()){
+          localStorage.setItem('gelateria_card', existingId);
+          openCard(existingId);
+          return;
+        }
+        // Si el índice apunta a una tarjeta borrada, lo ignoramos y creamos nueva.
       }
       const token = genToken();
       const cardId = telefono + '_' + token;
@@ -791,7 +798,7 @@
         creado: serverTimestamp(), ultimoSello: null,
         hoyFecha: '', hoyN: 0
       });
-      batch.set(telRef, { existe: true });
+      batch.set(telRef, { cardId: cardId });
       await batch.commit();
       localStorage.setItem('gelateria_card', cardId);
       openCard(cardId);

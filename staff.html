@@ -910,6 +910,7 @@
       const batch = writeBatch(db);
       batch.set(doc(db, 'clientes', nuevoId), Object.assign({}, d, { token: nuevoToken }));
       batch.delete(doc(db, 'clientes', sheetCard.id));
+      batch.set(doc(db, 'telefonos', d.telefono), { cardId: nuevoId });
       await batch.commit();
       logEvento('transferencia', d.telefono, d.nombre, 0);
       sheetCard = { id: nuevoId, data: Object.assign({}, d, { token: nuevoToken }) };
