@@ -575,6 +575,44 @@
     color:var(--teal-darker);
   }
 
+
+  /* FINAL POLISH AFTER LIVE SCREENSHOT */
+  .card.premium-card .stamp{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    font-weight:900;
+    line-height:1;
+  }
+  .card.premium-card .stamp.filled{
+    color:#073E3A;
+    text-shadow:0 1px 0 rgba(255,255,255,.30);
+  }
+  .card.premium-card .wallet span{
+    display:block;
+    max-width:320px;
+    margin:6px auto 0;
+    line-height:1.32;
+  }
+  @media (min-width: 700px){
+    .app{ max-width:460px; }
+    .card.premium-card{ transform:translateZ(0); }
+  }
+
+
+  /* GOOGLE REVIEW LINK */
+  .google-review-link{
+    border-color:rgba(255,212,94,.64) !important;
+    background:
+      radial-gradient(circle at 12% 20%, rgba(255,212,94,.18), transparent 36%),
+      rgba(2,45,43,.42) !important;
+  }
+  .google-review-link .premium-ico{
+    background:linear-gradient(145deg, rgba(255,212,94,.30), rgba(255,212,94,.08));
+    border-color:rgba(255,212,94,.62);
+  }
+
   @media (prefers-reduced-motion: reduce){
     *{ animation:none !important; transition:none !important; }
   }
@@ -670,6 +708,12 @@
           <a class="premium-link" id="webLink" href="https://lagelateriaderoses.com/" target="_blank" rel="noopener">
             <div class="premium-ico">🌍</div>
             <div><b id="webTitle"></b><span id="webText"></span></div>
+            <div class="premium-arrow">›</div>
+          </a>
+
+          <a class="premium-link google-review-link" id="googleReviewLink" href="https://g.page/r/CaVSamGk-7L3EBM/review" target="_blank" rel="noopener">
+            <div class="premium-ico">⭐</div>
+            <div><b id="googleTitle">Google</b><span id="googleText">Déjanos tu reseña.</span></div>
             <div class="premium-arrow">›</div>
           </a>
         </div>
@@ -786,6 +830,8 @@
       storyModalText:'Más de 20 años elaborando helado artesanal en Roses. Cada día preparamos nuestros helados siguiendo recetas italianas, ingredientes seleccionados y la ilusión de servir el helado que nos gusta dar a nuestra propia familia. No hacemos una tarjeta cualquiera: queremos que formes parte de nuestra historia. Gracias por tu fidelidad.',
       instaTitle:'Instagram', instaText:'Comparte tu helado y etiquétanos.',
       webTitle:'Web', webText:'Descubre más sobre La Gelateria de Roses.',
+    googleTitle:'Google',
+    googleText:'Déjanos tu reseña.',
       seasonTitle:'Sabores de temporada', seasonText:'Novedades y sabores especiales del momento.',
       achievementsTitle:'Mis logros', achievementsText:'{s} sellos en total · {p} premios ganados',
       specialTitle:'Premio especial', specialText:'Cada 10 premios: helado doble, batido o smoothie.',
@@ -1115,6 +1161,8 @@
     $('instaText').textContent = t('instaText');
     $('webTitle').textContent = t('webTitle');
     $('webText').textContent = t('webText');
+    $('googleTitle').textContent = t('googleTitle') || 'Google';
+    $('googleText').textContent = t('googleText') || 'Déjanos tu reseña.';
     $('seasonTitle').textContent = t('seasonTitle');
     $('seasonText').textContent = t('seasonText');
     $('achievementsTitle').textContent = t('achievementsTitle');
@@ -1216,7 +1264,7 @@
     for(let i = 0; i < objetivo; i++){
       const s = document.createElement('div');
       s.className = 'stamp' + (i < d.sellos ? ' filled' : '');
-      s.innerHTML = '<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7.5" r="4.2" stroke="currentColor" stroke-width="2"/><path d="M6.8 12.6 L17.2 12.6 L12 21 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
+      s.textContent = i < d.sellos ? '✓' : '';
       if(animate && prevSellos !== null && i >= prevSellos && i < d.sellos){
         s.classList.add('pop');
         s.style.animationDelay = ((i - prevSellos) * 0.12) + 's';
@@ -1233,12 +1281,16 @@
     if(d.monedero > 0){
       w.classList.add('show');
       $('walletTitle').textContent = '🎁 Premio disponible';
-      $('walletText').textContent = (cfg.premioTexto ? t('premio', {p: cfg.premioTexto}) + ' · ' : '') + t('walletHow');
+      $('walletText').textContent = t('walletHow');
     } else {
       w.classList.remove('show');
     }
 
-    // Reseña: no molestar al principio. Solo aparece al cabo de 5 premios/canjes.
+    // Link visible de Google, como Instagram/Web.
+    const grl = $('googleReviewLink');
+    if(grl) grl.href = cfg.reviewUrl || GOOGLE_REVIEW_URL;
+
+    // Reseña destacada: no molestar al principio. Solo aparece al cabo de 5 premios/canjes.
     const reviewReady = ((d.premiosGanados || 0) >= 5 || (d.canjes || 0) >= 5);
     if(cfg.reviewUrl && reviewReady && !d.resenaPedida){
       $('reviewCta').href = cfg.reviewUrl;
@@ -1260,14 +1312,14 @@
 
   function celebrate(){
     $('celebTitle').textContent = t('celebTitle');
-    $('celebText').textContent = t('celebText', {p: cfg.premioTexto || '🍦'});
+    $('celebText').textContent = t('celebText');
     const reviewReady = currentData && ((currentData.premiosGanados || 0) >= 5 || (currentData.canjes || 0) >= 5);
     const cr = $('celebReview');
     if(cfg.reviewUrl && reviewReady && currentData && !currentData.resenaPedida){
       cr.href = cfg.reviewUrl;
       cr.textContent = t('reviewPrizeBtn');
       cr.classList.add('show');
-      $('celebText').textContent = t('celebText', {p: cfg.premioTexto || '🍦'}) + ' ' + t('reviewThanks');
+      $('celebText').textContent = t('celebText') + ' ' + t('reviewThanks');
     } else {
       cr.classList.remove('show');
       cr.removeAttribute('href');
