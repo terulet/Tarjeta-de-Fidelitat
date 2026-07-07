@@ -1,5 +1,5 @@
-// La Gelateria de Roses · Tarjeta v3
-const CACHE = 'gelateria-v2-3';
+// La Gelateria de Roses · Tarjeta v4 premium
+const CACHE = 'gelateria-v2-4-premium';
 const SHELL = ['./', './index.html', './staff.html', './privacidad.html', './manifest.json', './manifest-staff.json', './firebase-config.js', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {

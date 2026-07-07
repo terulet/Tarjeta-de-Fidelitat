@@ -191,6 +191,94 @@
     to{ transform:translateY(430px) rotate(var(--rot)); opacity:0; }
   }
 
+
+
+  /* ── EXPERIENCIA PREMIUM CLIENTE ───────────────────────── */
+  .card.premium-card{
+    background:
+      radial-gradient(circle at 20% 0%, rgba(255,212,94,.10), transparent 35%),
+      linear-gradient(170deg, #033E3C 0%, #054D49 58%, #0B7E7C 100%);
+    color:var(--cream);
+    border:1.5px solid rgba(240,180,41,.65);
+    box-shadow:0 24px 70px rgba(0,0,0,.35);
+    padding:24px 20px;
+  }
+  .card.premium-card .hello{ color:var(--cream); font-size:27px; }
+  .card.premium-card .hello-sub{ color:rgba(255,252,245,.64); }
+  .card.premium-card .stamps-label{ color:var(--gold-bright); letter-spacing:.03em; }
+  .card.premium-card .stamps-next{ color:rgba(255,252,245,.82); font-weight:600; }
+  .card.premium-card .stamp{ border-color:rgba(255,212,94,.40); }
+  .card.premium-card .qr-note{ color:rgba(255,252,245,.70); }
+  .card.premium-card .wallet{
+    background:linear-gradient(135deg, rgba(255,212,94,.22), rgba(240,180,41,.08));
+    border-color:rgba(255,212,94,.75);
+    color:var(--cream);
+  }
+  .card.premium-card .wallet b{ color:var(--gold-bright); }
+  .card.premium-card .wallet span{ color:rgba(255,252,245,.80); }
+  .premium-home{ margin-top:14px; display:grid; gap:10px; }
+  .premium-feature, .premium-link, .premium-mini{
+    border:1px solid rgba(240,180,41,.48);
+    background:rgba(3,62,60,.34);
+    border-radius:16px;
+    color:var(--cream);
+    text-decoration:none;
+    font-family:'Inter',sans-serif;
+    box-shadow:0 8px 24px rgba(0,0,0,.13);
+  }
+  .premium-feature{
+    width:100%; cursor:pointer; display:grid; grid-template-columns:1fr 96px 18px;
+    gap:12px; align-items:center; padding:13px; text-align:left;
+  }
+  .premium-feature b, .premium-link b, .premium-mini b{
+    display:block; font-family:'Cormorant Garamond',serif; font-size:18px; color:var(--cream); line-height:1.05;
+  }
+  .premium-feature p, .premium-link span, .premium-mini span{
+    display:block; margin-top:5px; font-size:12px; line-height:1.38; color:rgba(255,252,245,.72);
+  }
+  .premium-arrow{ color:var(--gold-bright); font-size:24px; line-height:1; }
+  .story-photo{
+    height:76px; border-radius:13px; overflow:hidden;
+    border:1px solid rgba(240,180,41,.42);
+    background:
+      radial-gradient(circle at 60% 28%, rgba(255,252,245,.9) 0 12px, rgba(255,252,245,.0) 13px),
+      radial-gradient(circle at 38% 34%, rgba(255,252,245,.82) 0 18px, rgba(255,252,245,.0) 19px),
+      linear-gradient(150deg, rgba(240,180,41,.22), rgba(3,62,60,.65)),
+      url('icon-512.png') center/55px no-repeat;
+    position:relative;
+  }
+  .story-photo:after{
+    content:'🍨'; position:absolute; right:10px; bottom:7px; font-size:27px;
+    filter:drop-shadow(0 3px 8px rgba(0,0,0,.35));
+  }
+  .premium-actions{ display:grid; gap:9px; }
+  .premium-link{ display:grid; grid-template-columns:42px 1fr 18px; gap:10px; align-items:center; padding:11px 12px; text-align:left; }
+  .premium-ico{
+    width:42px; height:42px; border-radius:13px; display:flex; align-items:center; justify-content:center;
+    background:rgba(255,212,94,.12); border:1px solid rgba(240,180,41,.35); font-size:22px; color:var(--gold-bright);
+  }
+  .premium-grid{ display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+  .premium-mini{ padding:13px 12px; min-height:104px; text-align:left; }
+  .premium-mini .premium-ico{ width:34px; height:34px; font-size:18px; margin-bottom:9px; border-radius:11px; }
+  .premium-special{
+    display:grid; grid-template-columns:42px 1fr 32px; gap:11px; align-items:center;
+    padding:12px; border-radius:16px; border:1px solid rgba(255,212,94,.75);
+    background:linear-gradient(135deg, rgba(255,212,94,.18), rgba(3,62,60,.22));
+    text-align:left;
+  }
+  .premium-special b{ font-family:'Cormorant Garamond',serif; font-size:18px; color:var(--gold-bright); }
+  .premium-special span{ display:block; margin-top:3px; font-size:12px; line-height:1.35; color:rgba(255,252,245,.76); }
+  .premium-special .premium-ico{ width:42px; height:42px; }
+  .premium-card .review-card{
+    background:linear-gradient(150deg, rgba(255,212,94,.20), rgba(240,180,41,.08));
+    color:var(--cream); border-color:rgba(255,212,94,.70);
+  }
+  .premium-card .review-title{ color:var(--cream); }
+  .premium-card .review-text, .premium-card .review-foot{ color:rgba(255,252,245,.75); }
+  .premium-card .install-banner{ color:var(--cream); background:rgba(255,212,94,.08); }
+  .premium-card .install-banner b{ color:var(--gold-bright); }
+  .premium-card .install-steps, .premium-card .delete-link{ color:rgba(255,252,245,.70); }
+
   /* ── MODAL / TOAST ────────────────────────────── */
   .modal{ position:fixed; inset:0; z-index:70; display:none; align-items:center; justify-content:center; padding:26px; background:rgba(3,62,60,0.8); }
   .modal.show{ display:flex; }
@@ -283,6 +371,49 @@
       <div class="qr-wrap"><div id="qrcode"></div></div>
       <div class="qr-note" id="tQrNote"></div>
 
+      <div class="premium-home" id="premiumHome">
+        <button class="premium-feature" id="historyCardBtn" type="button">
+          <div>
+            <b id="storyTitle"></b>
+            <p id="storyText"></p>
+          </div>
+          <div class="story-photo" aria-hidden="true"></div>
+          <div class="premium-arrow">›</div>
+        </button>
+
+        <div class="premium-actions">
+          <a class="premium-link" id="instagramLink" href="https://www.instagram.com/lagelateriaderoses/" target="_blank" rel="noopener">
+            <div class="premium-ico">📸</div>
+            <div><b id="instaTitle"></b><span id="instaText"></span></div>
+            <div class="premium-arrow">›</div>
+          </a>
+          <a class="premium-link" id="webLink" href="https://lagelateriaderoses.com/" target="_blank" rel="noopener">
+            <div class="premium-ico">🌍</div>
+            <div><b id="webTitle"></b><span id="webText"></span></div>
+            <div class="premium-arrow">›</div>
+          </a>
+        </div>
+
+        <div class="premium-grid">
+          <div class="premium-mini">
+            <div class="premium-ico">🍓</div>
+            <b id="seasonTitle"></b>
+            <span id="seasonText"></span>
+          </div>
+          <div class="premium-mini">
+            <div class="premium-ico">🏆</div>
+            <b id="achievementsTitle"></b>
+            <span id="achievementsText"></span>
+          </div>
+        </div>
+
+        <div class="premium-special">
+          <div class="premium-ico">⭐</div>
+          <div><b id="specialTitle"></b><span id="specialText"></span></div>
+          <div class="premium-ico">🥤</div>
+        </div>
+      </div>
+
       <div class="review-card" id="reviewCard">
         <div class="review-stars">⭐⭐⭐⭐⭐</div>
         <div class="review-title" id="tReviewTitle"></div>
@@ -319,6 +450,15 @@
     <h2 id="celebTitle"></h2>
     <p id="celebText"></p>
     <a class="celeb-review" id="celebReview" target="_blank" rel="noopener"></a>
+  </div>
+</div>
+
+<!-- Modal historia -->
+<div class="modal" id="modalStory">
+  <div class="modal-box">
+    <h3 id="storyModalTitle"></h3>
+    <p id="storyModalText"></p>
+    <button class="btn" id="storyClose"></button>
   </div>
 </div>
 
@@ -360,6 +500,16 @@
       walletHow:'Enséñanos esta pantalla en el mostrador cuando quieras canjearlo. No caduca.',
       premio:'Premio: {p}',
       qrNote:'Enséñanos este QR cada vez que compres.',
+      storyTitle:'Nuestra historia',
+      storyText:'Más de 20 años de helado artesanal en Roses, recetas italianas e ingredientes seleccionados.',
+      storyModalTitle:'Nuestra historia',
+      storyModalText:'Más de 20 años elaborando helado artesanal en Roses. Cada día trabajamos con recetas italianas, ingredientes seleccionados y la ilusión de servir el helado que nos gusta dar a nuestra propia familia. Gracias por formar parte de esta historia.',
+      instaTitle:'Instagram', instaText:'Comparte tu helado y etiquétanos.',
+      webTitle:'Web', webText:'Descubre más sobre La Gelateria de Roses.',
+      seasonTitle:'Sabores de temporada', seasonText:'Novedades y sabores especiales del momento.',
+      achievementsTitle:'Mis logros', achievementsText:'{s} sellos en total · {p} premios ganados',
+      specialTitle:'Premio especial', specialText:'Cada 10 premios: helado doble, batido o smoothie.',
+      storyClose:'Cerrar',
       reviewTitle:'¿Disfrutas de tus helados con nosotros?',
       reviewText:'Somos una heladería de Roses de toda la vida. Nosotros te cuidamos en cada visita — tú puedes ayudarnos con solo una reseña. Es lo que nos permite seguir aquí.',
       reviewBtn:'Dejar mi reseña →',
@@ -395,6 +545,16 @@
       walletHow:'Ensenya\'ns aquesta pantalla al taulell quan el vulguis bescanviar. No caduca.',
       premio:'Premi: {p}',
       qrNote:'Ensenya\'ns aquest QR cada vegada que compris.',
+      storyTitle:'La nostra història',
+      storyText:'Més de 20 anys de gelat artesanal a Roses, receptes italianes i ingredients seleccionats.',
+      storyModalTitle:'La nostra història',
+      storyModalText:'Més de 20 anys elaborant gelat artesanal a Roses. Cada dia treballem amb receptes italianes, ingredients seleccionats i la il·lusió de servir el gelat que ens agrada donar a la nostra família. Gràcies per formar part d’aquesta història.',
+      instaTitle:'Instagram', instaText:'Comparteix el teu gelat i etiqueta’ns.',
+      webTitle:'Web', webText:'Descobreix més sobre La Gelateria de Roses.',
+      seasonTitle:'Sabors de temporada', seasonText:'Novetats i sabors especials del moment.',
+      achievementsTitle:'Els meus èxits', achievementsText:'{s} segells en total · {p} premis guanyats',
+      specialTitle:'Premi especial', specialText:'Cada 10 premis: gelat doble, batut o smoothie.',
+      storyClose:'Tancar',
       reviewTitle:'Gaudeixes dels teus gelats amb nosaltres?',
       reviewText:'Som una gelateria de Roses de tota la vida. Nosaltres et cuidem cada visita — tu ens pots ajudar amb només una ressenya. És el que ens permet seguir aquí.',
       reviewBtn:'Deixar la meva ressenya →',
@@ -430,6 +590,16 @@
       walletHow:'Montrez-nous cet écran au comptoir quand vous voulez l\'utiliser. Sans date limite.',
       premio:'Récompense : {p}',
       qrNote:'Montrez-nous ce QR à chaque achat.',
+      storyTitle:'Notre histoire',
+      storyText:'Plus de 20 ans de glace artisanale à Roses, recettes italiennes et ingrédients sélectionnés.',
+      storyModalTitle:'Notre histoire',
+      storyModalText:'Plus de 20 ans à préparer des glaces artisanales à Roses. Chaque jour, nous travaillons avec des recettes italiennes, des ingrédients sélectionnés et l’envie de servir une glace que nous donnerions à notre propre famille. Merci de faire partie de cette histoire.',
+      instaTitle:'Instagram', instaText:'Partagez votre glace et identifiez-nous.',
+      webTitle:'Web', webText:'Découvrez La Gelateria de Roses.',
+      seasonTitle:'Parfums de saison', seasonText:'Nouveautés et parfums du moment.',
+      achievementsTitle:'Mes réussites', achievementsText:'{s} tampons au total · {p} récompenses gagnées',
+      specialTitle:'Récompense spéciale', specialText:'Toutes les 10 récompenses : double glace, milkshake ou smoothie.',
+      storyClose:'Fermer',
       reviewTitle:'Vous vous régalez avec nos glaces ?',
       reviewText:'Nous sommes un glacier de Roses depuis toujours. Nous prenons soin de vous à chaque visite — vous pouvez nous aider avec un simple avis. C\'est ce qui nous permet de rester ouverts.',
       reviewBtn:'Laisser mon avis →',
@@ -465,6 +635,16 @@
       walletHow:'Show us this screen at the counter whenever you want to redeem. It never expires.',
       premio:'Reward: {p}',
       qrNote:'Show us this QR every time you buy.',
+      storyTitle:'Our story',
+      storyText:'Over 20 years of artisan gelato in Roses, Italian recipes and selected ingredients.',
+      storyModalTitle:'Our story',
+      storyModalText:'Over 20 years making artisan gelato in Roses. Every day we work with Italian recipes, selected ingredients and the passion to serve the gelato we would give to our own family. Thank you for being part of this story.',
+      instaTitle:'Instagram', instaText:'Share your gelato and tag us.',
+      webTitle:'Website', webText:'Discover more about La Gelateria de Roses.',
+      seasonTitle:'Seasonal flavours', seasonText:'New and special flavours of the moment.',
+      achievementsTitle:'My achievements', achievementsText:'{s} stamps total · {p} rewards earned',
+      specialTitle:'Special reward', specialText:'Every 10 rewards: double gelato, milkshake or smoothie.',
+      storyClose:'Close',
       reviewTitle:'Enjoying your ice cream with us?',
       reviewText:'We\'re a lifelong ice cream shop in Roses. We look after you on every visit — you can help us back with just a review. It\'s what keeps us going.',
       reviewBtn:'Leave my review →',
@@ -500,6 +680,16 @@
       walletHow:'Zeig uns diesen Bildschirm an der Theke, wann immer du einlösen willst. Verfällt nie.',
       premio:'Prämie: {p}',
       qrNote:'Zeig uns diesen QR-Code bei jedem Einkauf.',
+      storyTitle:'Unsere Geschichte',
+      storyText:'Über 20 Jahre handwerkliches Eis in Roses, italienische Rezepte und ausgewählte Zutaten.',
+      storyModalTitle:'Unsere Geschichte',
+      storyModalText:'Seit über 20 Jahren stellen wir in Roses handwerkliches Eis her. Jeden Tag arbeiten wir mit italienischen Rezepten, ausgewählten Zutaten und der Leidenschaft, ein Eis zu servieren, das wir auch unserer eigenen Familie geben würden. Danke, dass du Teil dieser Geschichte bist.',
+      instaTitle:'Instagram', instaText:'Teile dein Eis und markiere uns.',
+      webTitle:'Web', webText:'Entdecke mehr über La Gelateria de Roses.',
+      seasonTitle:'Saisonale Sorten', seasonText:'Neuheiten und besondere Sorten des Moments.',
+      achievementsTitle:'Meine Erfolge', achievementsText:'{s} Stempel insgesamt · {p} Prämien erhalten',
+      specialTitle:'Spezialprämie', specialText:'Alle 10 Prämien: doppeltes Eis, Milchshake oder Smoothie.',
+      storyClose:'Schließen',
       reviewTitle:'Schmeckt dir dein Eis bei uns?',
       reviewText:'Wir sind eine alteingesessene Eisdiele in Roses. Wir kümmern uns bei jedem Besuch um dich — du kannst uns mit nur einer Bewertung helfen. Das hält uns am Leben.',
       reviewBtn:'Meine Bewertung abgeben →',
@@ -535,6 +725,16 @@
       walletHow:'Laat dit scherm zien aan de toonbank wanneer je wilt inwisselen. Verloopt nooit.',
       premio:'Beloning: {p}',
       qrNote:'Laat deze QR zien bij elke aankoop.',
+      storyTitle:'Ons verhaal',
+      storyText:'Meer dan 20 jaar ambachtelijk ijs in Roses, Italiaanse recepten en geselecteerde ingrediënten.',
+      storyModalTitle:'Ons verhaal',
+      storyModalText:'Al meer dan 20 jaar maken we ambachtelijk ijs in Roses. Elke dag werken we met Italiaanse recepten, geselecteerde ingrediënten en de passie om ijs te serveren dat we ook aan onze eigen familie zouden geven. Bedankt dat je deel uitmaakt van dit verhaal.',
+      instaTitle:'Instagram', instaText:'Deel je ijsje en tag ons.',
+      webTitle:'Website', webText:'Ontdek meer over La Gelateria de Roses.',
+      seasonTitle:'Seizoenssmaken', seasonText:'Nieuwe en speciale smaken van dit moment.',
+      achievementsTitle:'Mijn prestaties', achievementsText:'{s} stempels totaal · {p} beloningen verdiend',
+      specialTitle:'Speciale beloning', specialText:'Elke 10 beloningen: dubbel ijs, milkshake of smoothie.',
+      storyClose:'Sluiten',
       reviewTitle:'Geniet je van je ijsje bij ons?',
       reviewText:'Wij zijn al jaren een ijssalon in Roses. Wij verwennen je bij elk bezoek — jij kunt ons helpen met slechts een review. Daardoor kunnen we blijven bestaan.',
       reviewBtn:'Mijn review achterlaten →',
@@ -587,6 +787,8 @@
   function showScreen(id){
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     $(id).classList.add('active');
+    const mainCard = document.querySelector('.card');
+    if(mainCard) mainCard.classList.toggle('premium-card', id === 'screenCard');
     // El idioma se elige una vez al registrarse.
     // Cuando la tarjeta ya existe, usamos el idioma guardado y ocultamos el selector.
     const sw = $('langSwitch');
@@ -623,6 +825,20 @@
     $('tExisteText').textContent = t('existeText');
     $('btnVolver').textContent = t('existeBack');
     $('tQrNote').textContent = t('qrNote');
+    $('storyTitle').textContent = t('storyTitle');
+    $('storyText').textContent = t('storyText');
+    $('storyModalTitle').textContent = t('storyModalTitle');
+    $('storyModalText').textContent = t('storyModalText');
+    $('storyClose').textContent = t('storyClose');
+    $('instaTitle').textContent = t('instaTitle');
+    $('instaText').textContent = t('instaText');
+    $('webTitle').textContent = t('webTitle');
+    $('webText').textContent = t('webText');
+    $('seasonTitle').textContent = t('seasonTitle');
+    $('seasonText').textContent = t('seasonText');
+    $('achievementsTitle').textContent = t('achievementsTitle');
+    $('specialTitle').textContent = t('specialTitle');
+    $('specialText').textContent = t('specialText');
     $('tReviewTitle').textContent = t('reviewTitle');
     $('tReviewText').textContent = t('reviewText');
     $('tReviewBtn').textContent = t('reviewBtn');
@@ -729,6 +945,7 @@
     $('stampsLabel').textContent = t('stampsLabel', {s: d.sellos, o: objetivo});
     const restan = objetivo - d.sellos;
     $('stampsNext').textContent = restan === 1 ? t('stampsNext1') : t('stampsNext', {r: restan});
+    $('achievementsText').textContent = t('achievementsText', {s: d.totalSellos || d.sellos || 0, p: d.premiosGanados || 0});
 
     // Monedero
     const w = $('walletBox');
@@ -876,6 +1093,8 @@
   /* ══════════ ARRANQUE ══════════ */
   $('btnCrear').onclick = crearTarjeta;
   $('btnVolver').onclick = () => showScreen('screenForm');
+  $('historyCardBtn').onclick = () => $('modalStory').classList.add('show');
+  $('storyClose').onclick = () => $('modalStory').classList.remove('show');
   $('reviewCta').onclick = async () => {
     if(!currentCardId || !db) return;
     try{ await setDoc(doc(db, 'clientes', currentCardId), { resenaPedida:true, fechaResenaPedida:serverTimestamp() }, { merge:true }); }catch(e){}
