@@ -615,6 +615,40 @@
     border:1px solid rgba(255,252,245,.22);
   }
 
+
+  /* STAFF HISTORY */
+  .staff-history{
+    display:none;
+    margin:8px 0 10px;
+    padding:10px 12px;
+    border-radius:14px;
+    border:1px solid rgba(255,252,245,.12);
+    background:rgba(255,252,245,.045);
+  }
+  .staff-history.show{ display:block; }
+  .staff-history-title{
+    color:var(--gold-bright);
+    font-size:11px;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    margin-bottom:5px;
+  }
+  .staff-history-row{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    padding:5px 0;
+    border-top:1px solid rgba(255,252,245,.08);
+    color:rgba(255,252,245,.86);
+    font-size:12px;
+  }
+  .staff-history-row:first-of-type{ border-top:0; }
+  .staff-history-row span:last-child{
+    color:rgba(255,252,245,.50);
+    white-space:nowrap;
+  }
+
   @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
 </style>
 </head>
@@ -806,6 +840,7 @@
     </div>
 
     <div id="shChips"></div>
+    <div class="staff-history" id="staffHistory"></div>
 
     <div class="stepper-label">Sellos a añadir · toca o mantén pulsado · máximo 20</div>
     <div class="stepper">
@@ -1141,6 +1176,57 @@
   $('btnSheetClose').onclick = closeSheet;
   $('sheetMask').onclick = closeSheet;
 
+
+  function movNow(tipo, cantidad){
+    return {
+      tipo,
+      cantidad: cantidad || 1,
+      ts: Timestamp.now(),
+      local: getLocal(),
+      staff: user ? user.email : ''
+    };
+  }
+  function addMovimientosCliente(c, nuevos){
+    const prev = Array.isArray(c.movimientos) ? c.movimientos : [];
+    return nuevos.concat(prev).slice(0, 20);
+  }
+  function movDateStaff(m){
+    const raw = m && m.ts;
+    if(raw && typeof raw.toDate === 'function') return raw.toDate();
+    if(raw && raw.seconds) return new Date(raw.seconds * 1000);
+    if(typeof raw === 'number') return new Date(raw);
+    return new Date();
+  }
+  function movTimeStaff(m){
+    const d = movDateStaff(m);
+    const today = new Date();
+    const sameDay = d.toDateString() === today.toDateString();
+    const day = sameDay ? 'Hoy' : d.toLocaleDateString('es-ES', { day:'2-digit', month:'2-digit' });
+    return day + ' · ' + d.toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' });
+  }
+  function movLabelStaff(m){
+    const n = Number(m.cantidad || 0);
+    if(m.tipo === 'sello') return '+' + n + (n === 1 ? ' sello' : ' sellos');
+    if(m.tipo === 'premio_ganado') return '🎉 Premio ganado';
+    if(m.tipo === 'premio_canjeado') return '✅ Premio entregado';
+    if(m.tipo === 'ajuste') return (n > 0 ? '+' : '') + n + ' sellos · ajuste';
+    if(m.tipo === 'transferencia') return '📲 Transferencia';
+    return 'Movimiento';
+  }
+  function renderStaffHistory(d){
+    const box = $('staffHistory');
+    if(!box) return;
+    const arr = Array.isArray(d.movimientos) ? d.movimientos.slice(0, 5) : [];
+    if(!arr.length){
+      box.classList.remove('show');
+      box.innerHTML = '';
+      return;
+    }
+    box.classList.add('show');
+    box.innerHTML = '<div class="staff-history-title">Últimos movimientos</div>' +
+      arr.map(m => '<div class="staff-history-row"><b>' + movLabelStaff(m) + '</b><span>' + movTimeStaff(m) + '</span></div>').join('');
+  }
+
   function renderSheet(){
     if(!sheetCard) return;
     const d = sheetCard.data;
@@ -1160,6 +1246,7 @@
     }
 
     const chips = $('shChips'); chips.innerHTML = '';
+    renderStaffHistory(d);
     const hoy = fechaHoy();
     const hoyN = d.hoyFecha === hoy ? (d.hoyN || 0) : 0;
     if(d.ultimoSello && cfg.cooldownMin > 0){
@@ -1178,7 +1265,7 @@
       chips.insertAdjacentHTML('beforeend',
         '<div class="chip info">🎁 Premio pendiente: entrégalo ahora o guárdalo para otro día.</div>');
       bc.style.display = 'block';
-      bc.textContent = '🎁 CANJEAR PREMIO AHORA';
+      bc.textContent = '🎁 ENTREGAR PREMIO AHORA';
       if(bg){
         bg.style.display = 'block';
         bg.textContent = 'Guardar premio para después';
@@ -1334,6 +1421,9 @@
         while(s >= objetivo){ s -= objetivo; premios++; }
         const f = fechaHoy();
         const n = (c.hoyFecha === f ? (c.hoyN || 0) : 0) + qty;
+        const nuevosMovs = [movNow('sello', qty)];
+        if(premios > 0) nuevosMovs.push(movNow('premio_ganado', premios));
+        const movimientos = addMovimientosCliente(c, nuevosMovs);
         tx.update(ref, {
           sellos: s,
           monedero: (c.monedero || 0) + premios,
@@ -1341,17 +1431,20 @@
           totalSellos: (c.totalSellos || 0) + qty,
           visitas: (c.visitas || 0) + 1,
           ultimoSello: serverTimestamp(),
-          hoyFecha: f, hoyN: n
+          hoyFecha: f, hoyN: n,
+          movimientos
         });
         return { premios, data: Object.assign({}, c, {
           sellos: s, monedero: (c.monedero || 0) + premios,
           premiosGanados: (c.premiosGanados || 0) + premios,
           totalSellos: (c.totalSellos || 0) + qty, visitas: (c.visitas || 0) + 1,
-          hoyFecha: f, hoyN: n, ultimoSello: Timestamp.now()
+          hoyFecha: f, hoyN: n, ultimoSello: Timestamp.now(),
+          movimientos
         }) };
       });
 
       logEvento('sello', d.telefono, d.nombre, qty);
+      if(res.premios > 0) logEvento('premio_ganado', d.telefono, d.nombre, res.premios);
       sheetCard.data = res.data;
 
       playTapTick('ok');
@@ -1397,14 +1490,15 @@
         if(!snap.exists()) throw new Error('no-card');
         const c = snap.data();
         if((c.monedero || 0) < 1) throw new Error('sin-premio');
-        tx.update(ref, { monedero: c.monedero - 1, canjes: (c.canjes || 0) + 1 });
-        return Object.assign({}, c, { monedero: c.monedero - 1, canjes: (c.canjes || 0) + 1 });
+        const movimientos = addMovimientosCliente(c, [movNow('premio_canjeado', 1)]);
+        tx.update(ref, { monedero: c.monedero - 1, canjes: (c.canjes || 0) + 1, movimientos });
+        return Object.assign({}, c, { monedero: c.monedero - 1, canjes: (c.canjes || 0) + 1, movimientos });
       });
       logEvento('canje', sheetCard.data.telefono, sheetCard.data.nombre, 1);
       sheetCard.data = res;
       renderSheet();
       v3Success('✅ PREMIO ENTREGADO', true);
-      toast('🎁 Premio canjeado');
+      toast('✅ Premio entregado');
       setTimeout(() => closeSheet(), 620);
     }catch(e){
       toast(e.message === 'sin-premio' ? 'No tiene premios pendientes' : 'Error al canjear', true);

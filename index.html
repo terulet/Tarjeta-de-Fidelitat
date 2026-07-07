@@ -619,6 +619,48 @@
     display:none !important;
   }
 
+
+  /* CLIENT HISTORY */
+  .client-history{
+    display:none;
+    margin:13px 0 14px;
+    padding:13px 13px 10px;
+    border-radius:18px;
+    border:1px solid rgba(255,212,94,.34);
+    background:rgba(1,28,27,.28);
+  }
+  .client-history.show{ display:block; }
+  .history-title{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    font-weight:900;
+    color:var(--gold-bright);
+    margin-bottom:9px;
+  }
+  .history-item{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:10px;
+    align-items:center;
+    padding:8px 0;
+    border-top:1px solid rgba(255,252,245,.08);
+    font-size:13px;
+    color:rgba(255,252,245,.88);
+  }
+  .history-item:first-child{ border-top:0; padding-top:0; }
+  .history-item .h-sub{
+    display:block;
+    margin-top:2px;
+    font-size:11px;
+    color:rgba(255,252,245,.56);
+  }
+  .history-item .h-time{
+    color:rgba(255,252,245,.58);
+    font-size:11px;
+    white-space:nowrap;
+  }
+
   @media (prefers-reduced-motion: reduce){
     *{ animation:none !important; transition:none !important; }
   }
@@ -693,6 +735,11 @@
       <div class="qr-card">
         <div class="qr-wrap"><div id="qrcode"></div></div>
         <div class="qr-note" id="tQrNote"></div>
+      </div>
+
+      <div class="client-history" id="clientHistory">
+        <div class="history-title">Historial</div>
+        <div class="history-list" id="clientHistoryList"></div>
       </div>
 
       <div class="premium-home" id="premiumHome">
@@ -1249,6 +1296,55 @@
     }, () => toast(t('errNet')));
   }
 
+
+  function movDate(m){
+    const raw = m && m.ts;
+    if(raw && typeof raw.toDate === 'function') return raw.toDate();
+    if(raw && raw.seconds) return new Date(raw.seconds * 1000);
+    if(typeof raw === 'number') return new Date(raw);
+    return new Date();
+  }
+  function movTime(m){
+    const d = movDate(m);
+    const today = new Date();
+    const sameDay = d.toDateString() === today.toDateString();
+    const day = sameDay ? 'Hoy' : d.toLocaleDateString('es-ES', { day:'2-digit', month:'2-digit' });
+    return day + ' · ' + d.toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' });
+  }
+  function movLabel(m){
+    const n = Number(m.cantidad || 0);
+    if(m.tipo === 'sello') return '+' + n + (n === 1 ? ' sello' : ' sellos');
+    if(m.tipo === 'premio_ganado') return '🎉 Premio conseguido';
+    if(m.tipo === 'premio_canjeado') return '✅ Premio canjeado';
+    if(m.tipo === 'ajuste') return (n > 0 ? '+' : '') + n + ' sellos · ajuste';
+    if(m.tipo === 'transferencia') return '📲 Tarjeta transferida';
+    return 'Movimiento';
+  }
+  function movSub(m){
+    if(m.tipo === 'premio_canjeado') return 'Entregado en mostrador';
+    if(m.tipo === 'premio_ganado') return 'Guardado en tu tarjeta';
+    if(m.local) return m.local;
+    return 'La Gelateria de Roses';
+  }
+  function renderClientHistory(movs){
+    const box = $('clientHistory');
+    const list = $('clientHistoryList');
+    if(!box || !list) return;
+    const arr = Array.isArray(movs) ? movs.slice(0, 6) : [];
+    if(!arr.length){
+      box.classList.remove('show');
+      list.innerHTML = '';
+      return;
+    }
+    box.classList.add('show');
+    list.innerHTML = arr.map(m => `
+      <div class="history-item">
+        <div><b>${movLabel(m)}</b><span class="h-sub">${movSub(m)}</span></div>
+        <div class="h-time">${movTime(m)}</div>
+      </div>
+    `).join('');
+  }
+
   function renderCard(d, animate){
     // La tarjeta recuerda el idioma elegido en el primer registro.
     // Así el cliente no tiene que volver a escoger idioma cada vez que abre la app.
@@ -1281,6 +1377,7 @@
     const restan = objetivo - d.sellos;
     $('stampsNext').textContent = restan === 1 ? t('stampsNext1') : t('stampsNext', {r: restan});
     $('achievementsText').textContent = t('achievementsText', {s: d.totalSellos || d.sellos || 0, p: d.premiosGanados || 0});
+    renderClientHistory(d.movimientos || []);
 
     // Monedero
     const w = $('walletBox');
@@ -1308,6 +1405,8 @@
     // Celebraciones (solo en cambios reales, no en la primera carga)
     if(animate && prevMonedero !== null && d.monedero > prevMonedero){
       celebrate();
+    } else if(animate && prevMonedero !== null && d.monedero < prevMonedero){
+      toast('✅ Premio canjeado');
     } else if(animate && prevSellos !== null && prevSellos < 5 && d.sellos >= 5 && d.sellos < objetivo){
       toast(t('halfToast'));
     }
