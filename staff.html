@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Staff · La Gelateria de Roses</title>
 
 <link rel="manifest" href="manifest-staff.json">
@@ -28,6 +28,14 @@
     --ok:#3FA372; --warn:#D9902A; --danger:#C4574E;
   }
   *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  /* NO DOUBLE TAP ZOOM STAFF */
+  html, body, button, input, select, textarea, .btn, .tab, .stepper button, .sheet, .chip button{
+    touch-action: manipulation;
+    -webkit-user-select:none;
+    user-select:none;
+  }
+  input, textarea{ -webkit-user-select:text; user-select:text; }
+
   html,body{ height:100%; }
   body{
     background:linear-gradient(170deg, var(--bg) 0%, #043835 60%, #054541 100%);
@@ -1251,6 +1259,27 @@
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
 
+</script>
+
+
+<script>
+(function preventStaffDoubleTapZoom(){
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', function(event){
+    const now = Date.now();
+    const target = event.target;
+    const tag = target && target.tagName ? target.tagName.toLowerCase() : '';
+    const editable = tag === 'input' || tag === 'textarea' || tag === 'select' || target.isContentEditable;
+    if (!editable && now - lastTouchEnd <= 350) {
+      event.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, { passive:false });
+
+  document.addEventListener('gesturestart', function(event){
+    event.preventDefault();
+  }, { passive:false });
+})();
 </script>
 
 </body>
