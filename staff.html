@@ -334,17 +334,29 @@
 </head>
 <body>
 
+
+<!-- ARRANQUE RÁPIDO -->
+<div class="view active" id="viewBoot">
+  <div class="center-wrap">
+    <div class="panel" style="text-align:center;">
+      <div style="font-size:48px; margin-bottom:10px;">📷</div>
+      <h2>Abriendo Staff…</h2>
+      <div class="sub">Preparando cámara y sesión del iPad.</div>
+    </div>
+  </div>
+</div>
+
 <!-- LOGIN -->
-<div class="view active" id="viewLogin">
+<div class="view" id="viewLogin">
   <div class="center-wrap">
     <div class="panel">
       <h2>La Gelateria · Staff</h2>
-      <div class="sub">Acceso del personal al sistema de fidelización.</div>
+      <div class="sub">Solo debería pedirse la primera vez en este iPad.</div>
       <label for="loginEmail">Email</label>
       <input type="email" id="loginEmail" autocomplete="username" inputmode="email" value="staff@lagelateria.app">
       <label for="loginPass">Contraseña</label>
       <input type="password" id="loginPass" autocomplete="current-password">
-      <div class="err" id="loginErr">Email o contraseña incorrectos.</div>
+      <div class="err" id="loginErr">Email o contraseña incorrectos.</div><div class="sub" id="loginKioskHint" style="margin-top:8px;">Después no cierres sesión. Abre siempre desde el icono de pantalla de inicio.</div>
       <button class="btn" id="btnLogin">Entrar</button>
     </div>
   </div>
@@ -762,7 +774,7 @@
       }
     }catch(e){
       console.error('ZXing error', e);
-      $('camStatus').innerHTML = '⚠️ Sin acceso a la cámara. Actívalo en Ajustes de Safari, o usa el <b>escáner USB</b>.';
+      $('camStatus').innerHTML = '⚠️ Sin acceso a la cámara. Pulsa Permitir cuando iPad lo pida. Si ya lo bloqueaste, actívalo en Ajustes de Safari.';
     }
   }
   function stopCam(){
@@ -1343,6 +1355,7 @@
 
   function entrar(){
     $('localBadge').textContent = getLocal();
+    $('camStatus').innerHTML = '📷 Abriendo cámara…';
     showView('viewMain');
     setTab('Validar');
   }
