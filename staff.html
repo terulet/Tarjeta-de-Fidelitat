@@ -234,6 +234,32 @@
   .btn-sellar[disabled]{ opacity:.72; }
   .btn-canjear{ min-height:56px; }
 
+
+  /* STAFF VISUAL FEEDBACK */
+  .stepper .n.bump{
+    animation:numberBump .12s ease-out both;
+    text-shadow:0 0 22px rgba(255,212,94,.55);
+  }
+  @keyframes numberBump{
+    0%{ transform:scale(1); }
+    55%{ transform:scale(1.18); }
+    100%{ transform:scale(1); }
+  }
+  .sheet.flashPlus{
+    box-shadow:0 -6px 0 var(--gold) inset, 0 0 34px rgba(255,212,94,.28);
+  }
+  .sheet.flashMinus{
+    box-shadow:0 -6px 0 var(--danger) inset, 0 0 34px rgba(196,87,78,.22);
+  }
+  .btn-sellar.pulse{
+    animation:sellarPulse .18s ease-out both;
+  }
+  @keyframes sellarPulse{
+    0%{ transform:scale(1); }
+    50%{ transform:scale(.985); }
+    100%{ transform:scale(1); }
+  }
+
   .btn-sellar{ background:var(--gold); color:var(--teal-darker); font-size:17px; padding:17px; }
   .btn-sellar.confirm{ background:var(--warn); color:#fff; }
   .btn-canjear{ background:linear-gradient(135deg, #0B7E7C, #0A5350); color:var(--gold-bright);
@@ -858,6 +884,31 @@
     } else bc.style.display = 'none';
   }
 
+
+  let audioCtxStaff = null;
+  function playTapTick(kind='tap'){
+    try{
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if(!Ctx) return;
+      if(!audioCtxStaff) audioCtxStaff = new Ctx();
+      if(audioCtxStaff.state === 'suspended') audioCtxStaff.resume();
+
+      const osc = audioCtxStaff.createOscillator();
+      const gain = audioCtxStaff.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.value = kind === 'ok' ? 880 : 560;
+      gain.gain.setValueAtTime(0.0001, audioCtxStaff.currentTime);
+      gain.gain.exponentialRampToValueAtTime(kind === 'ok' ? 0.10 : 0.055, audioCtxStaff.currentTime + 0.006);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtxStaff.currentTime + (kind === 'ok' ? 0.085 : 0.045));
+
+      osc.connect(gain);
+      gain.connect(audioCtxStaff.destination);
+      osc.start();
+      osc.stop(audioCtxStaff.currentTime + (kind === 'ok' ? 0.09 : 0.05));
+    }catch(e){}
+  }
+
   function updateStepUI(){
     const n = $('stepN');
     const bs = $('btnSellar');
@@ -869,12 +920,38 @@
     confirmArmed = false;
   }
 
+
+  function visualTapFeedback(delta){
+    const n = $('stepN');
+    const sh = $('sheet');
+    const bs = $('btnSellar');
+
+    if(n){
+      n.classList.remove('bump');
+      void n.offsetWidth;
+      n.classList.add('bump');
+    }
+    if(sh){
+      sh.classList.remove('flashPlus','flashMinus');
+      void sh.offsetWidth;
+      sh.classList.add(delta > 0 ? 'flashPlus' : 'flashMinus');
+      setTimeout(() => sh.classList.remove('flashPlus','flashMinus'), 140);
+    }
+    if(bs && stepVal > 0){
+      bs.classList.remove('pulse');
+      void bs.offsetWidth;
+      bs.classList.add('pulse');
+    }
+  }
+
   function bumpStep(delta){
     const old = stepVal;
     stepVal = Math.max(0, Math.min(20, stepVal + delta));
     if(old !== stepVal){
       updateStepUI();
+      visualTapFeedback(delta);
       try{ navigator.vibrate && navigator.vibrate(8); }catch(e){}
+      try{ playTapTick && playTapTick('tap'); }catch(e){}
     }
   }
 
@@ -949,6 +1026,8 @@
 
       logEvento('sello', d.telefono, d.nombre, qty);
       sheetCard.data = res.data;
+
+      playTapTick('ok');
 
       if(res.premios > 0){
         $('celebP').textContent = (d.nombre ? d.nombre + ' ha' : 'Ha') + ' conseguido: ' + (cfg.premioTexto || 'su premio') + ' 🎁';
