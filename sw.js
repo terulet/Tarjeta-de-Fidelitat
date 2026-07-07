@@ -1,5 +1,5 @@
 // La Gelateria de Roses · Tarjeta v4 premium
-const CACHE = 'gelateria-v2-5-staff-nozoom';
+const CACHE = 'gelateria-v2-6-fast-buttons';
 const SHELL = ['./', './index.html', './staff.html', './privacidad.html', './manifest.json', './manifest-staff.json', './firebase-config.js', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {

@@ -170,6 +170,43 @@
   .stepper .n{ font-size:44px; font-weight:800; min-width:64px; text-align:center; color:var(--gold-bright); }
   .stepper-label{ text-align:center; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--cream-soft); margin-top:12px; }
 
+
+  /* FAST STAFF STAMPS */
+  .quick-stamps{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:9px;
+    margin:14px 0 10px;
+  }
+  .quick-stamps button{
+    min-height:54px;
+    border-radius:14px;
+    border:1.5px solid rgba(240,180,41,0.55);
+    background:rgba(10,83,80,0.95);
+    color:var(--gold-bright);
+    font-family:'Inter',sans-serif;
+    font-weight:900;
+    font-size:20px;
+    cursor:pointer;
+    touch-action:manipulation;
+  }
+  .quick-stamps button.active{
+    background:var(--gold);
+    color:var(--teal-darker);
+    box-shadow:0 0 0 2px rgba(255,212,94,0.18);
+  }
+  .quick-stamps button:active{ transform:scale(.96); }
+  .fast-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:10px;
+  }
+  .fast-actions .btn{
+    margin-top:0;
+    min-height:58px;
+  }
+
   .btn-sellar{ background:var(--gold); color:var(--teal-darker); font-size:17px; padding:17px; }
   .btn-sellar.confirm{ background:var(--warn); color:#fff; }
   .btn-canjear{ background:linear-gradient(135deg, #0B7E7C, #0A5350); color:var(--gold-bright);
@@ -418,13 +455,20 @@
     <div id="shChips"></div>
 
     <div class="stepper-label">Sellos a añadir</div>
-    <div class="stepper">
-      <button id="stepMinus">−</button>
-      <div class="n" id="stepN">1</div>
-      <button id="stepPlus">+</button>
+    <div class="quick-stamps" id="quickStamps">
+      <button type="button" data-n="1" class="active">+1</button>
+      <button type="button" data-n="2">+2</button>
+      <button type="button" data-n="3">+3</button>
+      <button type="button" data-n="4">+4</button>
+      <button type="button" data-n="5">+5</button>
+      <button type="button" data-n="6">+6</button>
+      <button type="button" data-n="7">+7</button>
+      <button type="button" data-n="8">+8</button>
+      <button type="button" data-n="9">+9</button>
+      <button type="button" data-n="10">+10</button>
     </div>
 
-    <button class="btn btn-sellar" id="btnSellar">SELLAR</button>
+    <button class="btn btn-sellar" id="btnSellar">SELLAR +1</button>
     <button class="btn btn-canjear" id="btnCanjear" style="display:none;">🎁 Canjear premio</button>
 
     <button class="manage-toggle" id="btnManage">Gestionar tarjeta…</button>
@@ -789,11 +833,7 @@
       };
     }
 
-    $('stepN').textContent = stepVal;
-    const bs = $('btnSellar');
-    bs.classList.remove('confirm');
-    bs.textContent = 'SELLAR +' + stepVal;
-    confirmArmed = false;
+    setStepValFast(stepVal);
 
     const bc = $('btnCanjear');
     if((d.monedero || 0) > 0){
@@ -802,8 +842,27 @@
     } else bc.style.display = 'none';
   }
 
-  $('stepMinus').onclick = () => { const v = stepVal; stepVal = Math.max(1, stepVal - 1); if(v !== stepVal){ $('stepN').textContent = stepVal; $('btnSellar').textContent = 'SELLAR +' + stepVal; $('btnSellar').classList.remove('confirm'); confirmArmed = false; } };
-  $('stepPlus').onclick  = () => { const v = stepVal; stepVal = Math.min(9, stepVal + 1); if(v !== stepVal){ $('stepN').textContent = stepVal; $('btnSellar').textContent = 'SELLAR +' + stepVal; $('btnSellar').classList.remove('confirm'); confirmArmed = false; } };
+
+  function setStepValFast(n){
+    stepVal = Math.max(1, Math.min(10, Number(n) || 1));
+    const bs = $('btnSellar');
+    if(bs){
+      bs.textContent = 'SELLAR +' + stepVal;
+      bs.classList.remove('confirm');
+    }
+    document.querySelectorAll('#quickStamps button').forEach(b => {
+      b.classList.toggle('active', Number(b.dataset.n) === stepVal);
+    });
+    confirmArmed = false;
+  }
+
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest && e.target.closest('#quickStamps button');
+    if(!b) return;
+    e.preventDefault();
+    setStepValFast(b.dataset.n);
+  });
+
   $('btnManage').onclick = () => $('manageBox').classList.toggle('show');
 
   /* ══════ SELLAR ══════ */
