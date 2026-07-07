@@ -299,6 +299,282 @@
   footer{ text-align:center; margin-top:18px; font-size:11px; color:rgba(255,252,245,0.4); }
   footer a{ color:rgba(255,252,245,0.55); }
 
+
+  /* CLIENTE TOP VISUAL V3 */
+  body{
+    background:
+      radial-gradient(circle at 50% -10%, rgba(255,212,94,.10), transparent 32%),
+      radial-gradient(circle at 92% 72%, rgba(0,183,179,.26), transparent 44%),
+      radial-gradient(circle at 10% 16%, rgba(240,180,41,.08), transparent 34%),
+      linear-gradient(155deg, #022D2B 0%, #054B47 54%, #0B817C 100%);
+  }
+  .app{ max-width:430px; }
+  header{ margin-bottom:16px; }
+  .brand-crest{
+    width:132px; height:82px; margin-bottom:2px;
+    filter: drop-shadow(0 10px 22px rgba(0,0,0,.18));
+  }
+  .brand-crest img{ width:100%; height:100%; object-fit:contain; display:block; }
+  .eyebrow{
+    color:var(--gold-bright);
+    text-shadow:0 1px 10px rgba(240,180,41,.22);
+  }
+  h1{ font-size:30px; }
+
+  .card.premium-card{
+    padding:18px 16px 16px;
+    border-radius:28px;
+    border:1.5px solid rgba(255,212,94,.82);
+    background:
+      radial-gradient(circle at 24% 0%, rgba(255,212,94,.12), transparent 36%),
+      radial-gradient(circle at 100% 88%, rgba(0,183,179,.18), transparent 42%),
+      linear-gradient(165deg, rgba(2,45,43,.97), rgba(4,77,72,.96) 58%, rgba(6,105,99,.96));
+    box-shadow:
+      0 28px 70px rgba(0,0,0,.32),
+      inset 0 1px 0 rgba(255,255,255,.05);
+    color:var(--cream);
+  }
+  .client-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:12px;
+    text-align:left;
+  }
+  .card.premium-card .hello{
+    color:var(--cream);
+    font-size:30px;
+    line-height:1.05;
+    letter-spacing:-.02em;
+  }
+  .card.premium-card .hello-sub{
+    color:rgba(255,252,245,.68);
+    margin:6px 0 0;
+    font-size:13px;
+  }
+  .client-gift{
+    width:42px; height:42px; border-radius:14px;
+    display:flex; align-items:center; justify-content:center;
+    border:1px solid rgba(255,212,94,.45);
+    background:rgba(255,212,94,.08);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+  }
+
+  .loyalty-panel{
+    border:1px solid rgba(255,212,94,.54);
+    border-radius:20px;
+    padding:15px 13px 14px;
+    margin-bottom:14px;
+    background:
+      radial-gradient(circle at 18% 0%, rgba(255,212,94,.14), transparent 36%),
+      rgba(2,45,43,.36);
+    box-shadow:0 12px 32px rgba(0,0,0,.18);
+  }
+  .loyalty-head{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    margin-bottom:12px;
+    font-size:12px; font-weight:800; letter-spacing:.08em;
+    color:var(--gold-bright);
+    text-transform:uppercase;
+  }
+  .loyalty-head #stampsLabel{
+    font-size:12px;
+    letter-spacing:0;
+    text-transform:none;
+    font-weight:800;
+    color:rgba(255,252,245,.90);
+  }
+  .card.premium-card .stamps{
+    max-width:none;
+    gap:9px;
+    margin-bottom:12px;
+  }
+  .card.premium-card .stamp{
+    border:2px dashed rgba(255,212,94,.48);
+    background:rgba(255,252,245,.02);
+    color:rgba(255,212,94,.0);
+  }
+  .card.premium-card .stamp.filled{
+    border:1.5px solid #C4910E;
+    background:
+      radial-gradient(circle at 33% 28%, rgba(255,255,255,.45), transparent 20%),
+      linear-gradient(145deg, #FFE38A 0%, #F0B429 52%, #B97808 100%);
+    color:#033E3C;
+    box-shadow:
+      0 6px 14px rgba(0,0,0,.26),
+      inset 0 1px 0 rgba(255,255,255,.48);
+  }
+  .card.premium-card .stamps-next{
+    margin:0;
+    font-size:14px;
+    font-weight:700;
+    color:rgba(255,252,245,.86);
+  }
+
+  .qr-card{
+    margin:13px auto 14px;
+    padding:14px 12px 12px;
+    border-radius:20px;
+    border:1px solid rgba(255,212,94,.35);
+    background:rgba(255,252,245,.055);
+  }
+  .card.premium-card .qr-wrap{
+    padding:12px;
+    border-radius:18px;
+    margin-bottom:9px;
+    border:1.5px solid rgba(255,252,245,.72);
+    box-shadow:0 12px 26px rgba(0,0,0,.20);
+  }
+  .card.premium-card .qr-note{
+    color:rgba(255,252,245,.76);
+    margin-bottom:0;
+    font-size:12px;
+  }
+
+  .card.premium-card .wallet{
+    max-width:none;
+    margin:0 0 14px;
+    padding:14px 14px;
+    border-radius:18px;
+    background:linear-gradient(135deg, rgba(255,212,94,.24), rgba(255,212,94,.08));
+    box-shadow:0 12px 30px rgba(0,0,0,.16);
+  }
+  .card.premium-card .wallet b{
+    font-size:21px;
+  }
+
+  .premium-home{ gap:10px; }
+  .premium-feature, .premium-link, .premium-mini{
+    border-color:rgba(255,212,94,.50);
+    background:rgba(2,45,43,.38);
+  }
+  .premium-feature{
+    grid-template-columns:1fr 104px 18px;
+    min-height:112px;
+    border-radius:18px;
+  }
+  .premium-feature b, .premium-link b, .premium-mini b{
+    font-size:19px;
+  }
+  .premium-feature p, .premium-link span, .premium-mini span{
+    font-size:12.3px;
+    color:rgba(255,252,245,.78);
+  }
+  .story-photo{
+    height:82px;
+    background:
+      radial-gradient(circle at 54% 28%, rgba(255,252,245,.90) 0 13px, rgba(255,252,245,.0) 14px),
+      radial-gradient(circle at 35% 35%, rgba(255,252,245,.84) 0 19px, rgba(255,252,245,.0) 20px),
+      linear-gradient(150deg, rgba(255,212,94,.23), rgba(3,62,60,.72)),
+      url('icon-512.png') center/62px no-repeat;
+  }
+  .premium-actions .premium-link{
+    border-radius:17px;
+    min-height:58px;
+  }
+  .premium-ico{
+    background:linear-gradient(145deg, rgba(255,212,94,.20), rgba(255,212,94,.06));
+    border-color:rgba(255,212,94,.43);
+    color:var(--gold-bright);
+  }
+  .premium-mini{
+    min-height:116px;
+    border-radius:17px;
+  }
+  .premium-special{
+    border-color:rgba(255,212,94,.86);
+    background:
+      radial-gradient(circle at 10% 10%, rgba(255,212,94,.24), transparent 34%),
+      linear-gradient(135deg, rgba(255,212,94,.18), rgba(3,62,60,.34));
+    box-shadow:0 12px 28px rgba(0,0,0,.16);
+  }
+
+  .client-nav{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:4px;
+    margin:14px 0 4px;
+    padding:8px 6px;
+    border-radius:22px;
+    border:1px solid rgba(255,212,94,.28);
+    background:rgba(1,28,27,.42);
+  }
+  .client-nav div{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:2px;
+    min-height:42px;
+    color:rgba(255,252,245,.62);
+    font-size:17px;
+  }
+  .client-nav div span{
+    font-size:10px;
+    font-weight:700;
+  }
+  .client-nav .active{
+    color:var(--gold-bright);
+  }
+
+  .card.premium-card .install-banner{
+    margin-top:12px;
+    padding:10px 12px;
+    border-radius:16px;
+    background:rgba(255,212,94,.09);
+  }
+  .card.premium-card .install-banner b{ color:var(--gold-bright); }
+  .card.premium-card .install-steps{ color:rgba(255,252,245,.68); }
+  .card.premium-card .delete-link{ color:rgba(255,252,245,.62); }
+
+  .review-card.show{
+    background:radial-gradient(circle at 50% 0%, rgba(255,212,94,.24), rgba(255,212,94,.08));
+    border-color:rgba(255,212,94,.82);
+  }
+  .card.premium-card .review-title{ color:var(--cream); }
+  .card.premium-card .review-text, .card.premium-card .review-foot{ color:rgba(255,252,245,.72); }
+  .card.premium-card .review-btn{
+    background:linear-gradient(145deg, #FFD45E, #F0B429);
+    color:var(--teal-darker);
+  }
+
+  .celebration{
+    background:
+      radial-gradient(circle at 50% 22%, rgba(255,212,94,.18), transparent 38%),
+      rgba(1,31,29,.88);
+  }
+  .celebration-box{
+    background:
+      radial-gradient(circle at 50% 0%, rgba(255,212,94,.22), transparent 34%),
+      linear-gradient(165deg, #032B29, #075B56);
+    color:var(--cream);
+    border-color:rgba(255,212,94,.90);
+    box-shadow:0 26px 80px rgba(0,0,0,.42);
+  }
+  .celebration-logo{
+    content:url('icon-512.png');
+    width:118px; height:84px; border-radius:0; object-fit:contain;
+    box-shadow:none;
+    filter:drop-shadow(0 12px 24px rgba(0,0,0,.25));
+  }
+  .celebration-box h2{ color:var(--cream); font-size:31px; line-height:1.02; }
+  .celebration-box p{ color:rgba(255,252,245,.82); }
+  .celebration-box .big{
+    color:var(--gold-bright);
+    filter:drop-shadow(0 8px 20px rgba(255,212,94,.25));
+  }
+  .celeb-review{
+    display:none;
+    margin-top:14px;
+    padding:13px 15px;
+    border-radius:14px;
+    text-decoration:none;
+    font-weight:800;
+    background:linear-gradient(145deg, #FFD45E, #F0B429);
+    color:var(--teal-darker);
+  }
+
   @media (prefers-reduced-motion: reduce){
     *{ animation:none !important; transition:none !important; }
   }
@@ -310,15 +586,7 @@
   <div class="lang-switch" id="langSwitch"></div>
 
   <header>
-    <div class="crest">
-      <svg viewBox="0 0 100 100" fill="none">
-        <circle cx="50" cy="18" r="9" stroke="#F0B429" stroke-width="3"/>
-        <circle cx="38" cy="30" r="9" stroke="#F0B429" stroke-width="3"/>
-        <circle cx="62" cy="30" r="9" stroke="#F0B429" stroke-width="3"/>
-        <path d="M30 38 L70 38 L50 78 Z" stroke="#F0B429" stroke-width="3" stroke-linejoin="round"/>
-        <path d="M40 48 L60 48 L50 64 Z" stroke="#F0B429" stroke-width="3" stroke-linejoin="round"/>
-      </svg>
-    </div>
+    <div class="crest brand-crest"><img src="icon-512.png" alt="La Gelateria de Roses"></div>
     <div class="eyebrow">La Gelateria de Roses</div>
     <h1><span class="title-main" id="titleA"></span><span class="title-accent" id="titleB"></span></h1>
   </header>
@@ -356,20 +624,32 @@
 
     <!-- TARJETA VIVA -->
     <div class="screen" id="screenCard">
-      <div class="hello" id="helloLine"></div>
-      <div class="hello-sub" id="phonePretty"></div>
+      <div class="client-top">
+        <div>
+          <div class="hello" id="helloLine"></div>
+          <div class="hello-sub" id="phonePretty"></div>
+        </div>
+        <div class="client-gift" aria-hidden="true">🎁</div>
+      </div>
 
-      <div class="stamps" id="stampsGrid"></div>
-      <div class="stamps-label" id="stampsLabel"></div>
-      <div class="stamps-next" id="stampsNext"></div>
+      <div class="loyalty-panel">
+        <div class="loyalty-head">
+          <span>TU FIDELIDAD</span>
+          <span id="stampsLabel"></span>
+        </div>
+        <div class="stamps" id="stampsGrid"></div>
+        <div class="stamps-next" id="stampsNext"></div>
+      </div>
 
       <div class="wallet" id="walletBox">
         <b id="walletTitle"></b>
         <span id="walletText"></span>
       </div>
 
-      <div class="qr-wrap"><div id="qrcode"></div></div>
-      <div class="qr-note" id="tQrNote"></div>
+      <div class="qr-card">
+        <div class="qr-wrap"><div id="qrcode"></div></div>
+        <div class="qr-note" id="tQrNote"></div>
+      </div>
 
       <div class="premium-home" id="premiumHome">
         <button class="premium-feature" id="historyCardBtn" type="button">
@@ -497,23 +777,23 @@
       hello:'¡Hola!', helloName:'¡Hola, {n}!',
       stampsLabel:'{s} de {o} sellos', stampsNext:'Te falta {r} para tu premio', stampsNext1:'¡Te falta solo 1 para tu premio!', stampsFull:'',
       walletOne:'1 premio por canjear', walletMany:'{n} premios por canjear',
-      walletHow:'Enséñanos esta pantalla en el mostrador cuando quieras canjearlo. No caduca.',
+      walletHow:'Elige: 1 bola, 1 granizado o hasta 3 € de descuento. También puedes usarlo como descuento en otro producto.',
       premio:'Premio: {p}',
       qrNote:'Enséñanos este QR cada vez que compres.',
       storyTitle:'Nuestra historia',
       storyText:'Más de 20 años de helado artesanal en Roses, recetas italianas e ingredientes seleccionados.',
       storyModalTitle:'Nuestra historia',
-      storyModalText:'Más de 20 años elaborando helado artesanal en Roses. Cada día trabajamos con recetas italianas, ingredientes seleccionados y la ilusión de servir el helado que nos gusta dar a nuestra propia familia. Gracias por formar parte de esta historia.',
+      storyModalText:'Más de 20 años elaborando helado artesanal en Roses. Cada día preparamos nuestros helados siguiendo recetas italianas, ingredientes seleccionados y la ilusión de servir el helado que nos gusta dar a nuestra propia familia. No hacemos una tarjeta cualquiera: queremos que formes parte de nuestra historia. Gracias por tu fidelidad.',
       instaTitle:'Instagram', instaText:'Comparte tu helado y etiquétanos.',
       webTitle:'Web', webText:'Descubre más sobre La Gelateria de Roses.',
       seasonTitle:'Sabores de temporada', seasonText:'Novedades y sabores especiales del momento.',
       achievementsTitle:'Mis logros', achievementsText:'{s} sellos en total · {p} premios ganados',
       specialTitle:'Premio especial', specialText:'Cada 10 premios: helado doble, batido o smoothie.',
       storyClose:'Cerrar',
-      reviewTitle:'¿Disfrutas de tus helados con nosotros?',
-      reviewText:'Somos una heladería de Roses de toda la vida. Nosotros te cuidamos en cada visita — tú puedes ayudarnos con solo una reseña. Es lo que nos permite seguir aquí.',
-      reviewBtn:'Dejar mi reseña →',
-      reviewFoot:'Solo 10 segundos, y nos haces el día 🍦',
+      reviewTitle:'Gracias por formar parte de nuestra historia',
+      reviewText:'Si ya has disfrutado varias veces de nuestros helados, tu opinión nos ayuda muchísimo a seguir creciendo en Roses.',
+      reviewBtn:'Dejar reseña en Google →',
+      reviewFoot:'Solo aparece para clientes fieles. Gracias de corazón 🍦',
       reviewThanks:'Gracias por tu fidelidad. Si ya eres de los nuestros, tu reseña nos ayuda muchísimo.',
       reviewPrizeBtn:'Dejar una reseña en Google →',
       installTitle:'📲 Añadir a pantalla de inicio',
@@ -526,7 +806,7 @@
       footer:'La Gelateria de Roses · Tarjeta digital', footerPriv:'Privacidad',
       errPhone:'Escribe un móvil válido', errConsent:'Marca la casilla de consentimiento para continuar', errNet:'Sin conexión. Inténtalo de nuevo.',
       cardDeleted:'Tu tarjeta ha sido eliminada',
-      celebTitle:'¡Premio conseguido!', celebText:'Has completado tu tarjeta: {p}. Ya lo tienes guardado en tu monedero 🎁',
+      celebTitle:'¡Premio conseguido!', celebText:'Has completado tu tarjeta. Elige tu premio: 1 bola, 1 granizado o hasta 3 € de descuento. Gracias por tu fidelidad ❤️',
       halfToast:'¡Ya llevas la mitad de la tarjeta! 🎉'
     },
     ca:{
@@ -771,7 +1051,8 @@
   let currentCardId = null, currentData = null;
   let prevSellos = null, prevMonedero = null;
   let qrRendered = null;
-  let cfg = { objetivoSellos: 10, premioTexto: '', reviewUrl: 'https://g.page/r/CaVSamGk-7L3EBM/review' };
+  const GOOGLE_REVIEW_URL = 'https://g.page/r/CaVSamGk-7L3EBM/review';
+  let cfg = { objetivoSellos: 10, premioTexto: '', reviewUrl: GOOGLE_REVIEW_URL };
 
   function detectLang(){
     const nav = (navigator.language || 'es').slice(0,2).toLowerCase();
@@ -951,7 +1232,7 @@
     const w = $('walletBox');
     if(d.monedero > 0){
       w.classList.add('show');
-      $('walletTitle').textContent = '🎁 ' + (d.monedero === 1 ? t('walletOne') : t('walletMany', {n: d.monedero}));
+      $('walletTitle').textContent = '🎁 Premio disponible';
       $('walletText').textContent = (cfg.premioTexto ? t('premio', {p: cfg.premioTexto}) + ' · ' : '') + t('walletHow');
     } else {
       w.classList.remove('show');
@@ -1130,6 +1411,7 @@
     unsubCfg = onSnapshot(doc(db, 'config', 'publico'), snap => {
       if(snap.exists()){
         cfg = Object.assign(cfg, snap.data());
+        if(!cfg.reviewUrl) cfg.reviewUrl = GOOGLE_REVIEW_URL;
         if(currentData) renderCard(currentData, false);
       }
     }, () => {});

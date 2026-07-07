@@ -468,7 +468,7 @@
         <label>Minutos entre sellados</label>
         <input type="number" id="setCooldown" min="0" max="120" inputmode="numeric">
         <label>Enlace de reseñas de Google (opcional)</label>
-        <input type="text" id="setReview" placeholder="https://g.page/r/...">
+        <input type="text" id="setReview" value="https://g.page/r/CaVSamGk-7L3EBM/review" placeholder="https://g.page/r/...">
       </div>
       <button class="btn" id="btnGuardarAjustes">Guardar cambios</button>
       <button class="btn btn-dark" id="btnCambiarPin">Cambiar PIN de encargado</button>
@@ -611,7 +611,7 @@
 
   /* ══════ ESTADO ══════ */
   let db, auth, user = null;
-  let cfg = { objetivoSellos:10, premioTexto:'', cooldownMin:0, topeDiario:50, reviewUrl:'' };
+  let cfg = { objetivoSellos:10, premioTexto:'', cooldownMin:0, topeDiario:50, reviewUrl:'https://g.page/r/CaVSamGk-7L3EBM/review' };
   let unsubCfg = null, unsubHoy = null, unsubNuevos = null;
   let currentTab = 'Validar';
   let sheetCard = null;
@@ -861,18 +861,6 @@
         chips.insertAdjacentHTML('beforeend',
           '<div class="chip warn">⏱ Sellado hace ' + (mins < 1 ? 'menos de 1 min' : Math.floor(mins) + ' min') + '. ¿Doble escaneo?</div>');
       }
-    }
-    if((d.visitas || 0) >= 3 && !d.resenaPedida){
-      chips.insertAdjacentHTML('beforeend',
-        '<div class="chip info">⭐ 3ª visita o más — recuérdale la reseña de Google <button id="btnResenaHecha">Hecho</button></div>');
-      const b = $('btnResenaHecha');
-      if(b) b.onclick = async () => {
-        try{
-          await updateDoc(doc(db, 'clientes', sheetCard.id), { resenaPedida: true });
-          sheetCard.data.resenaPedida = true;
-          renderSheet();
-        }catch(e){ toast('Sin conexión', true); }
-      };
     }
 
     updateStepUI();
@@ -1267,7 +1255,7 @@
     $('setTope').value = cfg.topeDiario || 6;
     $('setPremio').value = cfg.premioTexto || '';
     $('setCooldown').value = cfg.cooldownMin != null ? cfg.cooldownMin : 2;
-    $('setReview').value = cfg.reviewUrl || '';
+    $('setReview').value = cfg.reviewUrl || 'https://g.page/r/CaVSamGk-7L3EBM/review';
   }
   $('btnGuardarAjustes').onclick = async () => {
     const local = $('setLocal').value.trim();
@@ -1279,7 +1267,7 @@
         topeDiario: Math.min(30, Math.max(1, parseInt($('setTope').value) || 6)),
         premioTexto: $('setPremio').value.trim().slice(0, 80),
         cooldownMin: Math.min(120, Math.max(0, parseInt($('setCooldown').value) || 0)),
-        reviewUrl: $('setReview').value.trim()
+        reviewUrl: $('setReview').value.trim() || 'https://g.page/r/CaVSamGk-7L3EBM/review'
       }, { merge: true });
       toast('✅ Ajustes guardados');
     }catch(e){ toast('Error al guardar', true); }
