@@ -598,6 +598,23 @@
     100%{ opacity:0; transform:translate(-50%,-54%) scale(.98); }
   }
 
+
+  /* STAFF V3 PRIZE ACTIONS */
+  body.v3-scanner .btn-canjear{
+    background:linear-gradient(145deg, #FFD45E, #F0B429);
+    color:var(--teal-darker);
+    font-size:19px !important;
+    font-weight:900;
+  }
+  body.v3-scanner .btn-guardar-premio{
+    min-height:54px;
+    border-radius:18px;
+    font-size:16px !important;
+    background:rgba(255,252,245,.07);
+    color:var(--cream);
+    border:1px solid rgba(255,252,245,.22);
+  }
+
   @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
 </style>
 </head>
@@ -799,6 +816,7 @@
 
     <button class="btn btn-sellar" id="btnSellar">ELIGE SELLOS</button>
     <button class="btn btn-canjear" id="btnCanjear" style="display:none;">🎁 Canjear premio</button>
+    <button class="btn btn-dark btn-guardar-premio" id="btnGuardarPremio" style="display:none;">Guardar premio para después</button>
 
     <button class="manage-toggle" id="btnManage">Gestionar tarjeta…</button>
     <div class="manage" id="manageBox">
@@ -1155,10 +1173,20 @@
     updateStepUI();
 
     const bc = $('btnCanjear');
+    const bg = $('btnGuardarPremio');
     if((d.monedero || 0) > 0){
+      chips.insertAdjacentHTML('beforeend',
+        '<div class="chip info">🎁 Premio pendiente: entrégalo ahora o guárdalo para otro día.</div>');
       bc.style.display = 'block';
-      bc.textContent = '🎁 Canjear premio (' + d.monedero + ' disp.)' + (cfg.premioTexto ? ' · ' + cfg.premioTexto : '');
-    } else bc.style.display = 'none';
+      bc.textContent = '🎁 CANJEAR PREMIO AHORA';
+      if(bg){
+        bg.style.display = 'block';
+        bg.textContent = 'Guardar premio para después';
+      }
+    } else {
+      bc.style.display = 'none';
+      if(bg) bg.style.display = 'none';
+    }
   }
 
 
@@ -1329,19 +1357,18 @@
       playTapTick('ok');
       v3Success(res.premios > 0 ? '🎉 PREMIO' : ('✅ +' + qty + ' SELLOS'), res.premios > 0);
 
+      stepVal = 0;
+
       if(res.premios > 0){
-        $('celebP').textContent = (d.nombre ? d.nombre + ' ha' : 'Ha') + ' conseguido: ' + (cfg.premioTexto || 'su premio') + ' 🎁';
-        $('celebration').classList.add('show');
-        toast('🎁 +' + qty + ' sellos · Premio conseguido');
-        setTimeout(() => $('celebration').classList.remove('show'), 1600);
+        renderSheet();
+        toast('🎁 Premio conseguido: canjear ahora o guardar');
+        return;
       } else {
         toast('✅ +' + qty + (qty === 1 ? ' sello' : ' sellos'));
+        setTimeout(() => {
+          closeSheet();
+        }, 520);
       }
-
-      stepVal = 0;
-      setTimeout(() => {
-        closeSheet();
-      }, 520);
 
     }catch(e){
       console.error(e);
@@ -1351,6 +1378,12 @@
     }
   };
   $('celebration').onclick = () => $('celebration').classList.remove('show');
+
+  $('btnGuardarPremio').onclick = () => {
+    if(!sheetCard) return;
+    toast('🎁 Premio guardado para después');
+    closeSheet();
+  };
 
   /* ══════ CANJEAR ══════ */
   $('btnCanjear').onclick = async () => {
