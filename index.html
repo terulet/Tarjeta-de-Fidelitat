@@ -56,7 +56,8 @@
   .crest svg{ width:100%; height:100%; }
   .eyebrow{ font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--gold-bright); font-weight:600; margin-bottom:7px; }
   h1{ font-family:'Cormorant Garamond', serif; font-weight:700; font-size:29px; color:var(--cream); line-height:1.1; }
-  h1 span{ color:var(--gold); font-style:italic; }
+  h1 .title-main{ color:var(--cream); font-style:normal; }
+  h1 .title-accent{ color:var(--gold); font-style:italic; }
 
   .card{
     background:var(--cream); border-radius:22px; padding:26px 22px;
@@ -177,7 +178,11 @@
     animation:celebIn .5s cubic-bezier(.2,1.5,.4,1) both; position:relative; overflow:hidden;
   }
   @keyframes celebIn{ from{transform:scale(.6); opacity:0;} to{transform:scale(1); opacity:1;} }
+  .celebration-logo{ width:78px; height:78px; border-radius:22px; margin:0 auto 12px; display:block; animation:logoPrize .9s cubic-bezier(.2,1.7,.4,1) both; box-shadow:0 8px 24px rgba(240,180,41,.35); }
+  @keyframes logoPrize{ 0%{ transform:scale(.25) rotate(-18deg); opacity:0; } 55%{ transform:scale(1.18) rotate(5deg); opacity:1; } 100%{ transform:scale(1) rotate(0); opacity:1; } }
   .celebration-box .big{ font-size:52px; line-height:1; margin-bottom:12px; }
+  .celeb-review{ display:none; margin-top:18px; text-decoration:none; background:var(--teal-darker); color:var(--gold-bright); font-weight:800; padding:13px 16px; border-radius:14px; }
+  .celeb-review.show{ display:block; }
   .celebration-box h2{ font-family:'Cormorant Garamond', serif; font-size:26px; color:var(--teal-darker); margin-bottom:8px; }
   .celebration-box p{ font-size:14px; color:var(--ink-soft); line-height:1.5; }
   .confetti{ position:absolute; top:-12px; width:9px; height:14px; border-radius:2px; animation:confFall 1.9s ease-in forwards; }
@@ -227,7 +232,7 @@
       </svg>
     </div>
     <div class="eyebrow">La Gelateria de Roses</div>
-    <h1><span id="titleA"></span><span id="titleB"></span></h1>
+    <h1><span class="title-main" id="titleA"></span><span class="title-accent" id="titleB"></span></h1>
   </header>
 
   <div class="card">
@@ -309,9 +314,11 @@
 <!-- Celebración premio -->
 <div class="celebration" id="celebration">
   <div class="celebration-box" id="celebBox">
-    <div class="big">🍦</div>
+    <img class="celebration-logo" src="icon-192.png" alt="La Gelateria de Roses">
+    <div class="big">🎁</div>
     <h2 id="celebTitle"></h2>
     <p id="celebText"></p>
+    <a class="celeb-review" id="celebReview" target="_blank" rel="noopener"></a>
   </div>
 </div>
 
@@ -338,8 +345,8 @@
   const LANGS = [['es','ES'],['ca','CA'],['fr','FR'],['en','EN'],['de','DE'],['nl','NL']];
   const T = {
     es:{
-      titleA:'Mi Tarjeta ', titleB:'fidelidad',
-      formIntro:'Crea tu tarjeta en 10 segundos. Cada vez que compres te sellamos aquí — sin papel, sin perderla.',
+      titleA:'Mi Tarjeta ', titleB:'de fidelidad',
+      formIntro:'Crea tu tarjeta en 10 segundos. Introduce tu móvil y empieza a acumular sellos — sin papel, sin perderla.',
       nameLabel:'Tu nombre (opcional)', namePh:'Marta',
       phoneLabel:'Tu móvil',
       consent:'Acepto que La Gelateria de Roses use mi móvil y nombre solo para gestionar mi tarjeta de fidelidad. <a href="privacidad.html" target="_blank">Política de privacidad</a>.',
@@ -357,6 +364,8 @@
       reviewText:'Somos una heladería de Roses de toda la vida. Nosotros te cuidamos en cada visita — tú puedes ayudarnos con solo una reseña. Es lo que nos permite seguir aquí.',
       reviewBtn:'Dejar mi reseña →',
       reviewFoot:'Solo 10 segundos, y nos haces el día 🍦',
+      reviewThanks:'Gracias por tu fidelidad. Si ya eres de los nuestros, tu reseña nos ayuda muchísimo.',
+      reviewPrizeBtn:'Dejar una reseña en Google →',
       installTitle:'📲 Añadir a pantalla de inicio',
       installIos:'En Safari, toca <b>Compartir</b> (el cuadrado con flecha) y luego <b>"Añadir a pantalla de inicio"</b>.',
       installAndroid:'Toca el menú <b>⋮</b> de arriba y luego <b>"Añadir a pantalla de inicio"</b> o <b>"Instalar app"</b>.',
@@ -371,7 +380,7 @@
       halfToast:'¡Ya llevas la mitad de la tarjeta! 🎉'
     },
     ca:{
-      titleA:'La Meva Targeta ', titleB:'fidelitat',
+      titleA:'La Meva Targeta ', titleB:'de fidelitat',
       formIntro:'Crea la teva targeta en 10 segons. Cada vegada que compris et segellem aquí — sense paper, sense perdre-la.',
       nameLabel:'El teu nom (opcional)', namePh:'Marta',
       phoneLabel:'El teu mòbil',
@@ -390,6 +399,8 @@
       reviewText:'Som una gelateria de Roses de tota la vida. Nosaltres et cuidem cada visita — tu ens pots ajudar amb només una ressenya. És el que ens permet seguir aquí.',
       reviewBtn:'Deixar la meva ressenya →',
       reviewFoot:'Només 10 segons, i ens fas el dia 🍦',
+      reviewThanks:'Gràcies per la teva fidelitat. Si ja ets dels nostres, la teva ressenya ens ajuda moltíssim.',
+      reviewPrizeBtn:'Deixar una ressenya a Google →',
       installTitle:'📲 Afegir a la pantalla d\'inici',
       installIos:'A Safari, toca <b>Compartir</b> (el quadrat amb fletxa) i després <b>"Afegir a la pantalla d\'inici"</b>.',
       installAndroid:'Toca el menú <b>⋮</b> de dalt i després <b>"Afegir a la pantalla d\'inici"</b> o <b>"Instal·lar app"</b>.',
@@ -404,7 +415,7 @@
       halfToast:'Ja portes la meitat de la targeta! 🎉'
     },
     fr:{
-      titleA:'Ma Carte ', titleB:'fidélité',
+      titleA:'Ma Carte ', titleB:'de fidélité',
       formIntro:'Créez votre carte en 10 secondes. À chaque achat, on vous tamponne ici — sans papier, impossible à perdre.',
       nameLabel:'Votre prénom (facultatif)', namePh:'Marie',
       phoneLabel:'Votre mobile',
@@ -423,6 +434,8 @@
       reviewText:'Nous sommes un glacier de Roses depuis toujours. Nous prenons soin de vous à chaque visite — vous pouvez nous aider avec un simple avis. C\'est ce qui nous permet de rester ouverts.',
       reviewBtn:'Laisser mon avis →',
       reviewFoot:'Seulement 10 secondes, et vous nous faites la journée 🍦',
+      reviewThanks:'Merci pour votre fidélité. Si vous aimez venir chez nous, votre avis nous aide énormément.',
+      reviewPrizeBtn:'Laisser un avis Google →',
       installTitle:'📲 Ajouter à l\'écran d\'accueil',
       installIos:'Sur Safari, appuyez sur <b>Partager</b> (le carré avec la flèche) puis <b>« Sur l\'écran d\'accueil »</b>.',
       installAndroid:'Appuyez sur le menu <b>⋮</b> en haut puis <b>« Ajouter à l\'écran d\'accueil »</b> ou <b>« Installer l\'appli »</b>.',
@@ -437,7 +450,7 @@
       halfToast:'Déjà la moitié de la carte ! 🎉'
     },
     en:{
-      titleA:'My Loyalty ', titleB:'card',
+      titleA:'My loyalty ', titleB:'card',
       formIntro:'Create your card in 10 seconds. Every time you buy, we stamp it here — no paper, impossible to lose.',
       nameLabel:'Your name (optional)', namePh:'Emma',
       phoneLabel:'Your mobile',
@@ -456,6 +469,8 @@
       reviewText:'We\'re a lifelong ice cream shop in Roses. We look after you on every visit — you can help us back with just a review. It\'s what keeps us going.',
       reviewBtn:'Leave my review →',
       reviewFoot:'Just 10 seconds, and you make our day 🍦',
+      reviewThanks:'Thank you for your loyalty. If you love coming here, your Google review helps us a lot.',
+      reviewPrizeBtn:'Leave a Google review →',
       installTitle:'📲 Add to Home Screen',
       installIos:'On Safari, tap <b>Share</b> (the square with the arrow) then <b>"Add to Home Screen"</b>.',
       installAndroid:'Tap the <b>⋮</b> menu at the top then <b>"Add to Home Screen"</b> or <b>"Install app"</b>.',
@@ -489,6 +504,8 @@
       reviewText:'Wir sind eine alteingesessene Eisdiele in Roses. Wir kümmern uns bei jedem Besuch um dich — du kannst uns mit nur einer Bewertung helfen. Das hält uns am Leben.',
       reviewBtn:'Meine Bewertung abgeben →',
       reviewFoot:'Nur 10 Sekunden, und du machst uns den Tag 🍦',
+      reviewThanks:'Danke für deine Treue. Wenn du gerne zu uns kommst, hilft uns deine Bewertung sehr.',
+      reviewPrizeBtn:'Google-Bewertung schreiben →',
       installTitle:'📲 Zum Home-Bildschirm hinzufügen',
       installIos:'In Safari auf <b>Teilen</b> tippen (Quadrat mit Pfeil), dann <b>„Zum Home-Bildschirm"</b>.',
       installAndroid:'Oben auf das Menü <b>⋮</b> tippen, dann <b>„Zum Startbildschirm hinzufügen"</b> oder <b>„App installieren"</b>.',
@@ -522,6 +539,8 @@
       reviewText:'Wij zijn al jaren een ijssalon in Roses. Wij verwennen je bij elk bezoek — jij kunt ons helpen met slechts een review. Daardoor kunnen we blijven bestaan.',
       reviewBtn:'Mijn review achterlaten →',
       reviewFoot:'Slechts 10 seconden, en je maakt onze dag 🍦',
+      reviewThanks:'Bedankt voor je trouw. Als je graag bij ons komt, helpt je review ons enorm.',
+      reviewPrizeBtn:'Google-review achterlaten →',
       installTitle:'📲 Zet op je beginscherm',
       installIos:'In Safari, tik op <b>Delen</b> (vierkant met pijl) en dan <b>"Zet op beginscherm"</b>.',
       installAndroid:'Tik op het menu <b>⋮</b> bovenaan en dan <b>"Toevoegen aan startscherm"</b> of <b>"App installeren"</b>.',
@@ -568,6 +587,10 @@
   function showScreen(id){
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     $(id).classList.add('active');
+    // El idioma se elige una vez al registrarse.
+    // Cuando la tarjeta ya existe, usamos el idioma guardado y ocultamos el selector.
+    const sw = $('langSwitch');
+    if(sw) sw.style.display = (id === 'screenForm' || id === 'screenExiste') ? 'flex' : 'none';
   }
   let toastTimer = null;
   function toast(msg){
@@ -676,6 +699,13 @@
   }
 
   function renderCard(d, animate){
+    // La tarjeta recuerda el idioma elegido en el primer registro.
+    // Así el cliente no tiene que volver a escoger idioma cada vez que abre la app.
+    if(d.idioma && T[d.idioma] && d.idioma !== lang){
+      lang = d.idioma;
+      localStorage.setItem('gelateria_lang', lang);
+      applyLang();
+    }
     currentData = d;
     const objetivo = cfg.objetivoSellos || 10;
 
@@ -710,8 +740,9 @@
       w.classList.remove('show');
     }
 
-    // Reseña: tarjeta destacada, solo a partir de la 3ª visita (cliente ya fiel)
-    if(cfg.reviewUrl && (d.visitas || 0) >= 3){
+    // Reseña: no molestar al principio. Solo aparece al cabo de 5 premios/canjes.
+    const reviewReady = ((d.premiosGanados || 0) >= 5 || (d.canjes || 0) >= 5);
+    if(cfg.reviewUrl && reviewReady && !d.resenaPedida){
       $('reviewCta').href = cfg.reviewUrl;
       $('reviewCard').classList.add('show');
     } else {
@@ -732,6 +763,17 @@
   function celebrate(){
     $('celebTitle').textContent = t('celebTitle');
     $('celebText').textContent = t('celebText', {p: cfg.premioTexto || '🍦'});
+    const reviewReady = currentData && ((currentData.premiosGanados || 0) >= 5 || (currentData.canjes || 0) >= 5);
+    const cr = $('celebReview');
+    if(cfg.reviewUrl && reviewReady && currentData && !currentData.resenaPedida){
+      cr.href = cfg.reviewUrl;
+      cr.textContent = t('reviewPrizeBtn');
+      cr.classList.add('show');
+      $('celebText').textContent = t('celebText', {p: cfg.premioTexto || '🍦'}) + ' ' + t('reviewThanks');
+    } else {
+      cr.classList.remove('show');
+      cr.removeAttribute('href');
+    }
     const box = $('celebBox');
     box.querySelectorAll('.confetti').forEach(c => c.remove());
     const colors = ['#F0B429','#FFD45E','#0B7E7C','#C4910E','#FFFCF5'];
@@ -793,7 +835,7 @@
         telefono, token,
         nombre, idioma: lang,
         sellos: 0, monedero: 0, totalSellos: 0,
-        visitas: 0, canjes: 0,
+        visitas: 0, canjes: 0, premiosGanados: 0,
         resenaPedida: false, consentimiento: true,
         creado: serverTimestamp(), ultimoSello: null,
         hoyFecha: '', hoyN: 0
@@ -834,6 +876,14 @@
   /* ══════════ ARRANQUE ══════════ */
   $('btnCrear').onclick = crearTarjeta;
   $('btnVolver').onclick = () => showScreen('screenForm');
+  $('reviewCta').onclick = async () => {
+    if(!currentCardId || !db) return;
+    try{ await setDoc(doc(db, 'clientes', currentCardId), { resenaPedida:true, fechaResenaPedida:serverTimestamp() }, { merge:true }); }catch(e){}
+  };
+  $('celebReview').onclick = async () => {
+    if(!currentCardId || !db) return;
+    try{ await setDoc(doc(db, 'clientes', currentCardId), { resenaPedida:true, fechaResenaPedida:serverTimestamp() }, { merge:true }); }catch(e){}
+  };
 
   // Limpieza de la v1 (localStorage antiguo)
   localStorage.removeItem('mi_telefono');

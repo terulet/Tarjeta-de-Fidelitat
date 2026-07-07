@@ -274,7 +274,7 @@
       <input type="text" id="wizPremio" placeholder="1 helado gratis (bola pequeña)" maxlength="80">
       <label>Minutos entre sellados (anti doble escaneo)</label>
       <input type="number" id="wizCooldown" value="2" min="0" max="120" inputmode="numeric">
-      <label>PIN de encargado (canjes y ajustes)</label>
+      <label>PIN de encargado (ajustes y borrados)</label>
       <input type="password" id="wizPin1" placeholder="4 a 6 dígitos" inputmode="numeric" maxlength="6">
       <label>Repite el PIN</label>
       <input type="password" id="wizPin2" inputmode="numeric" maxlength="6">
@@ -842,6 +842,7 @@
         tx.update(ref, {
           sellos: s,
           monedero: (c.monedero || 0) + premios,
+          premiosGanados: (c.premiosGanados || 0) + premios,
           totalSellos: (c.totalSellos || 0) + qty,
           visitas: (c.visitas || 0) + 1,
           ultimoSello: serverTimestamp(),
@@ -849,6 +850,7 @@
         });
         return { premios, data: Object.assign({}, c, {
           sellos: s, monedero: (c.monedero || 0) + premios,
+          premiosGanados: (c.premiosGanados || 0) + premios,
           totalSellos: (c.totalSellos || 0) + qty, visitas: (c.visitas || 0) + 1,
           hoyFecha: f, hoyN: n, ultimoSello: Timestamp.now()
         }) };
@@ -877,8 +879,8 @@
   /* ══════ CANJEAR ══════ */
   $('btnCanjear').onclick = async () => {
     if(!sheetCard || (sheetCard.data.monedero || 0) < 1) return;
-    const ok = await askPin('Canjear 1 premio' + (cfg.premioTexto ? ': ' + cfg.premioTexto : ''));
-    if(!ok) return;
+    // Canjear premio es una acción rápida de mostrador: sin PIN.
+    // El PIN queda solo para ajustes, transferencias, borrados y configuración.
     try{
       const ref = doc(db, 'clientes', sheetCard.id);
       const res = await runTransaction(db, async tx => {
@@ -1242,6 +1244,13 @@
       }
     });
   }
+
+
+  // PWA / instalar app staff
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+
 </script>
 
 </body>

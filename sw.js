@@ -1,6 +1,6 @@
-// La Gelateria de Roses · Tarjeta v2
-const CACHE = 'gelateria-v2-1';
-const SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
+// La Gelateria de Roses · Tarjeta v3
+const CACHE = 'gelateria-v2-3';
+const SHELL = ['./', './index.html', './staff.html', './privacidad.html', './manifest.json', './manifest-staff.json', './firebase-config.js', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
