@@ -329,6 +329,275 @@
   .celebration-box h2{ font-family:'Cormorant Garamond', serif; font-size:32px; color:var(--gold-bright); margin-top:10px; }
   .celebration-box p{ font-size:15px; color:var(--cream); margin-top:6px; max-width:420px; }
 
+
+  /* STAFF V3 VERTICAL FULLSCREEN */
+  body.v3-scanner{
+    overflow:hidden;
+    background:#010f0e;
+  }
+  body.v3-scanner #viewMain{
+    position:fixed;
+    inset:0;
+    display:block;
+    overflow:hidden;
+    background:#010f0e;
+  }
+  body.v3-scanner .topbar{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index:18;
+    padding:calc(10px + env(safe-area-inset-top)) 14px 10px;
+    background:linear-gradient(180deg, rgba(1,15,14,.82), rgba(1,15,14,0));
+    pointer-events:none;
+  }
+  body.v3-scanner .topbar .crest,
+  body.v3-scanner .topbar .name{
+    display:none;
+  }
+  body.v3-scanner .topbar .local{
+    margin-left:0;
+    background:rgba(2,43,41,.72);
+    backdrop-filter:blur(10px);
+    border-color:rgba(240,180,41,.42);
+  }
+  body.v3-scanner .content{
+    position:fixed;
+    inset:0;
+    width:100%;
+    max-width:none;
+    margin:0;
+    padding:0;
+    overflow:hidden;
+  }
+  body.v3-scanner #secValidar.active{
+    display:block;
+    position:fixed;
+    inset:0;
+  }
+  body.v3-scanner .cam-box{
+    position:fixed;
+    inset:0;
+    width:100vw;
+    height:100svh;
+    aspect-ratio:auto;
+    border:0;
+    border-radius:0;
+    background:#000;
+  }
+  body.v3-scanner .cam-box video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  }
+  body.v3-scanner .cam-frame div{
+    width:min(68vw, 360px);
+    border-radius:28px;
+    border-width:3px;
+    box-shadow:0 0 0 2000px rgba(1,15,14,.36), 0 0 28px rgba(255,212,94,.24);
+  }
+  body.v3-scanner .cam-actions{
+    position:fixed;
+    top:calc(14px + env(safe-area-inset-top));
+    right:12px;
+    z-index:22;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+  }
+  body.v3-scanner .cam-btn{
+    width:46px;
+    height:46px;
+    background:rgba(2,43,41,.72);
+    backdrop-filter:blur(10px);
+    border-color:rgba(255,252,245,.28);
+    box-shadow:0 8px 22px rgba(0,0,0,.24);
+  }
+  body.v3-scanner .cam-status{
+    position:fixed;
+    left:14px;
+    right:14px;
+    bottom:calc(18px + env(safe-area-inset-bottom));
+    z-index:16;
+    margin:0;
+    padding:11px 14px;
+    border-radius:18px;
+    background:rgba(2,43,41,.72);
+    border:1px solid rgba(240,180,41,.34);
+    backdrop-filter:blur(12px);
+    color:rgba(255,252,245,.84);
+    box-shadow:0 12px 30px rgba(0,0,0,.24);
+  }
+  body.v3-scanner .usb-hint{
+    display:none;
+  }
+  body.v3-scanner .tabbar{
+    display:none;
+  }
+  body.v3-scanner .sheet-mask.show{
+    display:block;
+    pointer-events:none;
+    background:linear-gradient(0deg, rgba(1,15,14,.74), rgba(1,15,14,0) 62%);
+  }
+  body.v3-scanner .sheet{
+    left:8px;
+    right:8px;
+    bottom:8px;
+    z-index:42;
+    max-height:68svh;
+    border-radius:30px;
+    border:1.5px solid rgba(255,212,94,.70);
+    background:
+      radial-gradient(circle at 18% 0%, rgba(255,212,94,.16), transparent 36%),
+      linear-gradient(165deg, rgba(3,43,41,.98), rgba(6,83,78,.98));
+    box-shadow:0 28px 90px rgba(0,0,0,.52), inset 0 1px 0 rgba(255,255,255,.05);
+    padding:16px 16px calc(16px + env(safe-area-inset-bottom));
+    backdrop-filter:blur(18px);
+  }
+  body.v3-scanner .sheet.show{
+    animation:v3SheetUp .18s cubic-bezier(.2,1,.2,1);
+  }
+  @keyframes v3SheetUp{
+    from{ transform:translateY(100%); opacity:.8; }
+    to{ transform:translateY(0); opacity:1; }
+  }
+  body.v3-scanner .sheet-inner{
+    position:relative;
+    max-width:520px;
+  }
+  body.v3-scanner .sheet-head{
+    margin-bottom:10px;
+  }
+  body.v3-scanner .sheet-name{
+    font-size:32px;
+    letter-spacing:-.02em;
+  }
+  body.v3-scanner .sheet-phone{
+    font-size:13px;
+    opacity:.78;
+  }
+  body.v3-scanner .sheet-close{
+    width:42px;
+    height:42px;
+    background:rgba(255,252,245,.07);
+  }
+  body.v3-scanner .minibar{
+    gap:5px;
+    margin-bottom:8px;
+  }
+  body.v3-scanner .minibar i{
+    height:12px;
+  }
+  body.v3-scanner .sheet-meta{
+    justify-content:center;
+    gap:12px;
+    margin-bottom:8px;
+    font-size:12px;
+  }
+  body.v3-scanner #shChips{
+    max-height:62px;
+    overflow:hidden;
+  }
+  body.v3-scanner .stepper-label{
+    text-align:center;
+    margin-top:10px;
+    font-size:12px;
+    color:var(--gold-bright);
+  }
+  body.v3-scanner .stepper{
+    grid-template-columns:minmax(0,1fr) 112px minmax(0,1fr);
+    gap:12px;
+    margin:9px 0 10px;
+  }
+  body.v3-scanner .stepper button{
+    min-height:102px;
+    border-radius:24px;
+    font-size:58px;
+  }
+  body.v3-scanner .stepper .n{
+    min-width:112px;
+    font-size:76px;
+  }
+  body.v3-scanner .btn-sellar{
+    min-height:70px;
+    border-radius:20px;
+    font-size:22px !important;
+    box-shadow:0 16px 34px rgba(0,0,0,.22);
+  }
+  body.v3-scanner .btn-canjear{
+    min-height:58px;
+    border-radius:18px;
+    margin-top:10px;
+  }
+  body.v3-scanner .manage-toggle{
+    margin-top:10px;
+    opacity:.52;
+    font-size:12px;
+  }
+  body.v3-scanner .manage.show{
+    margin-top:6px;
+  }
+
+  .v3-float{
+    position:absolute;
+    left:50%;
+    top:48%;
+    transform:translate(-50%,-50%);
+    z-index:12;
+    pointer-events:none;
+    font-size:42px;
+    line-height:1;
+    font-weight:900;
+    color:var(--gold-bright);
+    text-shadow:0 8px 24px rgba(0,0,0,.40);
+    animation:v3FloatUp .42s ease-out forwards;
+  }
+  .v3-float.minus{
+    color:#FF9B93;
+  }
+  @keyframes v3FloatUp{
+    0%{ opacity:0; transform:translate(-50%, 10px) scale(.86); }
+    18%{ opacity:1; transform:translate(-50%, -8px) scale(1.08); }
+    100%{ opacity:0; transform:translate(-50%, -68px) scale(.98); }
+  }
+
+  .v3-success{
+    position:fixed;
+    left:50%;
+    top:50%;
+    z-index:90;
+    transform:translate(-50%,-50%) scale(.88);
+    opacity:0;
+    pointer-events:none;
+    padding:22px 28px;
+    min-width:230px;
+    text-align:center;
+    border-radius:28px;
+    border:1.5px solid rgba(255,212,94,.76);
+    background:
+      radial-gradient(circle at 50% 0%, rgba(255,212,94,.22), transparent 42%),
+      rgba(3,43,41,.94);
+    color:var(--cream);
+    box-shadow:0 28px 80px rgba(0,0,0,.48);
+    font-size:27px;
+    font-weight:900;
+    backdrop-filter:blur(14px);
+  }
+  .v3-success.show{
+    animation:v3Success .7s ease-out forwards;
+  }
+  .v3-success.prize{
+    border-color:rgba(255,212,94,.98);
+    color:var(--gold-bright);
+  }
+  @keyframes v3Success{
+    0%{ opacity:0; transform:translate(-50%,-50%) scale(.82); }
+    18%{ opacity:1; transform:translate(-50%,-50%) scale(1.03); }
+    72%{ opacity:1; transform:translate(-50%,-50%) scale(1); }
+    100%{ opacity:0; transform:translate(-50%,-54%) scale(.98); }
+  }
+
   @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
 </style>
 </head>
@@ -431,6 +700,8 @@
         <div class="cam-frame"><div></div></div>
         <div class="cam-actions">
           <button class="cam-btn" id="btnFlip" title="Cambiar cámara">🔄</button>
+          <button class="cam-btn" id="btnV3Search" title="Buscar">🔍</button>
+          <button class="cam-btn" id="btnV3Settings" title="Ajustes">⚙️</button>
         </div>
       </div>
       <div class="cam-status" id="camStatus">Apunta la cámara al <b>QR del cliente</b></div>
@@ -757,6 +1028,7 @@
       $('camStatus').innerHTML = 'Apunta la cámara al <b>QR del cliente</b>';
 
       const onResult = (result, err) => {
+        if(sheetCard) return;
         if(result && Date.now() - lastHit > 2000){
           lastHit = Date.now();
           hitFeedback();
@@ -790,6 +1062,11 @@
       if(currentTab === 'Validar' && !sheetCard) startCam();
     }
   };
+  $('btnV3Search').onclick = () => setTab('Buscar');
+  $('btnV3Settings').onclick = async () => {
+    const ok = await askPin('Abrir ajustes');
+    if(ok) setTab('Ajustes');
+  };
 
   let usbBuf = '', usbLast = 0;
   window.addEventListener('keydown', e => {
@@ -809,6 +1086,7 @@
 
   /* ══════ PROCESAR CÓDIGO ══════ */
   async function procesarCodigo(raw){
+    if(sheetCard) return;
     const text = String(raw).trim();
     if(text.startsWith('GELROSES:')){
       const id = text.slice(9).trim();
@@ -831,7 +1109,6 @@
   function openSheet(id, data){
     sheetCard = { id, data };
     stepVal = 0; confirmArmed = false;
-    stopCam();
     renderSheet();
     $('manageBox').classList.remove('show');
     $('sheetMask').classList.add('show');
@@ -841,7 +1118,7 @@
     sheetCard = null;
     $('sheetMask').classList.remove('show');
     $('sheet').classList.remove('show');
-    if(currentTab === 'Validar') startCam();
+    if(currentTab === 'Validar' && !zxingControls) startCam();
   }
   $('btnSheetClose').onclick = closeSheet;
   $('sheetMask').onclick = closeSheet;
@@ -921,6 +1198,27 @@
   }
 
 
+
+  function v3FloatCounter(delta){
+    const host = $('sheet');
+    if(!host) return;
+    const f = document.createElement('div');
+    f.className = 'v3-float' + (delta < 0 ? ' minus' : '');
+    f.textContent = delta > 0 ? ('+' + stepVal) : (stepVal > 0 ? ('+' + stepVal) : '0');
+    host.appendChild(f);
+    setTimeout(() => f.remove(), 520);
+  }
+
+  function v3Success(text, prize){
+    const el = $('v3Success');
+    if(!el) return;
+    el.textContent = text;
+    el.classList.remove('show','prize');
+    if(prize) el.classList.add('prize');
+    void el.offsetWidth;
+    el.classList.add('show');
+  }
+
   function visualTapFeedback(delta){
     const n = $('stepN');
     const sh = $('sheet');
@@ -950,6 +1248,7 @@
     if(old !== stepVal){
       updateStepUI();
       visualTapFeedback(delta);
+      v3FloatCounter(delta);
       try{ navigator.vibrate && navigator.vibrate(8); }catch(e){}
       try{ playTapTick && playTapTick('tap'); }catch(e){}
     }
@@ -1028,6 +1327,7 @@
       sheetCard.data = res.data;
 
       playTapTick('ok');
+      v3Success(res.premios > 0 ? '🎉 PREMIO' : ('✅ +' + qty + ' SELLOS'), res.premios > 0);
 
       if(res.premios > 0){
         $('celebP').textContent = (d.nombre ? d.nombre + ' ha' : 'Ha') + ' conseguido: ' + (cfg.premioTexto || 'su premio') + ' 🎁';
@@ -1070,7 +1370,9 @@
       logEvento('canje', sheetCard.data.telefono, sheetCard.data.nombre, 1);
       sheetCard.data = res;
       renderSheet();
+      v3Success('✅ PREMIO ENTREGADO', true);
       toast('🎁 Premio canjeado');
+      setTimeout(() => closeSheet(), 620);
     }catch(e){
       toast(e.message === 'sin-premio' ? 'No tiene premios pendientes' : 'Error al canjear', true);
     }
@@ -1308,6 +1610,7 @@
   /* ══════ TABS ══════ */
   function setTab(name){
     currentTab = name;
+    document.body.classList.toggle('v3-scanner', name === 'Validar');
     document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     $('sec' + name).classList.add('active');
@@ -1453,5 +1756,6 @@
 })();
 </script>
 
+<div class="v3-success" id="v3Success"></div>
 </body>
 </html>
