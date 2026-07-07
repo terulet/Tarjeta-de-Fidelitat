@@ -171,41 +171,68 @@
   .stepper-label{ text-align:center; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--cream-soft); margin-top:12px; }
 
 
-  /* FAST STAFF STAMPS */
-  .quick-stamps{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:9px;
-    margin:14px 0 10px;
+  /* STAFF V2 IPAD TURBO */
+  .sheet{
+    max-height:94vh;
+    padding:18px 20px calc(20px + env(safe-area-inset-bottom));
   }
-  .quick-stamps button{
-    min-height:54px;
-    border-radius:14px;
-    border:1.5px solid rgba(240,180,41,0.55);
-    background:rgba(10,83,80,0.95);
+  .sheet-head{ margin-bottom:10px; }
+  .sheet-name{ font-size:32px; }
+  .sheet-phone{ font-size:15px; }
+  .minibar{ margin-bottom:10px; }
+  .sheet-meta{ font-size:15px; margin-bottom:12px; }
+  .chip{ font-size:14px; padding:12px 13px; margin-bottom:9px; }
+  .stepper-label{
+    margin-top:14px;
+    font-size:13px;
     color:var(--gold-bright);
-    font-family:'Inter',sans-serif;
-    font-weight:900;
-    font-size:20px;
-    cursor:pointer;
-    touch-action:manipulation;
   }
-  .quick-stamps button.active{
+  .stepper{
+    display:grid;
+    grid-template-columns:minmax(0, 1fr) 120px minmax(0, 1fr);
+    gap:14px;
+    align-items:center;
+    justify-content:center;
+    margin:12px 0 10px;
+  }
+  .stepper button{
+    width:100%;
+    min-height:112px;
+    border-radius:24px;
+    border:2px solid rgba(240,180,41,0.65);
+    background:rgba(10,83,80,0.97);
+    color:var(--gold-bright);
+    font-size:58px;
+    font-weight:900;
+    line-height:1;
+    cursor:pointer;
+    touch-action:none;
+    -webkit-user-select:none;
+    user-select:none;
+  }
+  .stepper button:active,
+  .stepper button.pressed{
+    transform:scale(.97);
     background:var(--gold);
     color:var(--teal-darker);
-    box-shadow:0 0 0 2px rgba(255,212,94,0.18);
+    box-shadow:0 0 0 4px rgba(255,212,94,0.16);
   }
-  .quick-stamps button:active{ transform:scale(.96); }
-  .fast-actions{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-top:10px;
+  .stepper .n{
+    font-size:70px;
+    font-weight:900;
+    min-width:120px;
+    text-align:center;
+    color:var(--gold-bright);
+    line-height:1;
   }
-  .fast-actions .btn{
-    margin-top:0;
-    min-height:58px;
+  .btn-sellar{
+    min-height:74px;
+    font-size:22px !important;
+    letter-spacing:.02em;
+    margin-top:12px !important;
   }
+  .btn-sellar[disabled]{ opacity:.72; }
+  .btn-canjear{ min-height:56px; }
 
   .btn-sellar{ background:var(--gold); color:var(--teal-darker); font-size:17px; padding:17px; }
   .btn-sellar.confirm{ background:var(--warn); color:#fff; }
@@ -288,7 +315,7 @@
       <h2>La Gelateria · Staff</h2>
       <div class="sub">Acceso del personal al sistema de fidelización.</div>
       <label for="loginEmail">Email</label>
-      <input type="email" id="loginEmail" autocomplete="username" inputmode="email">
+      <input type="email" id="loginEmail" autocomplete="username" inputmode="email" value="staff@lagelateria.app">
       <label for="loginPass">Contraseña</label>
       <input type="password" id="loginPass" autocomplete="current-password">
       <div class="err" id="loginErr">Email o contraseña incorrectos.</div>
@@ -312,13 +339,13 @@
         </div>
         <div>
           <label>Tope sellos/día</label>
-          <input type="number" id="wizTope" value="6" min="1" max="30" inputmode="numeric">
+          <input type="number" id="wizTope" value="50" min="1" max="30" inputmode="numeric">
         </div>
       </div>
       <label>Premio al completar</label>
       <input type="text" id="wizPremio" placeholder="1 helado gratis (bola pequeña)" maxlength="80">
       <label>Minutos entre sellados (anti doble escaneo)</label>
-      <input type="number" id="wizCooldown" value="2" min="0" max="120" inputmode="numeric">
+      <input type="number" id="wizCooldown" value="0" min="0" max="120" inputmode="numeric">
       <label>PIN de encargado (ajustes y borrados)</label>
       <input type="password" id="wizPin1" placeholder="4 a 6 dígitos" inputmode="numeric" maxlength="6">
       <label>Repite el PIN</label>
@@ -454,21 +481,14 @@
 
     <div id="shChips"></div>
 
-    <div class="stepper-label">Sellos a añadir</div>
-    <div class="quick-stamps" id="quickStamps">
-      <button type="button" data-n="1" class="active">+1</button>
-      <button type="button" data-n="2">+2</button>
-      <button type="button" data-n="3">+3</button>
-      <button type="button" data-n="4">+4</button>
-      <button type="button" data-n="5">+5</button>
-      <button type="button" data-n="6">+6</button>
-      <button type="button" data-n="7">+7</button>
-      <button type="button" data-n="8">+8</button>
-      <button type="button" data-n="9">+9</button>
-      <button type="button" data-n="10">+10</button>
+    <div class="stepper-label">Sellos a añadir · toca o mantén pulsado · máximo 20</div>
+    <div class="stepper">
+      <button id="stepMinus">−</button>
+      <div class="n" id="stepN">0</div>
+      <button id="stepPlus">+</button>
     </div>
 
-    <button class="btn btn-sellar" id="btnSellar">SELLAR +1</button>
+    <button class="btn btn-sellar" id="btnSellar">ELIGE SELLOS</button>
     <button class="btn btn-canjear" id="btnCanjear" style="display:none;">🎁 Canjear premio</button>
 
     <button class="manage-toggle" id="btnManage">Gestionar tarjeta…</button>
@@ -550,7 +570,7 @@
     addDoc, writeBatch, serverTimestamp, runTransaction, Timestamp
   } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
   import {
-    getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut
+    getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence
   } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
   const $ = id => document.getElementById(id);
@@ -565,11 +585,11 @@
 
   /* ══════ ESTADO ══════ */
   let db, auth, user = null;
-  let cfg = { objetivoSellos:10, premioTexto:'', cooldownMin:2, topeDiario:6, reviewUrl:'' };
+  let cfg = { objetivoSellos:10, premioTexto:'', cooldownMin:0, topeDiario:50, reviewUrl:'' };
   let unsubCfg = null, unsubHoy = null, unsubNuevos = null;
   let currentTab = 'Validar';
   let sheetCard = null;
-  let stepVal = 1, ajVal = 1;
+  let stepVal = 0, ajVal = 1;
   let confirmArmed = false;
 
   /* ══════ UTILS ══════ */
@@ -772,7 +792,7 @@
   /* ══════ FICHA DE CLIENTE ══════ */
   function openSheet(id, data){
     sheetCard = { id, data };
-    stepVal = 1; confirmArmed = false;
+    stepVal = 0; confirmArmed = false;
     stopCam();
     renderSheet();
     $('manageBox').classList.remove('show');
@@ -816,10 +836,6 @@
           '<div class="chip warn">⏱ Sellado hace ' + (mins < 1 ? 'menos de 1 min' : Math.floor(mins) + ' min') + '. ¿Doble escaneo?</div>');
       }
     }
-    if(hoyN >= (cfg.topeDiario || 99)){
-      chips.insertAdjacentHTML('beforeend',
-        '<div class="chip warn">🚦 Ya lleva ' + hoyN + ' sellos hoy (tope: ' + cfg.topeDiario + ').</div>');
-    }
     if((d.visitas || 0) >= 3 && !d.resenaPedida){
       chips.insertAdjacentHTML('beforeend',
         '<div class="chip info">⭐ 3ª visita o más — recuérdale la reseña de Google <button id="btnResenaHecha">Hecho</button></div>');
@@ -833,7 +849,7 @@
       };
     }
 
-    setStepValFast(stepVal);
+    updateStepUI();
 
     const bc = $('btnCanjear');
     if((d.monedero || 0) > 0){
@@ -842,58 +858,66 @@
     } else bc.style.display = 'none';
   }
 
-
-  function setStepValFast(n){
-    stepVal = Math.max(1, Math.min(10, Number(n) || 1));
+  function updateStepUI(){
+    const n = $('stepN');
     const bs = $('btnSellar');
+    if(n) n.textContent = stepVal;
     if(bs){
-      bs.textContent = 'SELLAR +' + stepVal;
+      bs.textContent = stepVal > 0 ? ('SELLAR +' + stepVal) : 'ELIGE SELLOS';
       bs.classList.remove('confirm');
     }
-    document.querySelectorAll('#quickStamps button').forEach(b => {
-      b.classList.toggle('active', Number(b.dataset.n) === stepVal);
-    });
     confirmArmed = false;
   }
 
-  document.addEventListener('click', (e) => {
-    const b = e.target.closest && e.target.closest('#quickStamps button');
-    if(!b) return;
-    e.preventDefault();
-    setStepValFast(b.dataset.n);
-  });
+  function bumpStep(delta){
+    const old = stepVal;
+    stepVal = Math.max(0, Math.min(20, stepVal + delta));
+    if(old !== stepVal){
+      updateStepUI();
+      try{ navigator.vibrate && navigator.vibrate(8); }catch(e){}
+    }
+  }
 
+  let holdTimer = null, holdInterval = null;
+  function clearHold(){
+    clearTimeout(holdTimer);
+    clearInterval(holdInterval);
+    holdTimer = null;
+    holdInterval = null;
+    $('stepMinus').classList.remove('pressed');
+    $('stepPlus').classList.remove('pressed');
+  }
+
+  function bindHoldButton(id, delta){
+    const b = $(id);
+    b.addEventListener('pointerdown', e => {
+      e.preventDefault();
+      b.classList.add('pressed');
+      bumpStep(delta);
+      clearTimeout(holdTimer);
+      clearInterval(holdInterval);
+      holdTimer = setTimeout(() => {
+        holdInterval = setInterval(() => bumpStep(delta), 115);
+      }, 420);
+    }, { passive:false });
+  }
+
+  bindHoldButton('stepMinus', -1);
+  bindHoldButton('stepPlus', 1);
+  window.addEventListener('pointerup', clearHold);
+  window.addEventListener('pointercancel', clearHold);
+  window.addEventListener('blur', clearHold);
   $('btnManage').onclick = () => $('manageBox').classList.toggle('show');
 
   /* ══════ SELLAR ══════ */
   $('btnSellar').onclick = async () => {
     if(!sheetCard) return;
+    if(stepVal < 1){ toast('Pulsa + para añadir sellos', true); return; }
+
     const d = sheetCard.data;
-    const hoy = fechaHoy();
-    const hoyN = d.hoyFecha === hoy ? (d.hoyN || 0) : 0;
-    let necesitaConfirm = false;
-    if(d.ultimoSello && cfg.cooldownMin > 0){
-      const mins = (Date.now() - d.ultimoSello.toDate().getTime()) / 60000;
-      if(mins >= 0 && mins < cfg.cooldownMin) necesitaConfirm = true;
-    }
-    if(hoyN + stepVal > (cfg.topeDiario || 99)) necesitaConfirm = true;
-
     const bs = $('btnSellar');
-    if(necesitaConfirm && !confirmArmed){
-      confirmArmed = true;
-      bs.classList.add('confirm');
-      bs.textContent = '⚠️ ¿Seguro? Toca otra vez';
-      setTimeout(() => {
-        if(confirmArmed && sheetCard){
-          confirmArmed = false;
-          bs.classList.remove('confirm');
-          bs.textContent = 'SELLAR +' + stepVal;
-        }
-      }, 4000);
-      return;
-    }
-
     bs.disabled = true;
+
     try{
       const qty = stepVal;
       const objetivo = cfg.objetivoSellos || 10;
@@ -922,23 +946,29 @@
           hoyFecha: f, hoyN: n, ultimoSello: Timestamp.now()
         }) };
       });
-      logEvento('sello', d.telefono, d.nombre, qty);
 
+      logEvento('sello', d.telefono, d.nombre, qty);
       sheetCard.data = res.data;
-      stepVal = 1;
-      renderSheet();
+
       if(res.premios > 0){
-        $('celebP').textContent = (d.nombre ? d.nombre + ' ha' : 'Ha') + ' conseguido: ' + (cfg.premioTexto || 'su premio') + ' 🎁 Guardado en su monedero.';
+        $('celebP').textContent = (d.nombre ? d.nombre + ' ha' : 'Ha') + ' conseguido: ' + (cfg.premioTexto || 'su premio') + ' 🎁';
         $('celebration').classList.add('show');
-        setTimeout(() => $('celebration').classList.remove('show'), 3800);
+        toast('🎁 +' + qty + ' sellos · Premio conseguido');
+        setTimeout(() => $('celebration').classList.remove('show'), 1600);
       } else {
         toast('✅ +' + qty + (qty === 1 ? ' sello' : ' sellos'));
       }
+
+      stepVal = 0;
+      setTimeout(() => {
+        closeSheet();
+      }, 520);
+
     }catch(e){
       console.error(e);
       toast(e.message === 'no-card' ? 'La tarjeta ya no existe' : 'Error al sellar. Reintenta.', true);
     }finally{
-      $('btnSellar').disabled = false;
+      setTimeout(() => { $('btnSellar').disabled = false; updateStepUI(); }, 650);
     }
   };
   $('celebration').onclick = () => $('celebration').classList.remove('show');
@@ -1222,7 +1252,7 @@
     try{
       await setDoc(doc(db, 'config', 'publico'), {
         objetivoSellos: Math.min(20, Math.max(3, parseInt($('wizObjetivo').value) || 10)),
-        topeDiario: Math.min(30, Math.max(1, parseInt($('wizTope').value) || 6)),
+        topeDiario: Math.min(999, Math.max(1, parseInt($('wizTope').value) || 50)),
         premioTexto: premio.slice(0, 80),
         cooldownMin: Math.min(120, Math.max(0, parseInt($('wizCooldown').value) || 0)),
         reviewUrl: ''
@@ -1255,6 +1285,7 @@
     $('loginErr').classList.remove('show');
     $('btnLogin').disabled = true;
     try{
+      await setPersistence(auth, browserLocalPersistence);
       await signInWithEmailAndPassword(auth, $('loginEmail').value.trim(), $('loginPass').value);
     }catch(e){
       $('loginErr').classList.add('show');
@@ -1301,6 +1332,7 @@
       db = initializeFirestore(app, {});
     }
     auth = getAuth(app);
+    setPersistence(auth, browserLocalPersistence).catch(() => {});
     onAuthStateChanged(auth, u => {
       user = u;
       if(u){ afterLogin(); }
