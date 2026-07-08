@@ -95,3 +95,8 @@ Este ZIP ya lleva `firebase-config.js` configurado para el proyecto `gelateria-f
 ## STAFF iPAD MINI
 
 Esta versión incluye ajuste visual específico para iPad mini: cámara grande al abrir, navegación inferior grande, textos más grandes en lupa/historial y layout sin amontonarse.
+
+
+## STAFF SIN LOGIN
+
+Esta versión elimina la pantalla de usuario/contraseña del Staff. Al abrir `staff.html` entra directo a cámara. Las reglas incluidas en `firestore.rules` dejan `esStaff()` abierto para que el iPad pueda sellar sin login.

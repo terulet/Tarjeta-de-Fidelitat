@@ -323,6 +323,26 @@
   }
 }
 
+
+/* ============================
+   STAFF SIN LOGIN
+   Al abrir staff.html entra directo al modo cámara.
+   No se muestra usuario/contraseña ni pantalla de acceso.
+   ============================ */
+#login, #loginSec, #auth, #authSec, #passwordSec, #staffLogin,
+.login, .loginSec, .auth, .authSec, .passwordSec, .staffLogin,
+[data-login], [data-auth] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+#app, .app, .view {
+  display: grid !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
 </style>
 </head>
 <body>
@@ -367,5 +387,25 @@ function buildSignupQr(){$('signupQr').innerHTML=''; new QRCode($('signupQr'),{t
 window.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.activeElement===document.body){const v=$('manualCode').value.trim(); if(v)openClient(normalize(v));}});
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{}); if(initFirebase()){onAuthStateChanged(auth,u=>{user=u;if(u)afterLogin();else{showView('login');stopCam();}})}
 </script>
+
+<script>
+/* Staff sin login: fuerza entrada directa a cámara */
+window.STAFF_NO_LOGIN = true;
+document.addEventListener('DOMContentLoaded', function () {
+  ['login','loginSec','auth','authSec','passwordSec','staffLogin'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  var app = document.getElementById('app') || document.querySelector('.app') || document.querySelector('.view');
+  if (app) {
+    app.style.display = 'grid';
+    app.style.visibility = 'visible';
+    app.style.opacity = '1';
+  }
+  var cam = document.getElementById('camSec');
+  if (cam) cam.classList.add('on');
+});
+</script>
+
 </body>
 </html>
