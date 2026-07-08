@@ -343,6 +343,20 @@
   opacity: 1 !important;
 }
 
+
+/* QR directo: no enseñar pantalla intermedia del QR */
+#qrSec.on {
+  justify-content: center !important;
+}
+#qrSec.on .bigtitle,
+#qrSec.on .hint {
+  display: none !important;
+}
+#qrSec.on #showSignupQr {
+  min-height: 120px !important;
+  font-size: 34px !important;
+}
+
 </style>
 </head>
 <body>
@@ -404,6 +418,41 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   var cam = document.getElementById('camSec');
   if (cam) cam.classList.add('on');
+});
+</script>
+
+
+<script>
+/* QR directo: icono QR -> QR gigante sin pantalla intermedia */
+document.addEventListener('DOMContentLoaded', function () {
+  function openSignupQrDirect(){
+    var btn = document.getElementById('showSignupQr');
+    if (btn) {
+      setTimeout(function(){ btn.click(); }, 80);
+      return;
+    }
+    // Fallback: si no existe el botón, intenta abrir el modal QR manualmente.
+    var modal = document.getElementById('qrModal') || document.getElementById('signupQrModal') || document.querySelector('.qrModal');
+    if (modal) modal.classList.add('show','on','open');
+  }
+
+  document.querySelectorAll('.tab').forEach(function(tab){
+    var txt = (tab.textContent || '').toLowerCase();
+    var target = tab.getAttribute('data-tab') || '';
+    if (target === 'qrSec' || txt.includes('qr')) {
+      tab.addEventListener('click', function(){
+        openSignupQrDirect();
+      });
+    }
+  });
+
+  var qrSec = document.getElementById('qrSec');
+  if (qrSec) {
+    var observer = new MutationObserver(function(){
+      if (qrSec.classList.contains('on')) openSignupQrDirect();
+    });
+    observer.observe(qrSec, {attributes:true, attributeFilter:['class']});
+  }
 });
 </script>
 

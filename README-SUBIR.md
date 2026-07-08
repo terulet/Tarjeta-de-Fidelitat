@@ -100,3 +100,10 @@ Esta versión incluye ajuste visual específico para iPad mini: cámara grande a
 ## STAFF SIN LOGIN
 
 Esta versión elimina la pantalla de usuario/contraseña del Staff. Al abrir `staff.html` entra directo a cámara. Las reglas incluidas en `firestore.rules` dejan `esStaff()` abierto para que el iPad pueda sellar sin login.
+
+
+## CAMBIOS CLIENTE + STAFF QR DIRECTO
+
+- Modo cliente: al crear tarjeta ahora genera `clientes/{telefono_token}` y `telefonos/{telefono}`.
+- Guarda `cardId` en el móvil y el QR del cliente usa ese `cardId`.
+- Staff: tocar el icono QR abre directamente el QR gigante, sin pasar por botón intermedio.

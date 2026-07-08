@@ -58,17 +58,102 @@ const TXT={es:{intro:'Crea tu tarjeta en 10 segundos. Cada compra suma sellos, s
 function t(k,p={}){let s=(TXT[lang]||TXT.es)[k]||TXT.es[k]||k; for(const [a,b] of Object.entries(p)) s=s.replaceAll('{'+a+'}',b); return s}
 function renderLangs(){ $('langs').innerHTML=['es','ca','fr','en'].map(l=>`<button class="${l===lang?'on':''}" data-l="${l}">${l.toUpperCase()}</button>`).join(''); $('langs').querySelectorAll('button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;localStorage.setItem('gelateria_lang',lang);applyLang();renderLangs(); if(currentPhone) renderInstall();}); }
 function applyLang(){document.querySelectorAll('[data-t]').forEach(el=>{el.innerHTML=t(el.dataset.t)});}
+
+function makeToken(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let out='';
+  for(let i=0;i<6;i++) out += chars[Math.floor(Math.random()*chars.length)];
+  return out;
+}
+async function resolveCardId(phone){
+  // Primero mira si el móvil ya tiene tarjeta asociada.
+  try{
+    const telSnap = await getDoc(doc(db,'telefonos',phone));
+    if(telSnap.exists() && telSnap.data().cardId) return telSnap.data().cardId;
+  }catch(e){}
+  // Compatibilidad con versión antigua: clientes/{telefono}
+  try{
+    const oldSnap = await getDoc(doc(db,'clientes',phone));
+    if(oldSnap.exists()) return phone;
+  }catch(e){}
+  return null;
+}
+
 function cleanPhone(){return $('prefix').value + $('phone').value.replace(/\D/g,'')}
 function show(which){$('form').classList.toggle('on',which==='form');$('card').classList.toggle('on',which==='card')}
 function toast(m){$('toast').textContent=m;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1600)}
 function initFirebase(){const cfg=window.FIREBASE_CONFIG||{}; if(!cfg.apiKey||String(cfg.apiKey).includes('PEGAR')){toast('Falta firebase-config.js'); return false;} const app=initializeApp(cfg); try{db=initializeFirestore(app,{localCache:persistentLocalCache()});}catch(e){db=initializeFirestore(app,{})} return true;}
-async function create(){const phone=cleanPhone(); if(phone.length<8){toast('Móvil incompleto');return} if(!$('consent').checked){toast('Acepta la privacidad');return} const ref=doc(db,'clientes',phone); const snap=await getDoc(ref); if(!snap.exists()){await setDoc(ref,{telefono:phone,nombre:$('name').value.trim(),sellos:0,monedero:0,totalSellos:0,premiosGanados:0,premiosCanjeados:0,creado:serverTimestamp(),movimientos:[{tipo:'alta',qty:0,ts:Date.now(),texto:'Tarjeta creada'}]});} localStorage.setItem('gelateria_phone',phone); openCard(phone); toast(t('saved'));}
-function openCard(phone){currentPhone=phone; show('card'); if(unsub)unsub(); new QRCode($('qr'),{text:phone,width:210,height:210,colorDark:'#033E3C',colorLight:'#ffffff'}); unsub=onSnapshot(doc(db,'clientes',phone),s=>{ if(!s.exists()){localStorage.removeItem('gelateria_phone');show('form');return} renderCard(s.data());}); renderInstall();}
+async function create(){
+  const phone=cleanPhone();
+  if(phone.length<8){toast('Móvil incompleto');return}
+  if(!$('consent').checked){toast('Acepta la privacidad');return}
+
+  let cardId = await resolveCardId(phone);
+
+  if(!cardId){
+    const token = makeToken();
+    cardId = phone + '_' + token;
+    const clienteRef = doc(db,'clientes',cardId);
+    const telefonoRef = doc(db,'telefonos',phone);
+
+    await setDoc(clienteRef,{
+      telefono:phone,
+      token:token,
+      nombre:$('name').value.trim(),
+      sellos:0,
+      monedero:0,
+      totalSellos:0,
+      premiosGanados:0,
+      premiosCanjeados:0,
+      consentimiento:true,
+      creado:serverTimestamp(),
+      movimientos:[{tipo:'alta',qty:0,ts:Date.now(),texto:'Tarjeta creada'}]
+    });
+
+    await setDoc(telefonoRef,{
+      cardId:cardId,
+      telefono:phone,
+      creado:serverTimestamp()
+    });
+  }
+
+  localStorage.setItem('gelateria_phone',phone);
+  localStorage.setItem('gelateria_cardId',cardId);
+  openCard(cardId);
+  toast(t('saved'));
+}
+async function openCard(cardOrPhone){
+  let cardId = cardOrPhone;
+  if(!String(cardOrPhone).includes('_')){
+    const resolved = await resolveCardId(cardOrPhone);
+    if(resolved) cardId = resolved;
+  }
+  currentPhone=cardId;
+  show('card');
+  if(unsub)unsub();
+
+  $('qr').innerHTML='';
+  new QRCode($('qr'),{text:cardId,width:210,height:210,colorDark:'#033E3C',colorLight:'#ffffff'});
+
+  unsub=onSnapshot(doc(db,'clientes',cardId),s=>{
+    if(!s.exists()){
+      localStorage.removeItem('gelateria_phone');
+      localStorage.removeItem('gelateria_cardId');
+      show('form');
+      return
+    }
+    const data=s.data();
+    if(data.telefono) localStorage.setItem('gelateria_phone',data.telefono);
+    localStorage.setItem('gelateria_cardId',cardId);
+    renderCard(data);
+  });
+  renderInstall();
+}
 function renderCard(c){const sellos=c.sellos||0, mon=c.monedero||0; $('hello').textContent=c.nombre?`¡Hola, ${c.nombre}!`:'¡Hola!'; $('status').className='status'+(mon>0?' prize':''); $('status').textContent=mon>0?t('prize'):(sellos===9?t('missing1'):t('missing',{n:10-sellos})); $('stamps').innerHTML=''; for(let i=1;i<=10;i++){const d=document.createElement('div'); d.className='stamp '+(i<=sellos?'f':'')+(i>lastSellos&&i<=sellos?' pop':''); d.textContent=i<=sellos?'⭐':''; $('stamps').appendChild(d);} lastSellos=sellos; $('bar').style.width=(sellos*10)+'%'; $('count').textContent=t('count',{s:sellos}); $('wallet').classList.toggle('show',mon>0); $('walletTitle').textContent=mon===1?t('wallet1'):t('walletN',{n:mon}); if(c.lastPremioFlash&&Date.now()-c.lastPremioFlash<7000){showCele(c.lastPremioQty||1,sellos);} }
 function showCele(n,s){$('celeTitle').textContent=t('cele');$('celeText').textContent=t('celeText',{n,s});$('cele').classList.add('show');setTimeout(()=>$('cele').classList.remove('show'),2400)}
 function renderInstall(){const ios=/iPad|iPhone|iPod/.test(navigator.userAgent); $('install').classList.add('show'); $('installTitle').textContent=t('installTitle'); $('installText').textContent=ios?t('installIos'):t('installAndroid');}
-$('create').onclick=create; $('shareBtn').onclick=async()=>{renderInstall(); if(navigator.share){try{await navigator.share({title:'Mi Tarjeta La Gelateria',url:location.href});}catch(e){}}}; $('deleteBtn').onclick=async()=>{if(confirm('¿Eliminar esta tarjeta de este móvil?')){localStorage.removeItem('gelateria_phone'); if(unsub)unsub(); show('form');}}; $('cele').onclick=()=>$('cele').classList.remove('show');
-renderLangs(); applyLang(); if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{}); if(initFirebase()){const p=localStorage.getItem('gelateria_phone'); if(p) openCard(p);}
+$('create').onclick=create; $('shareBtn').onclick=async()=>{renderInstall(); if(navigator.share){try{await navigator.share({title:'Mi Tarjeta La Gelateria',url:location.href});}catch(e){}}}; $('deleteBtn').onclick=async()=>{if(confirm('¿Eliminar esta tarjeta de este móvil?')){localStorage.removeItem('gelateria_phone'); localStorage.removeItem('gelateria_cardId'); if(unsub)unsub(); show('form');}}; $('cele').onclick=()=>$('cele').classList.remove('show');
+renderLangs(); applyLang(); if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{}); if(initFirebase()){const c=localStorage.getItem('gelateria_cardId'); const p=localStorage.getItem('gelateria_phone'); if(c) openCard(c); else if(p) openCard(p);}
 </script>
 </body>
 </html>
