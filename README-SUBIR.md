@@ -126,3 +126,19 @@ La seguridad real está en `firestore.rules`.
 Importante: como pediste Staff sin login, `esStaff()` está abierto en las rules incluidas.
 Esto es cómodo para el iPad, pero no es máxima seguridad si `staff.html` queda en una URL pública.
 Recomendación práctica: no enlazar `staff.html` desde la web cliente y usar una URL difícil/no publicada para el staff.
+
+
+## CLIENTE RÁPIDO FINAL
+
+Cambio importante:
+- Al pulsar "Crear mi tarjeta", la tarjeta aparece al momento.
+- Ya no se queda clavado en "Creando…".
+- Después sincroniza con Firebase en segundo plano.
+- Si Firebase tarda o falla, muestra aviso claro.
+- Service Worker/cache actualizado para evitar que GitHub Pages enseñe una versión vieja.
+
+Prueba recomendada después de subir:
+1. Abrir la URL del cliente en modo incógnito o borrar caché.
+2. Nombre → móvil → aceptar privacidad → Crear.
+3. Debe aparecer inmediatamente: "¡Tarjeta creada!" y el QR del cliente.
+4. En Staff, escanear ese QR.

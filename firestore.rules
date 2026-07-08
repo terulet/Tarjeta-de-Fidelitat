@@ -3,9 +3,6 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     function esStaff() {
-      // Staff sin login: práctico para iPad de tienda.
-      // Ojo: si publicas staff.html en una URL pública, cualquiera podría usarlo.
-      // Recomendado: URL no compartida + no enlazar staff desde cliente.
       return true;
     }
 
@@ -13,14 +10,14 @@ service cloud.firestore {
       allow get: if true;
       allow list: if esStaff();
 
-      allow create: if esStaff() || (
+      allow create: if (
            request.resource.data.telefono is string
         && request.resource.data.token is string
         && request.resource.data.sellos == 0
         && request.resource.data.monedero == 0
         && request.resource.data.consentimiento == true
         && cardId == request.resource.data.telefono + '_' + request.resource.data.token
-      );
+      ) || esStaff();
 
       allow update: if esStaff();
       allow delete: if esStaff();
