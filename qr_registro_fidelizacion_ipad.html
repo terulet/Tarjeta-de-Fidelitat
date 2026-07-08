@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Registro Tarjeta Fidelización</title>
+  <style>
+    :root {
+      --turquesa: #008E8A;
+      --turquesa2: #00B7B3;
+      --dorado: #D8B45A;
+      --fondo: #fffdf7;
+      --texto: #1f2933;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: radial-gradient(circle at top, #ffffff 0%, var(--fondo) 46%, #f7efe0 100%);
+      color: var(--texto);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      width: min(820px, 100%);
+      min-height: 86vh;
+      border: 6px solid var(--dorado);
+      border-radius: 34px;
+      background: white;
+      box-shadow: 0 22px 60px rgba(0,0,0,.14);
+      padding: 34px 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .brand {
+      color: var(--turquesa);
+      font-size: clamp(34px, 6vw, 62px);
+      font-weight: 900;
+      letter-spacing: .5px;
+      margin: 0 0 6px;
+      line-height: 1;
+    }
+    .subtitle {
+      color: var(--dorado);
+      font-size: clamp(18px, 3vw, 30px);
+      font-weight: 800;
+      margin: 0 0 26px;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+    }
+    .qrbox {
+      width: min(520px, 78vw);
+      height: min(520px, 78vw);
+      border: 5px solid var(--turquesa);
+      border-radius: 30px;
+      display: grid;
+      place-items: center;
+      background: #fff;
+      padding: 22px;
+      margin: 8px 0 26px;
+    }
+    #qrcode img, #qrcode canvas {
+      width: 100% !important;
+      height: 100% !important;
+      image-rendering: crisp-edges;
+    }
+    .maintext {
+      font-size: clamp(24px, 4vw, 42px);
+      font-weight: 900;
+      margin: 0 0 12px;
+    }
+    .help {
+      font-size: clamp(17px, 2.6vw, 26px);
+      margin: 0;
+      color: #4b5563;
+      line-height: 1.35;
+    }
+    .url {
+      margin-top: 22px;
+      font-size: clamp(12px, 1.8vw, 18px);
+      color: #6b7280;
+      word-break: break-all;
+      max-width: 680px;
+    }
+    .button {
+      margin-top: 24px;
+      display: inline-block;
+      text-decoration: none;
+      background: linear-gradient(135deg, var(--turquesa), var(--turquesa2));
+      color: #fff;
+      font-weight: 900;
+      font-size: 20px;
+      padding: 16px 28px;
+      border-radius: 999px;
+      box-shadow: 0 10px 24px rgba(0,142,138,.26);
+    }
+    @media (orientation: landscape) and (max-height: 700px) {
+      .card { min-height: auto; padding: 22px; }
+      .brand { font-size: 36px; }
+      .subtitle { font-size: 18px; margin-bottom: 12px; }
+      .qrbox { width: 310px; height: 310px; margin-bottom: 12px; }
+      .maintext { font-size: 26px; }
+      .help { font-size: 17px; }
+      .url { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1 class="brand">La Gelateria de Roses</h1>
+    <p class="subtitle">Tarjeta fidelización</p>
+
+    <div class="qrbox">
+      <div id="qrcode" aria-label="QR registro fidelización"></div>
+    </div>
+
+    <p class="maintext">Escanea para crear tu tarjeta</p>
+    <p class="help">Abre la cámara de tu móvil y apunta al QR.<br />Regístrate y guarda tu tarjeta digital.</p>
+
+    <div class="url" id="urlText"></div>
+    <a class="button" id="openLink" href="#" target="_blank" rel="noopener">Abrir tarjeta</a>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script>
+    // CAMBIA ESTE ENLACE SI TU TARJETA ESTÁ EN OTRA URL.
+    // Debe ser la página que ve el CLIENTE para registrarse / abrir su tarjeta.
+    const REGISTRO_URL = "https://terulet.github.io/tarjeta-fidelidad/";
+
+    document.getElementById("urlText").textContent = REGISTRO_URL;
+    document.getElementById("openLink").href = REGISTRO_URL;
+
+    new QRCode(document.getElementById("qrcode"), {
+      text: REGISTRO_URL,
+      width: 900,
+      height: 900,
+      colorDark: "#111111",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  </script>
+</body>
+</html>
