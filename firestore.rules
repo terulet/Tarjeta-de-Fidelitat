@@ -3,8 +3,9 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     function esStaff() {
-      // Staff sin login: la protección se hace por URL privada/iPad de tienda.
-      // Para máxima seguridad futura, volver a exigir Firebase Auth.
+      // Staff sin login: práctico para iPad de tienda.
+      // Ojo: si publicas staff.html en una URL pública, cualquiera podría usarlo.
+      // Recomendado: URL no compartida + no enlazar staff desde cliente.
       return true;
     }
 
@@ -22,7 +23,7 @@ service cloud.firestore {
       );
 
       allow update: if esStaff();
-      allow delete: if true;
+      allow delete: if esStaff();
     }
 
     match /telefonos/{telefono} {
@@ -36,7 +37,7 @@ service cloud.firestore {
                     || (request.resource.data.cardId is string
                         && request.resource.data.cardId.matches(telefono + '_[A-Z2-9]{6}'));
 
-      allow delete: if true;
+      allow delete: if esStaff();
     }
 
     match /eventos/{eventoId} {

@@ -107,3 +107,22 @@ Esta versión elimina la pantalla de usuario/contraseña del Staff. Al abrir `st
 - Modo cliente: al crear tarjeta ahora genera `clientes/{telefono_token}` y `telefonos/{telefono}`.
 - Guarda `cardId` en el móvil y el QR del cliente usa ese `cardId`.
 - Staff: tocar el icono QR abre directamente el QR gigante, sin pasar por botón intermedio.
+
+
+## CORRECCIÓN CREAR TARJETA CLIENTE
+
+Esta versión reescribe el flujo cliente para:
+- crear `clientes/{telefono_token}`;
+- crear `telefonos/{telefono}`;
+- guardar `gelateria_cardId` en el móvil;
+- mostrar error real si Firebase rechaza la escritura.
+
+## PRIVACIDAD / GITHUB PAGES
+
+GitHub Pages no hace la web privada. La URL publicada es pública.
+El `firebase-config.js` también es visible en cualquier web Firebase; no es una contraseña.
+La seguridad real está en `firestore.rules`.
+
+Importante: como pediste Staff sin login, `esStaff()` está abierto en las rules incluidas.
+Esto es cómodo para el iPad, pero no es máxima seguridad si `staff.html` queda en una URL pública.
+Recomendación práctica: no enlazar `staff.html` desde la web cliente y usar una URL difícil/no publicada para el staff.

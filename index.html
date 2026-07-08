@@ -52,108 +52,215 @@
 <div class="toast" id="toast"></div>
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import {initializeFirestore,persistentLocalCache,doc,getDoc,setDoc,onSnapshot,serverTimestamp,deleteDoc} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-const $=id=>document.getElementById(id); const OBJECTIVE=10; let db, unsub, currentPhone=null, lastSellos=0, lang=localStorage.getItem('gelateria_lang')||'es';
-const TXT={es:{intro:'Crea tu tarjeta en 10 segundos. Cada compra suma sellos, sin papel y sin perderla.',name:'Nombre opcional',phone:'Móvil',consent:'Acepto que La Gelateria de Roses use mi nombre y móvil solo para gestionar mi tarjeta. <a href="privacidad.html" target="_blank">Política de privacidad</a>.',create:'Crear mi tarjeta',qrnote:'Enséñanos este QR cada vez que compres.',delete:'Eliminar mi tarjeta de este móvil',missing:'Faltan {n} sellos',missing1:'Falta 1 sello',prize:'🎁 PREMIO DISPONIBLE',count:'{s}/10 sellos',wallet1:'1 premio pendiente',walletN:'{n} premios pendientes',saved:'Tarjeta creada',installTitle:'Guárdala como app',installIos:'iPhone: toca Compartir → Añadir a pantalla de inicio. También puedes guardar esta página en favoritos.',installAndroid:'Android: toca el menú ⋮ → Añadir a pantalla de inicio o Instalar app.',cele:'¡Premio conseguido!',celeText:'Tienes {n} premio pendiente. Quedan {s}/10 sellos en tu nueva tarjeta.'},ca:{intro:'Crea la teva targeta en 10 segons. Cada compra suma segells, sense paper i sense perdre-la.',name:'Nom opcional',phone:'Mòbil',consent:'Accepto que La Gelateria de Roses faci servir el meu nom i mòbil només per gestionar la targeta. <a href="privacidad.html" target="_blank">Política de privacitat</a>.',create:'Crear la meva targeta',qrnote:'Ensenya aquest QR cada vegada que compris.',delete:'Eliminar la targeta d’aquest mòbil',missing:'Falten {n} segells',missing1:'Falta 1 segell',prize:'🎁 PREMI DISPONIBLE',count:'{s}/10 segells',wallet1:'1 premi pendent',walletN:'{n} premis pendents',saved:'Targeta creada',installTitle:'Guarda-la com app',installIos:'iPhone: toca Compartir → Afegir a pantalla d’inici.',installAndroid:'Android: toca el menú ⋮ → Afegir a pantalla d’inici o Instal·lar app.',cele:'Premi aconseguit!',celeText:'Tens {n} premi pendent. Queden {s}/10 segells a la nova targeta.'},fr:{intro:'Créez votre carte en 10 secondes. Chaque achat ajoute des tampons, sans papier.',name:'Nom optionnel',phone:'Mobile',consent:'J’accepte que La Gelateria de Roses utilise mon nom et mon mobile uniquement pour gérer ma carte. <a href="privacidad.html" target="_blank">Confidentialité</a>.',create:'Créer ma carte',qrnote:'Montrez ce QR à chaque achat.',delete:'Supprimer ma carte de ce téléphone',missing:'Encore {n} tampons',missing1:'Encore 1 tampon',prize:'🎁 RÉCOMPENSE DISPONIBLE',count:'{s}/10 tampons',wallet1:'1 récompense en attente',walletN:'{n} récompenses en attente',saved:'Carte créée',installTitle:'Ajoutez-la à l’écran d’accueil',installIos:'iPhone : Partager → Sur l’écran d’accueil.',installAndroid:'Android : menu ⋮ → Ajouter à l’écran d’accueil ou Installer.',cele:'Récompense gagnée !',celeText:'Vous avez {n} récompense. Il reste {s}/10 tampons sur la nouvelle carte.'},en:{intro:'Create your card in 10 seconds. Every purchase adds stamps, no paper needed.',name:'Optional name',phone:'Mobile',consent:'I accept that La Gelateria de Roses uses my name and mobile only to manage my loyalty card. <a href="privacidad.html" target="_blank">Privacy policy</a>.',create:'Create my card',qrnote:'Show us this QR whenever you buy.',delete:'Remove my card from this phone',missing:'{n} stamps to go',missing1:'1 stamp to go',prize:'🎁 REWARD AVAILABLE',count:'{s}/10 stamps',wallet1:'1 reward pending',walletN:'{n} rewards pending',saved:'Card created',installTitle:'Save it as an app',installIos:'iPhone: tap Share → Add to Home Screen.',installAndroid:'Android: tap ⋮ → Add to Home screen or Install app.',cele:'Reward earned!',celeText:'You have {n} pending reward. New card has {s}/10 stamps.'}};
+import {initializeFirestore,persistentLocalCache,doc,getDoc,setDoc,onSnapshot,serverTimestamp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+const $ = id => document.getElementById(id);
+const OBJECTIVE = 10;
+let db = null;
+let unsub = null;
+let currentCardId = null;
+let lastSellos = 0;
+let lang = localStorage.getItem('gelateria_lang') || 'es';
+
+const TXT = {
+  es:{intro:'Crea tu tarjeta en 10 segundos. Cada compra suma sellos, sin papel y sin perderla.',name:'Nombre opcional',phone:'Móvil',consent:'Acepto que La Gelateria de Roses use mi nombre y móvil solo para gestionar mi tarjeta. <a href="privacidad.html" target="_blank">Política de privacidad</a>.',create:'Crear mi tarjeta',qrnote:'Enséñanos este QR cada vez que compres.',delete:'Eliminar mi tarjeta de este móvil',missing:'Faltan {n} sellos',missing1:'Falta 1 sello',prize:'🎁 PREMIO DISPONIBLE',count:'{s}/10 sellos',wallet1:'1 premio pendiente',walletN:'{n} premios pendientes',saved:'Tarjeta creada',installTitle:'Guárdala como app',installIos:'iPhone: toca Compartir → Añadir a pantalla de inicio. También puedes guardar esta página en favoritos.',installAndroid:'Android: toca el menú ⋮ → Añadir a pantalla de inicio o Instalar app.',cele:'¡Premio conseguido!',celeText:'Tienes {n} premio pendiente. Quedan {s}/10 sellos en tu nueva tarjeta.'},
+  ca:{intro:'Crea la teva targeta en 10 segons. Cada compra suma segells, sense paper i sense perdre-la.',name:'Nom opcional',phone:'Mòbil',consent:'Accepto que La Gelateria de Roses faci servir el meu nom i mòbil només per gestionar la targeta. <a href="privacidad.html" target="_blank">Política de privacitat</a>.',create:'Crear la meva targeta',qrnote:'Ensenya aquest QR cada vegada que compris.',delete:'Eliminar la targeta d’aquest mòbil',missing:'Falten {n} segells',missing1:'Falta 1 segell',prize:'🎁 PREMI DISPONIBLE',count:'{s}/10 segells',wallet1:'1 premi pendent',walletN:'{n} premis pendents',saved:'Targeta creada',installTitle:'Guarda-la com app',installIos:'iPhone: toca Compartir → Afegir a pantalla d’inici.',installAndroid:'Android: toca el menú ⋮ → Afegir a pantalla d’inici o Instal·lar app.',cele:'Premi aconseguit!',celeText:'Tens {n} premi pendent. Queden {s}/10 segells a la nova targeta.'},
+  fr:{intro:'Créez votre carte en 10 secondes. Chaque achat ajoute des tampons, sans papier.',name:'Nom optionnel',phone:'Mobile',consent:'J’accepte que La Gelateria de Roses utilise mon nom et mon mobile uniquement pour gérer ma carte. <a href="privacidad.html" target="_blank">Confidentialité</a>.',create:'Créer ma carte',qrnote:'Montrez ce QR à chaque achat.',delete:'Supprimer ma carte de ce téléphone',missing:'Encore {n} tampons',missing1:'Encore 1 tampon',prize:'🎁 RÉCOMPENSE DISPONIBLE',count:'{s}/10 tampons',wallet1:'1 récompense en attente',walletN:'{n} récompenses en attente',saved:'Carte créée',installTitle:'Ajoutez-la à l’écran d’accueil',installIos:'iPhone : Partager → Sur l’écran d’accueil.',installAndroid:'Android : menu ⋮ → Ajouter à l’écran d’accueil ou Installer.',cele:'Récompense gagnée !',celeText:'Vous avez {n} récompense. Il reste {s}/10 tampons sur la nouvelle carte.'},
+  en:{intro:'Create your card in 10 seconds. Every purchase adds stamps, no paper needed.',name:'Optional name',phone:'Mobile',consent:'I accept that La Gelateria de Roses uses my name and mobile only to manage my loyalty card. <a href="privacidad.html" target="_blank">Privacy policy</a>.',create:'Create my card',qrnote:'Show us this QR whenever you buy.',delete:'Remove my card from this phone',missing:'{n} stamps to go',missing1:'1 stamp to go',prize:'🎁 REWARD AVAILABLE',count:'{s}/10 stamps',wallet1:'1 reward pending',walletN:'{n} rewards pending',saved:'Card created',installTitle:'Save it as an app',installIos:'iPhone: tap Share → Add to Home Screen.',installAndroid:'Android: tap ⋮ → Add to Home screen or Install app.',cele:'Reward earned!',celeText:'You have {n} pending reward. New card has {s}/10 stamps.'}
+};
+
 function t(k,p={}){let s=(TXT[lang]||TXT.es)[k]||TXT.es[k]||k; for(const [a,b] of Object.entries(p)) s=s.replaceAll('{'+a+'}',b); return s}
-function renderLangs(){ $('langs').innerHTML=['es','ca','fr','en'].map(l=>`<button class="${l===lang?'on':''}" data-l="${l}">${l.toUpperCase()}</button>`).join(''); $('langs').querySelectorAll('button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;localStorage.setItem('gelateria_lang',lang);applyLang();renderLangs(); if(currentPhone) renderInstall();}); }
+function toast(m){$('toast').textContent=m; $('toast').classList.add('show'); setTimeout(()=>$('toast').classList.remove('show'),2200)}
+function show(which){$('form').classList.toggle('on',which==='form'); $('card').classList.toggle('on',which==='card')}
+function cleanPhone(){return $('prefix').value + $('phone').value.replace(/\D/g,'')}
+function makeToken(){const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let out=''; for(let i=0;i<6;i++) out += chars[Math.floor(Math.random()*chars.length)]; return out}
+
+function renderLangs(){
+  $('langs').innerHTML=['es','ca','fr','en'].map(l=>`<button class="${l===lang?'on':''}" data-l="${l}">${l.toUpperCase()}</button>`).join('');
+  $('langs').querySelectorAll('button').forEach(b=>b.onclick=()=>{lang=b.dataset.l; localStorage.setItem('gelateria_lang',lang); applyLang(); renderLangs(); if(currentCardId) renderInstall();});
+}
 function applyLang(){document.querySelectorAll('[data-t]').forEach(el=>{el.innerHTML=t(el.dataset.t)});}
 
-function makeToken(){
-  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let out='';
-  for(let i=0;i<6;i++) out += chars[Math.floor(Math.random()*chars.length)];
-  return out;
+function initFirebase(){
+  const cfg=window.FIREBASE_CONFIG||{};
+  if(!cfg.apiKey || String(cfg.apiKey).includes('PEGAR')){toast('Falta firebase-config.js'); return false;}
+  try{
+    const app=initializeApp(cfg);
+    try{db=initializeFirestore(app,{localCache:persistentLocalCache()});}
+    catch(e){db=initializeFirestore(app,{});}
+    return true;
+  }catch(e){
+    console.error(e);
+    toast('Error Firebase');
+    return false;
+  }
 }
+
 async function resolveCardId(phone){
-  // Primero mira si el móvil ya tiene tarjeta asociada.
   try{
     const telSnap = await getDoc(doc(db,'telefonos',phone));
     if(telSnap.exists() && telSnap.data().cardId) return telSnap.data().cardId;
-  }catch(e){}
-  // Compatibilidad con versión antigua: clientes/{telefono}
+  }catch(e){ console.warn('resolve telefonos', e); }
+
+  // compatibilidad por si existe una tarjeta antigua guardada como clientes/{telefono}
   try{
     const oldSnap = await getDoc(doc(db,'clientes',phone));
     if(oldSnap.exists()) return phone;
-  }catch(e){}
+  }catch(e){ console.warn('resolve clientes old', e); }
+
   return null;
 }
 
-function cleanPhone(){return $('prefix').value + $('phone').value.replace(/\D/g,'')}
-function show(which){$('form').classList.toggle('on',which==='form');$('card').classList.toggle('on',which==='card')}
-function toast(m){$('toast').textContent=m;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1600)}
-function initFirebase(){const cfg=window.FIREBASE_CONFIG||{}; if(!cfg.apiKey||String(cfg.apiKey).includes('PEGAR')){toast('Falta firebase-config.js'); return false;} const app=initializeApp(cfg); try{db=initializeFirestore(app,{localCache:persistentLocalCache()});}catch(e){db=initializeFirestore(app,{})} return true;}
 async function create(){
-  const phone=cleanPhone();
-  if(phone.length<8){toast('Móvil incompleto');return}
-  if(!$('consent').checked){toast('Acepta la privacidad');return}
+  if(!db){toast('Firebase no está listo'); return;}
 
-  let cardId = await resolveCardId(phone);
+  const btn = $('create');
+  btn.disabled = true;
+  const oldText = btn.textContent;
+  btn.textContent = 'Creando…';
 
-  if(!cardId){
-    const token = makeToken();
-    cardId = phone + '_' + token;
-    const clienteRef = doc(db,'clientes',cardId);
-    const telefonoRef = doc(db,'telefonos',phone);
+  try{
+    const phone = cleanPhone();
+    if(phone.length < 8){toast('Móvil incompleto'); return;}
+    if(!$('consent').checked){toast('Acepta la privacidad'); return;}
 
-    await setDoc(clienteRef,{
-      telefono:phone,
-      token:token,
-      nombre:$('name').value.trim(),
-      sellos:0,
-      monedero:0,
-      totalSellos:0,
-      premiosGanados:0,
-      premiosCanjeados:0,
-      consentimiento:true,
-      creado:serverTimestamp(),
-      movimientos:[{tipo:'alta',qty:0,ts:Date.now(),texto:'Tarjeta creada'}]
-    });
+    let cardId = await resolveCardId(phone);
 
-    await setDoc(telefonoRef,{
-      cardId:cardId,
-      telefono:phone,
-      creado:serverTimestamp()
-    });
+    if(!cardId){
+      const token = makeToken();
+      cardId = phone + '_' + token;
+
+      await setDoc(doc(db,'clientes',cardId),{
+        telefono: phone,
+        token: token,
+        nombre: $('name').value.trim(),
+        sellos: 0,
+        monedero: 0,
+        totalSellos: 0,
+        premiosGanados: 0,
+        premiosCanjeados: 0,
+        consentimiento: true,
+        creado: serverTimestamp(),
+        actualizado: serverTimestamp(),
+        movimientos: [{tipo:'alta',qty:0,ts:Date.now(),texto:'Tarjeta creada'}]
+      });
+
+      await setDoc(doc(db,'telefonos',phone),{
+        cardId: cardId,
+        telefono: phone,
+        creado: serverTimestamp()
+      });
+    }
+
+    localStorage.setItem('gelateria_phone',phone);
+    localStorage.setItem('gelateria_cardId',cardId);
+    openCard(cardId);
+    toast(t('saved'));
+  }catch(e){
+    console.error('crear tarjeta', e);
+    const msg = e && e.code ? e.code : 'No se ha podido crear';
+    toast('Error: ' + msg);
+    alert('No se ha podido crear la tarjeta. Error: ' + msg);
+  }finally{
+    btn.disabled = false;
+    btn.textContent = oldText;
   }
-
-  localStorage.setItem('gelateria_phone',phone);
-  localStorage.setItem('gelateria_cardId',cardId);
-  openCard(cardId);
-  toast(t('saved'));
 }
-async function openCard(cardOrPhone){
-  let cardId = cardOrPhone;
-  if(!String(cardOrPhone).includes('_')){
-    const resolved = await resolveCardId(cardOrPhone);
-    if(resolved) cardId = resolved;
-  }
-  currentPhone=cardId;
-  show('card');
-  if(unsub)unsub();
 
-  $('qr').innerHTML='';
+function openCard(cardId){
+  currentCardId = cardId;
+  show('card');
+  if(unsub) unsub();
+
+  $('qr').innerHTML = '';
   new QRCode($('qr'),{text:cardId,width:210,height:210,colorDark:'#033E3C',colorLight:'#ffffff'});
 
-  unsub=onSnapshot(doc(db,'clientes',cardId),s=>{
-    if(!s.exists()){
+  unsub = onSnapshot(doc(db,'clientes',cardId), snap=>{
+    if(!snap.exists()){
       localStorage.removeItem('gelateria_phone');
       localStorage.removeItem('gelateria_cardId');
       show('form');
-      return
+      return;
     }
-    const data=s.data();
+    const data = snap.data();
     if(data.telefono) localStorage.setItem('gelateria_phone',data.telefono);
     localStorage.setItem('gelateria_cardId',cardId);
     renderCard(data);
+  }, err=>{
+    console.error('snapshot cliente', err);
+    toast('Error leyendo tarjeta');
   });
+
   renderInstall();
 }
-function renderCard(c){const sellos=c.sellos||0, mon=c.monedero||0; $('hello').textContent=c.nombre?`¡Hola, ${c.nombre}!`:'¡Hola!'; $('status').className='status'+(mon>0?' prize':''); $('status').textContent=mon>0?t('prize'):(sellos===9?t('missing1'):t('missing',{n:10-sellos})); $('stamps').innerHTML=''; for(let i=1;i<=10;i++){const d=document.createElement('div'); d.className='stamp '+(i<=sellos?'f':'')+(i>lastSellos&&i<=sellos?' pop':''); d.textContent=i<=sellos?'⭐':''; $('stamps').appendChild(d);} lastSellos=sellos; $('bar').style.width=(sellos*10)+'%'; $('count').textContent=t('count',{s:sellos}); $('wallet').classList.toggle('show',mon>0); $('walletTitle').textContent=mon===1?t('wallet1'):t('walletN',{n:mon}); if(c.lastPremioFlash&&Date.now()-c.lastPremioFlash<7000){showCele(c.lastPremioQty||1,sellos);} }
-function showCele(n,s){$('celeTitle').textContent=t('cele');$('celeText').textContent=t('celeText',{n,s});$('cele').classList.add('show');setTimeout(()=>$('cele').classList.remove('show'),2400)}
-function renderInstall(){const ios=/iPad|iPhone|iPod/.test(navigator.userAgent); $('install').classList.add('show'); $('installTitle').textContent=t('installTitle'); $('installText').textContent=ios?t('installIos'):t('installAndroid');}
-$('create').onclick=create; $('shareBtn').onclick=async()=>{renderInstall(); if(navigator.share){try{await navigator.share({title:'Mi Tarjeta La Gelateria',url:location.href});}catch(e){}}}; $('deleteBtn').onclick=async()=>{if(confirm('¿Eliminar esta tarjeta de este móvil?')){localStorage.removeItem('gelateria_phone'); localStorage.removeItem('gelateria_cardId'); if(unsub)unsub(); show('form');}}; $('cele').onclick=()=>$('cele').classList.remove('show');
-renderLangs(); applyLang(); if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{}); if(initFirebase()){const c=localStorage.getItem('gelateria_cardId'); const p=localStorage.getItem('gelateria_phone'); if(c) openCard(c); else if(p) openCard(p);}
+
+function renderCard(c){
+  const sellos = Number(c.sellos || 0);
+  const mon = Number(c.monedero || 0);
+
+  $('hello').textContent = c.nombre ? `¡Hola, ${c.nombre}!` : '¡Hola!';
+  $('status').className = 'status' + (mon>0 ? ' prize' : '');
+  $('status').textContent = mon>0 ? t('prize') : (sellos===9 ? t('missing1') : t('missing',{n:10-sellos}));
+
+  $('stamps').innerHTML = '';
+  for(let i=1;i<=10;i++){
+    const d=document.createElement('div');
+    d.className='stamp '+(i<=sellos?'f':'')+(i>lastSellos&&i<=sellos?' pop':'');
+    d.textContent=i<=sellos?'⭐':'';
+    $('stamps').appendChild(d);
+  }
+  lastSellos=sellos;
+
+  $('bar').style.width=(sellos*10)+'%';
+  $('count').textContent=t('count',{s:sellos});
+  $('wallet').classList.toggle('show',mon>0);
+  $('walletTitle').textContent=mon===1?t('wallet1'):t('walletN',{n:mon});
+
+  if(c.lastPremioFlash && Date.now()-c.lastPremioFlash<7000){
+    showCele(c.lastPremioQty||1,sellos);
+  }
+}
+
+function showCele(n,s){
+  $('celeTitle').textContent=t('cele');
+  $('celeText').textContent=t('celeText',{n,s});
+  $('cele').classList.add('show');
+  setTimeout(()=>$('cele').classList.remove('show'),2400);
+}
+
+function renderInstall(){
+  const ios=/iPad|iPhone|iPod/.test(navigator.userAgent);
+  $('install').classList.add('show');
+  $('installTitle').textContent=t('installTitle');
+  $('installText').textContent=ios?t('installIos'):t('installAndroid');
+}
+
+$('create').onclick = create;
+$('shareBtn').onclick = async()=>{
+  renderInstall();
+  if(navigator.share){
+    try{await navigator.share({title:'Mi Tarjeta La Gelateria',url:location.href});}catch(e){}
+  }
+};
+$('deleteBtn').onclick = ()=>{
+  if(confirm('¿Eliminar esta tarjeta de este móvil?')){
+    localStorage.removeItem('gelateria_phone');
+    localStorage.removeItem('gelateria_cardId');
+    if(unsub) unsub();
+    show('form');
+  }
+};
+$('cele').onclick=()=>$('cele').classList.remove('show');
+
+renderLangs();
+applyLang();
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+if(initFirebase()){
+  const cardId = localStorage.getItem('gelateria_cardId');
+  const phone = localStorage.getItem('gelateria_phone');
+  if(cardId) openCard(cardId);
+  else if(phone) resolveCardId(phone).then(id=>{ if(id) openCard(id); });
+}
 </script>
 </body>
 </html>
