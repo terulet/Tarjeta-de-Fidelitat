@@ -1,18 +1,55 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /clientes/{id} {
-      allow read, create, update: if true;
-      allow delete: if request.auth != null;
+
+    function esStaff() {
+      return request.auth != null
+        && request.auth.token.firebase.sign_in_provider == 'password';
     }
-    match /eventos/{id} {
-      allow create: if true;
-      allow read: if request.auth != null;
+
+    match /clientes/{cardId} {
+      allow get: if true;
+      allow list: if esStaff();
+
+      allow create: if esStaff() || (
+           request.resource.data.telefono is string
+        && request.resource.data.token is string
+        && request.resource.data.sellos == 0
+        && request.resource.data.monedero == 0
+        && request.resource.data.consentimiento == true
+        && cardId == request.resource.data.telefono + '_' + request.resource.data.token
+      );
+
+      allow update: if esStaff();
+      allow delete: if true;
+    }
+
+    match /telefonos/{telefono} {
+      allow get: if true;
+      allow list: if esStaff();
+
+      allow create: if request.resource.data.cardId is string
+                    && request.resource.data.cardId.matches(telefono + '_[A-Z2-9]{6}');
+
+      allow update: if esStaff()
+                    || (request.resource.data.cardId is string
+                        && request.resource.data.cardId.matches(telefono + '_[A-Z2-9]{6}'));
+
+      allow delete: if true;
+    }
+
+    match /eventos/{eventoId} {
+      allow read, create: if esStaff();
       allow update, delete: if false;
     }
-    match /config/{id} {
+
+    match /config/publico {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if esStaff();
+    }
+
+    match /config/staff {
+      allow read, write: if esStaff();
     }
   }
 }

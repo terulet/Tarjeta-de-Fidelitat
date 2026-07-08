@@ -85,3 +85,8 @@ const sellosRestantes = total % 10;
 5. Sellar +5.
 6. Confirmar que sale 1 premio y queda 3/10.
 7. Pulsar `Premio usado` y confirmar que baja el monedero.
+
+
+## FIREBASE
+
+Este ZIP ya lleva `firebase-config.js` configurado para el proyecto `gelateria-fidelizacion` y las reglas en `firestore.rules`.
