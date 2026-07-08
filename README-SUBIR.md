@@ -159,3 +159,7 @@ Ahora Staff:
 IMPORTANTE:
 Después de subir, publica también las reglas `firestore.rules` en Firebase Console.
 Si GitHub Pages enseña versión antigua, abre en incógnito o borra caché.
+
+
+## STAFF CARDID EXACTO FINAL
+Busca exactamente `clientes/+34..._TOKEN`. Si falta el `+`, prueba automáticamente con `+`. Abrir staff con `staff.html?v=cardid-exacto-final`.

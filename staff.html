@@ -358,6 +358,22 @@
 }
 
 </style>
+
+<style>
+#fixPanel{position:fixed;inset:0;background:rgba(3,30,28,.92);z-index:999999;display:none;align-items:center;justify-content:center;padding:24px}
+#fixPanel.show{display:flex}
+#fixBox{background:#fffdf4;color:#073b38;border:4px solid #f0b429;border-radius:34px;padding:28px;width:min(720px,94vw);text-align:center}
+#fixName{font-size:44px;font-weight:1000}
+#fixStatus{font-size:36px;font-weight:1000;margin:18px 0;padding:18px;border-radius:24px;background:#eaf8f6}
+#fixStatus.prize{background:#fff1b8;border:3px solid #f0b429}
+#fixStamps{display:grid;grid-template-columns:repeat(10,1fr);gap:10px;margin:18px 0}
+.fixStamp{aspect-ratio:1;border-radius:50%;border:3px dashed rgba(7,59,56,.25);display:grid;place-items:center;font-size:28px}
+.fixStamp.full{background:linear-gradient(135deg,#ffd45e,#f0b429);border:3px solid #c4910e}
+.fixActions{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
+.fixActions button,#fixClose{border:0;border-radius:22px;padding:18px 10px;font-size:24px;font-weight:1000;background:#073b38;color:#ffd45e}
+#fixClose{background:#eee2c7;color:#073b38;width:100%;margin-top:14px}
+</style>
+
 </head>
 <body>
 <section class="view on" id="login"><div class="center"><div class="panel"><h2>Gelateria Staff</h2><p>Entra una vez en el iPad. Después la app queda lista para escanear tarjetas rápido.</p><label>Email staff</label><input id="email" type="email" value="staff@lagelateria.app"><label>Contraseña</label><input id="pass" type="password"><button class="btn" id="loginBtn">Entrar</button><p id="loginErr" style="display:none;color:#FF9B93;font-weight:800">No se ha podido entrar.</p></div></div></section>
@@ -585,6 +601,149 @@ document.addEventListener('DOMContentLoaded', function () {
   window.addEventListener('gelateria:qr-scan', function(e){
     if (e && e.detail) staffOpenCardFixed(e.detail);
   });
+});
+</script>
+
+
+<script type="module">
+import {initializeApp, getApps} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import {getFirestore, doc, getDoc, setDoc, serverTimestamp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+let db=null, currentId=null, currentData=null;
+const OBJ=10;
+
+function getDb(){
+  if(db) return db;
+  const app=getApps().length?getApps()[0]:initializeApp(window.FIREBASE_CONFIG);
+  db=getFirestore(app);
+  return db;
+}
+function toast(msg){
+  let el=document.getElementById('toast');
+  if(!el){el=document.createElement('div');el.id='toast';document.body.appendChild(el);}
+  el.textContent=msg;
+  el.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#032B29;color:#fff;padding:14px 20px;border-radius:16px;font-weight:900;z-index:9999999;opacity:1';
+  setTimeout(()=>{el.style.opacity='0'},1800);
+}
+function norm(raw){
+  let txt=String(raw||'').trim();
+  try{
+    const u=new URL(txt);
+    txt=u.searchParams.get('card')||u.searchParams.get('cardId')||u.searchParams.get('id')||u.hash.replace('#','')||txt;
+  }catch(e){}
+  try{txt=decodeURIComponent(txt)}catch(e){}
+  txt=txt.trim();
+  if(txt.startsWith(' ')) txt='+'+txt.trim();
+  return txt;
+}
+async function findCard(raw){
+  const id=norm(raw);
+  const d=getDb();
+  let s=await getDoc(doc(d,'clientes',id));
+  if(s.exists()) return {id:id,data:s.data()};
+  if(/^\d+_[A-Z2-9]{6}$/.test(id)){
+    const plus='+'+id;
+    s=await getDoc(doc(d,'clientes',plus));
+    if(s.exists()) return {id:plus,data:s.data()};
+  }
+  if(!id.includes('_')){
+    let t=await getDoc(doc(d,'telefonos',id));
+    if(!t.exists()&&!id.startsWith('+')) t=await getDoc(doc(d,'telefonos','+'+id));
+    if(t.exists()&&t.data().cardId){
+      const real=t.data().cardId;
+      s=await getDoc(doc(d,'clientes',real));
+      if(s.exists()) return {id:real,data:s.data()};
+    }
+  }
+  return null;
+}
+function ensurePanel(){
+  let p=document.getElementById('fixPanel');
+  if(p) return p;
+  p=document.createElement('div');
+  p.id='fixPanel';
+  p.innerHTML=`<div id="fixBox">
+    <div id="fixName">Cliente</div>
+    <div id="fixStatus">0/10 sellos</div>
+    <div id="fixStamps"></div>
+    <div class="fixActions">
+      <button data-q="1">+1</button><button data-q="2">+2</button><button data-q="3">+3</button><button data-q="5">+5</button>
+    </div>
+    <div class="fixActions">
+      <button data-q="-1">-1</button><button id="fixPrize">🎁 Usar</button><button id="fixHist">📜 Hist.</button><button id="fixCam">📷 Cam.</button>
+    </div>
+    <button id="fixClose">Cerrar</button>
+  </div>`;
+  document.body.appendChild(p);
+  p.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>add(Number(b.dataset.q)));
+  p.querySelector('#fixPrize').onclick=usePrize;
+  p.querySelector('#fixClose').onclick=()=>p.classList.remove('show');
+  p.querySelector('#fixCam').onclick=()=>p.classList.remove('show');
+  p.querySelector('#fixHist').onclick=()=>{
+    const movs=(currentData&&currentData.movimientos)||[];
+    alert(movs.slice(-12).reverse().map(m=>`${new Date(m.ts||Date.now()).toLocaleString()} · ${m.texto||m.tipo||''}`).join('\n')||'Sin historial');
+  };
+  return p;
+}
+function render(){
+  const p=ensurePanel(), c=currentData||{};
+  const sellos=Number(c.sellos||0), mon=Number(c.monedero||0);
+  p.querySelector('#fixName').textContent=c.nombre||c.telefono||'Cliente';
+  const st=p.querySelector('#fixStatus');
+  st.className=mon>0?'prize':'';
+  st.textContent=mon>0?`🎁 PREMIO DISPONIBLE · ${mon}`:`${sellos}/10 sellos · faltan ${10-sellos}`;
+  const stamps=p.querySelector('#fixStamps'); stamps.innerHTML='';
+  for(let i=1;i<=10;i++){
+    const div=document.createElement('div');
+    div.className='fixStamp'+(i<=sellos?' full':'');
+    div.textContent=i<=sellos?'⭐':'';
+    stamps.appendChild(div);
+  }
+  p.classList.add('show');
+}
+async function openExact(raw){
+  toast('Buscando tarjeta…');
+  let found=null;
+  for(let i=0;i<8;i++){
+    try{found=await findCard(raw)}catch(e){console.error(e)}
+    if(found) break;
+    if(i===0) toast('Sincronizando tarjeta…');
+    await new Promise(r=>setTimeout(r,500));
+  }
+  if(!found){toast('Tarjeta no encontrada'); console.warn('QR no encontrado',raw,norm(raw)); return false;}
+  currentId=found.id; currentData=found.data; render(); return true;
+}
+async function add(qty){
+  if(!currentId||!currentData) return;
+  const oldS=Number(currentData.sellos||0), oldM=Number(currentData.monedero||0);
+  let total=Math.max(0,oldS+qty);
+  const premios=Math.floor(total/OBJ), sellos=total%OBJ, mon=oldM+premios;
+  const mov={tipo:qty>=0?'sellos':'resta',qty,ts:Date.now(),texto:`${qty>0?'+':''}${qty} sellos${premios?` · ${premios} premio`:''}`};
+  const up={sellos,monedero:mon,totalSellos:Number(currentData.totalSellos||0)+Math.max(qty,0),premiosGanados:Number(currentData.premiosGanados||0)+premios,actualizado:serverTimestamp(),movimientos:[...(currentData.movimientos||[]),mov].slice(-80)};
+  await setDoc(doc(getDb(),'clientes',currentId),up,{merge:true});
+  currentData={...currentData,...up,actualizado:Date.now()}; render();
+  toast(premios?`🎁 ${premios} premio · quedan ${sellos}/10`:`${sellos}/10 sellos`);
+}
+async function usePrize(){
+  if(!currentId||!currentData) return;
+  const mon=Number(currentData.monedero||0);
+  if(mon<=0){toast('No tiene premio disponible');return;}
+  const mov={tipo:'premio_usado',qty:-1,ts:Date.now(),texto:'Premio usado'};
+  const up={monedero:mon-1,premiosCanjeados:Number(currentData.premiosCanjeados||0)+1,actualizado:serverTimestamp(),movimientos:[...(currentData.movimientos||[]),mov].slice(-80)};
+  await setDoc(doc(getDb(),'clientes',currentId),up,{merge:true});
+  currentData={...currentData,...up,actualizado:Date.now()}; render(); toast('✅ Premio usado');
+}
+
+window.openExactFromQr=openExact;
+window.staffOpenCardFixed=openExact;
+window.openClient=openExact;
+window.openCard=openExact;
+window.handleQr=openExact;
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const btn=document.getElementById('manualBtn'), input=document.getElementById('manualCode');
+  if(btn&&input){btn.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();openExact(input.value)},true);}
+  if(input){input.addEventListener('input',()=>{if(String(input.value).includes('_')) openExact(input.value)},false);}
 });
 </script>
 
