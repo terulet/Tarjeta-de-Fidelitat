@@ -142,3 +142,20 @@ Prueba recomendada después de subir:
 2. Nombre → móvil → aceptar privacidad → Crear.
 3. Debe aparecer inmediatamente: "¡Tarjeta creada!" y el QR del cliente.
 4. En Staff, escanear ese QR.
+
+
+## FIX STAFF ESCANEA QR CLIENTE
+
+Esta versión corrige el caso:
+- Cliente crea tarjeta rápido.
+- Staff escanea el QR y antes decía "tarjeta no encontrada".
+
+Ahora Staff:
+- acepta QR tipo `telefono_TOKEN`;
+- busca directamente en `clientes/{telefono_TOKEN}`;
+- si Firebase tarda, muestra "Sincronizando tarjeta…" y reintenta unos segundos;
+- si el QR antiguo fuera solo teléfono, intenta resolver `telefonos/{telefono}`.
+
+IMPORTANTE:
+Después de subir, publica también las reglas `firestore.rules` en Firebase Console.
+Si GitHub Pages enseña versión antigua, abre en incógnito o borra caché.

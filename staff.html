@@ -14,7 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/@zxing/browser@0.1.5"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="firebase-config.js"></script>
+<script src="firebase-config.js?v=cliente-staff-sync-final"></script>
 <style>
 :root{--bg:#032B29;--bg2:#06413E;--bg3:#0A5350;--teal:#0B7E7C;--deep:#033E3C;--gold:#F0B429;--gold2:#FFD45E;--cream:#FFFCF5;--soft:rgba(255,252,245,.67);--ok:#3FA372;--warn:#D9902A;--danger:#C4574E}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}html,body,button{touch-action:manipulation;user-select:none}input{user-select:text}html,body{height:100%}body{font-family:Inter,sans-serif;background:linear-gradient(170deg,#032B29,#043835 60%,#054541);color:var(--cream);min-height:100vh;overflow:hidden}.view{display:none;height:100vh}.view.on{display:flex;flex-direction:column}.center{display:flex;align-items:center;justify-content:center;padding:22px;height:100vh}.panel{width:100%;max-width:430px;background:var(--bg2);border:1px solid rgba(240,180,41,.25);border-radius:22px;padding:24px}.panel h2{font-family:'Cormorant Garamond',serif;font-size:30px}.panel p{color:var(--soft);font-size:14px;line-height:1.5;margin:6px 0 14px}label{font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);display:block;margin:14px 0 6px}input,select{width:100%;font-size:18px;font-weight:800;padding:15px;border-radius:14px;border:1.5px solid rgba(255,252,245,.15);background:rgba(3,43,41,.65);color:var(--cream);outline:none}.btn{width:100%;border:0;border-radius:16px;background:var(--gold);color:var(--deep);font-size:18px;font-weight:900;padding:17px;margin-top:14px;cursor:pointer}.btn.dark{background:var(--bg3);color:var(--cream);border:1px solid rgba(255,252,245,.15)}.btn.danger{background:var(--danger);color:white}.top{display:flex;align-items:center;gap:10px;padding:12px 14px;padding-top:max(12px,env(safe-area-inset-top));background:rgba(3,32,30,.82);border-bottom:1px solid rgba(240,180,41,.22)}.logo{width:40px;height:40px;border:2px solid var(--gold);border-radius:50%;display:grid;place-items:center;font-size:22px}.brand{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;line-height:1}.pill{margin-left:auto;font-size:12px;color:var(--gold2);border:1px solid rgba(240,180,41,.35);padding:7px 10px;border-radius:20px;background:rgba(240,180,41,.1);font-weight:900}.content{flex:1;overflow:auto;padding:14px 14px 102px;max-width:760px;width:100%;margin:0 auto}.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(4,1fr);background:rgba(3,32,30,.98);border-top:1px solid rgba(240,180,41,.25);padding-bottom:env(safe-area-inset-bottom)}.tab{border:0;background:none;color:var(--soft);padding:11px 4px 10px;font-weight:900;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:3px}.tab .ic{font-size:34px;line-height:1}.tab.on{color:var(--gold2)}.sec{display:none}.sec.on{display:block}.cam{position:relative;border-radius:24px;overflow:hidden;border:2px solid rgba(240,180,41,.38);background:#021d1c;aspect-ratio:4/3}.cam video{width:100%;height:100%;object-fit:cover}.frame{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}.frame div{width:58%;aspect-ratio:1;border:4px solid rgba(255,212,94,.92);border-radius:28px;box-shadow:0 0 0 2000px rgba(2,29,28,.42)}.camBtns{position:absolute;right:12px;top:12px;display:flex;gap:8px}.round{width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,252,245,.35);background:rgba(3,43,41,.75);color:var(--cream);font-size:24px}.flash{position:absolute;inset:0;display:grid;place-items:center;background:var(--ok);opacity:0;pointer-events:none;font-size:90px}.flash.go{animation:fl .45s ease}@keyframes fl{0%{opacity:.9}100%{opacity:0}}.hint{text-align:center;color:var(--soft);font-size:15px;line-height:1.45;margin:12px 0}.hint b{color:var(--gold2)}.manual{display:flex;gap:8px;margin-top:12px}.manual input{flex:1}.manual .btn{width:128px;margin:0;padding:14px;font-size:16px}.qrPanel{display:none;position:fixed;inset:0;z-index:70;background:linear-gradient(170deg,#032B29,#075d59);padding:24px;align-items:center;justify-content:center;text-align:center}.qrPanel.show{display:flex}.qrCard{background:var(--cream);color:#193936;border:3px solid var(--gold);border-radius:30px;padding:26px 20px;max-width:520px;width:100%}.qrCard h2{font-family:'Cormorant Garamond',serif;font-size:38px;color:var(--deep)}.qrCard p{font-size:20px;color:#5C7B79;font-weight:800;line-height:1.35;margin:10px 0 16px}.qrBig{display:inline-block;background:white;padding:18px;border-radius:18px}.qrClose{position:absolute;right:18px;top:18px;width:62px;height:62px;border-radius:50%;border:1px solid rgba(255,252,245,.3);background:rgba(3,43,41,.72);color:white;font-size:28px}.searchRow{display:flex;gap:8px}.searchRow select{width:104px;font-size:16px;padding:14px 6px}.searchRow input{flex:1}.result,.event{background:var(--bg2);border:1px solid rgba(240,180,41,.25);border-radius:18px;padding:16px;margin-top:12px}.result{display:flex;align-items:center;gap:12px;cursor:pointer}.result .name{font-size:20px;font-weight:900}.result .phone{font-size:14px;color:var(--soft);margin-top:3px}.result .right{margin-left:auto;color:var(--gold2);font-size:18px;font-weight:900;white-space:nowrap}.bigtitle{font-family:'Cormorant Garamond',serif;font-size:32px;margin:3px 0 12px}.event{display:grid;grid-template-columns:70px 44px 1fr auto;gap:10px;align-items:center;font-size:17px}.event .time{color:var(--soft);font-size:14px;font-weight:800}.event .ic{font-size:28px}.event .who{font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.event .amt{color:var(--gold2);font-size:20px;font-weight:900}.empty{text-align:center;color:var(--soft);font-size:17px;line-height:1.5;padding:36px 12px}.sheetMask{position:fixed;inset:0;background:rgba(2,25,24,.72);z-index:40;display:none}.sheetMask.show{display:block}.sheet{position:fixed;left:0;right:0;bottom:0;background:var(--bg2);border-radius:28px 28px 0 0;border-top:3px solid var(--gold);z-index:41;display:none;max-height:94vh;overflow:auto;padding:18px 16px calc(20px + env(safe-area-inset-bottom))}.sheet.show{display:block;animation:up .22s ease both}@keyframes up{from{transform:translateY(80px);opacity:0}to{transform:none;opacity:1}}.sheetIn{max-width:680px;margin:0 auto}.head{display:flex;gap:12px;align-items:flex-start}.avatar{width:58px;height:58px;border-radius:18px;background:rgba(240,180,41,.14);display:grid;place-items:center;font-size:32px;border:1px solid rgba(240,180,41,.35)}.sname{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:700;line-height:1}.sphone{color:var(--soft);font-size:17px;font-weight:800}.close{margin-left:auto;width:50px;height:50px;border-radius:50%;background:var(--bg3);color:white;border:1px solid rgba(255,252,245,.2);font-size:25px}.prizeState{margin:14px 0;border-radius:22px;padding:16px;text-align:center;font-weight:900;border:2px solid rgba(240,180,41,.45);background:rgba(240,180,41,.11)}.prizeState .main{font-size:30px;color:var(--gold2)}.prizeState .sub{font-size:18px;color:var(--cream);margin-top:4px}.prizeState.no .main{color:var(--cream)}.stampGrid{display:grid;grid-template-columns:repeat(10,1fr);gap:7px;margin:12px 0}.stamp{aspect-ratio:1;border-radius:50%;background:rgba(255,252,245,.1);border:2px dashed rgba(255,252,245,.23);display:grid;place-items:center;font-size:18px}.stamp.f{background:linear-gradient(135deg,var(--gold2),var(--gold));border:2px solid #C4910E;box-shadow:0 3px 10px rgba(240,180,41,.24)}.stamp.pop{animation:pop .25s ease both}@keyframes pop{0%{transform:scale(.1)}70%{transform:scale(1.18)}100%{transform:scale(1)}}.prog{height:16px;background:rgba(255,252,245,.12);border-radius:20px;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));width:0}.stepLabel{text-align:center;font-size:16px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold2);font-weight:900;margin-top:16px}.stepper{display:grid;grid-template-columns:1fr 130px 1fr;gap:12px;align-items:center;margin:10px 0}.stepper button{min-height:112px;border-radius:24px;border:2px solid rgba(240,180,41,.65);background:rgba(10,83,80,.98);color:var(--gold2);font-size:62px;font-weight:900}.stepper button:active{transform:scale(.97);background:var(--gold);color:var(--deep)}.num{font-size:74px;font-weight:900;color:var(--gold2);text-align:center;line-height:1}.num.bump{animation:bump .13s ease}@keyframes bump{50%{transform:scale(1.2)}}.btnSell{min-height:78px;font-size:25px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions .btn{font-size:18px;min-height:58px}.summary{position:fixed;inset:0;background:rgba(3,43,41,.92);display:none;align-items:center;justify-content:center;z-index:80;padding:24px}.summary.show{display:flex}.sumBox{background:var(--cream);color:#193936;border:3px solid var(--gold);border-radius:30px;padding:30px 22px;text-align:center;max-width:420px;width:100%;animation:pop .2s ease both}.sumBox .plus{font-size:58px;font-weight:900;color:var(--deep)}.sumBox .prize{font-size:36px;font-weight:900;color:#C4910E;margin-top:8px}.sumBox .left{font-size:24px;font-weight:900;color:#193936;margin-top:10px}.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%) translateY(20px);background:#021d1c;color:white;border:1px solid rgba(240,180,41,.35);border-radius:16px;padding:14px 18px;font-weight:900;z-index:99;opacity:0;transition:.2s;text-align:center}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}@media(min-width:720px){.content{padding-left:22px;padding-right:22px}.tab .ic{font-size:38px}.tab{font-size:13px}.cam{max-height:58vh}.sheet{left:50%;transform:translateX(-50%);max-width:760px;border-radius:28px 28px 0 0}.sheet.show{animation:none}}
@@ -383,7 +383,7 @@ function stopCam(){scanning=false; try{reader&&reader.reset&&reader.reset()}catc
 $('restartCam').onclick=()=>{stopCam();setTimeout(startCam,200)};
 function normalize(raw){let x=String(raw||'').trim(); try{const u=new URL(x); const p=u.searchParams.get('card')||u.searchParams.get('phone')||u.searchParams.get('id'); if(p)x=p;}catch(e){} x=x.replace(/[^+0-9]/g,''); if(!x.startsWith('+')&&x.length===9)x='+34'+x; return x;}
 async function handleScan(raw){const code=normalize(raw); if(!code||code.length<8)return; const now=Date.now(); if(code===lastScan&&now-lastScanAt<1400)return; lastScan=code; lastScanAt=now; $('flash').classList.add('go'); setTimeout(()=>$('flash').classList.remove('go'),480); openClient(code);}
-async function openClient(phone){try{const ref=doc(db,'clientes',phone); const snap=await getDoc(ref); if(!snap.exists()){toast('Tarjeta no encontrada');return} sheet={id:phone,data:snap.data()}; step=1; renderSheet(); $('mask').classList.add('show'); $('sheet').classList.add('show'); stopCam();}catch(e){toast('Error al abrir cliente')}}
+async function openClient(phone){try{const ref=doc(db,'clientes',phone); const snap=await getDoc(ref); if(!snap.exists()){toast('Buscando tarjeta…');return} sheet={id:phone,data:snap.data()}; step=1; renderSheet(); $('mask').classList.add('show'); $('sheet').classList.add('show'); stopCam();}catch(e){toast('Error al abrir cliente')}}
 function renderSheet(){const c=sheet.data, sellos=c.sellos||0, mon=c.monedero||0; $('sname').textContent=c.nombre||'Cliente'; $('sphone').textContent=sheet.id; $('prizeState').classList.toggle('no',mon<1); $('prizeMain').textContent=mon>0?'🎁 PREMIO DISPONIBLE':'⭐ FALTAN '+(OBJ-sellos)+' SELLOS'; $('prizeSub').textContent=mon>0?(mon+' premio'+(mon>1?'s':'')+' pendiente'+(mon>1?'s':'')):(sellos+'/10 sellos actuales'); $('stampGrid').innerHTML=''; for(let i=1;i<=OBJ;i++){const d=document.createElement('div');d.className='stamp '+(i<=sellos?'f':'');d.textContent=i<=sellos?'⭐':'';$('stampGrid').appendChild(d)} $('sheetBar').style.width=(sellos*10)+'%'; updateStep();}
 function updateStep(){if(step<0)step=0;if(step>20)step=20;$('qty').textContent=step;$('qty').classList.remove('bump');void $('qty').offsetWidth;$('qty').classList.add('bump');$('sellBtn').textContent=step===0?'SIN SELLOS':'SELLAR +'+step; $('sellBtn').disabled=step===0;}
 $('plus').onclick=()=>{step++;updateStep()}; $('minus').onclick=()=>{step--;updateStep()};
@@ -453,6 +453,138 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     observer.observe(qrSec, {attributes:true, attributeFilter:['class']});
   }
+});
+</script>
+
+
+<script>
+/* ============================
+   STAFF FIX FINAL: QR cliente telefono_token + espera sincronización
+   ============================ */
+window.GELATERIA_STAFF_CARD_FIX = true;
+
+document.addEventListener('DOMContentLoaded', function () {
+  function toastStaff(msg){
+    var el = document.getElementById('toast');
+    if (el) {
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(function(){ el.classList.remove('show'); }, 1800);
+    } else {
+      console.log(msg);
+    }
+  }
+
+  function cleanQrPayload(raw){
+    raw = String(raw || '').trim();
+    try {
+      // Si el QR algún día contiene una URL con ?card=...
+      var u = new URL(raw);
+      return u.searchParams.get('card') || u.searchParams.get('cardId') || u.searchParams.get('id') || raw;
+    } catch(e) {}
+    return raw;
+  }
+
+  // Hook universal: si el código original llama a window.openClient, window.openCard,
+  // window.handleQr o similares, intentamos envolver sin romper.
+  async function waitForClientCard(cardId, attempts){
+    attempts = attempts || 8;
+    if (!cardId) return null;
+
+    // Espera a que Firebase/db estén inicializados por el script original.
+    for (var warm=0; warm<20; warm++) {
+      if (window.db || window._db || window.firestoreDb) break;
+      await new Promise(function(r){setTimeout(r,100);});
+    }
+
+    // No podemos acceder a variables module locales si el staff original las declaró con const.
+    // Por eso usamos el SDK modular directamente aquí para lectura, con FIREBASE_CONFIG global.
+    try {
+      const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+      const { getFirestore, doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+      const app = getApps().length ? getApps()[0] : initializeApp(window.FIREBASE_CONFIG);
+      const db2 = getFirestore(app);
+
+      for (var i=0; i<attempts; i++) {
+        var snap = await getDoc(doc(db2, 'clientes', cardId));
+        if (snap.exists()) return {id: cardId, data: snap.data()};
+
+        // Compatibilidad: si el QR fuera solo teléfono, resolver telefonos/{telefono}
+        if (cardId.indexOf('_') === -1) {
+          var tel = await getDoc(doc(db2, 'telefonos', cardId));
+          if (tel.exists() && tel.data().cardId) {
+            var realId = tel.data().cardId;
+            var snap2 = await getDoc(doc(db2, 'clientes', realId));
+            if (snap2.exists()) return {id: realId, data: snap2.data()};
+          }
+        }
+
+        if (i === 0) toastStaff('Sincronizando tarjeta…');
+        await new Promise(function(r){setTimeout(r,650);});
+      }
+    } catch(e) {
+      console.error('staff wait card fix', e);
+    }
+    return null;
+  }
+
+  async function staffOpenCardFixed(raw){
+    var cardId = cleanQrPayload(raw);
+
+    // Si existe función original de abrir tarjeta, primero intentamos que el fix espere a Firebase.
+    var found = await waitForClientCard(cardId, 9);
+
+    if (!found) {
+      toastStaff('Buscando tarjeta…. Espera 2 segundos y vuelve a escanear.');
+      return false;
+    }
+
+    // Si el código original tiene función global, úsala con el id correcto ya sincronizado.
+    var candidates = ['openClient','openCard','openCliente','loadClient','abrirCliente','handleClient'];
+    for (var i=0; i<candidates.length; i++) {
+      var fn = window[candidates[i]];
+      if (typeof fn === 'function' && fn !== staffOpenCardFixed) {
+        try {
+          fn(found.id);
+          return true;
+        } catch(e) {
+          console.warn('original staff opener failed', candidates[i], e);
+        }
+      }
+    }
+
+    // Fallback visual mínimo si el original no expone función global.
+    var modal = document.getElementById('clientModal') || document.getElementById('clienteModal') || document.getElementById('sheet') || document.querySelector('.sheet') || document.querySelector('.modal');
+    if (modal) {
+      modal.classList.add('show','on','open');
+      var nameEl = document.getElementById('clientName') || document.getElementById('clienteNombre') || modal.querySelector('[data-client-name]');
+      var statusEl = document.getElementById('clientStatus') || document.getElementById('clienteEstado') || modal.querySelector('[data-client-status]');
+      if (nameEl) nameEl.textContent = found.data.nombre || found.data.telefono || 'Cliente';
+      if (statusEl) statusEl.textContent = (found.data.monedero||0) > 0 ? '🎁 PREMIO DISPONIBLE' : ((found.data.sellos||0) + '/10 sellos');
+      return true;
+    }
+
+    toastStaff('Tarjeta encontrada');
+    return true;
+  }
+
+  window.staffOpenCardFixed = staffOpenCardFixed;
+
+  // Captura manual input si existe.
+  var manualBtn = document.getElementById('manualBtn');
+  var manualCode = document.getElementById('manualCode');
+  if (manualBtn && manualCode) {
+    manualBtn.addEventListener('click', function(ev){
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+      staffOpenCardFixed(manualCode.value);
+    }, true);
+  }
+
+  // Hook para librerías QR comunes: escucha cambios en inputs/resultados.
+  window.addEventListener('gelateria:qr-scan', function(e){
+    if (e && e.detail) staffOpenCardFixed(e.detail);
+  });
 });
 </script>
 
