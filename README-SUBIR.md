@@ -90,3 +90,8 @@ const sellosRestantes = total % 10;
 ## FIREBASE
 
 Este ZIP ya lleva `firebase-config.js` configurado para el proyecto `gelateria-fidelizacion` y las reglas en `firestore.rules`.
+
+
+## STAFF iPAD MINI
+
+Esta versión incluye ajuste visual específico para iPad mini: cámara grande al abrir, navegación inferior grande, textos más grandes en lupa/historial y layout sin amontonarse.
