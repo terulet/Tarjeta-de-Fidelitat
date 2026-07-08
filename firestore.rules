@@ -1,61 +1,18 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // El staff inicia sesión con email+contraseña (Firebase Auth).
-    // Los clientes NUNCA inician sesión.
-    function esStaff() {
-      return request.auth != null
-        && request.auth.token.firebase.sign_in_provider == 'password';
+    match /clientes/{id} {
+      allow read, create, update: if true;
+      allow delete: if request.auth != null;
     }
-
-    // ── Tarjetas ─────────────────────────────────────────────────────
-    match /clientes/{cardId} {
-      // Cualquiera con el ID completo (telefono_token) puede leer su tarjeta.
-      allow get: if true;
-      // Buscar/listar: solo staff.
-      allow list: if esStaff();
-      // Crear: el propio cliente al registrarse, o el staff (transferencias).
-      // Validamos lo esencial y que arranque a cero, sin bloquear por campos extra.
-      allow create: if esStaff() || (
-           request.resource.data.telefono is string
-        && request.resource.data.token is string
-        && request.resource.data.sellos == 0
-        && request.resource.data.monedero == 0
-        && request.resource.data.consentimiento == true
-        && cardId == request.resource.data.telefono + '_' + request.resource.data.token
-      );
-      // Sellar, canjear, ajustar: solo staff.
-      allow update: if esStaff();
-      // Borrar: staff, o el propio cliente (derecho de supresión RGPD).
-      allow delete: if true;
-    }
-
-    // ── Índice de teléfonos: guarda el cardId para recuperar la tarjeta ─
-    match /telefonos/{telefono} {
-      allow get: if true;
-      allow list: if esStaff();
-      allow create: if request.resource.data.cardId is string
-                    && request.resource.data.cardId.matches(telefono + '_[A-Z2-9]{6}');
-      allow update: if esStaff()
-                    || (request.resource.data.cardId is string
-                        && request.resource.data.cardId.matches(telefono + '_[A-Z2-9]{6}'));
-      allow delete: if true;
-    }
-
-    // ── Log de actividad (inmutable) ─────────────────────────────────
-    match /eventos/{eventoId} {
-      allow read, create: if esStaff();
+    match /eventos/{id} {
+      allow create: if true;
+      allow read: if request.auth != null;
       allow update, delete: if false;
     }
-
-    // ── Configuración ────────────────────────────────────────────────
-    match /config/publico {
+    match /config/{id} {
       allow read: if true;
-      allow write: if esStaff();
-    }
-    match /config/staff {
-      allow read, write: if esStaff();
+      allow write: if request.auth != null;
     }
   }
 }

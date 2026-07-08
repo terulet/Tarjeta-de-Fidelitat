@@ -1,43 +1,87 @@
-# Tarjeta de Fidelidad · La Gelateria de Roses
+# Tarjeta de Fidelidad · Staff Turbo Final
 
-Paquete final listo para subir al repo `terulet/Tarjeta-de-Fidelitat` en GitHub Pages.
+Paquete final para subir al root del repo `terulet/Tarjeta-de-Fidelitat` en GitHub Pages.
 
-## Qué subir al root del repo
+## Archivos incluidos
 
-Sube estos archivos tal cual al root de la rama `main`:
+- `index.html` — app del cliente.
+- `staff.html` — app del personal para iPad.
+- `privacidad.html` — privacidad básica.
+- `firebase-config.js` — pegar aquí la configuración real de Firebase.
+- `manifest.json` — PWA cliente.
+- `manifest-staff.json` — PWA staff.
+- `sw.js` — service worker con caché nueva.
+- `firestore.rules` — reglas para pegar en Firebase Console.
+- `icon-192.png`, `icon-512.png`, `apple-touch-icon.png` — iconos generados.
 
-- `index.html` — app del cliente
-- `staff.html` — app del personal
-- `privacidad.html` — política de privacidad
-- `firebase-config.js` — configuración Firebase
-- `manifest.json` — PWA cliente
-- `manifest-staff.json` — PWA staff
-- `sw.js` — service worker
-- `icon-192.png`, `icon-512.png`, `apple-touch-icon.png` — iconos
+## Cambios principales
 
-`firestore.rules` no hace falta subirlo al repo: se pega en Firebase Console → Firestore Database → Reglas → Publicar.
+### Staff rápido
 
-## URLs
+- Al abrir Staff, entra directo en cámara después del login.
+- Barra inferior con 4 botones grandes: Cámara, Lupa, Historial y QR.
+- Sin panel admin dentro de Staff para evitar líos.
+- Botón QR gigante para que el cliente cree su tarjeta desde el iPad.
+- Lupa con texto grande.
+- Historial de hoy más vistoso y legible.
 
-Cliente / póster QR:
-`https://terulet.github.io/Tarjeta-de-Fidelitat/`
+### Ficha del cliente
 
-Staff:
-`https://terulet.github.io/Tarjeta-de-Fidelitat/staff.html`
+- Nombre y móvil grandes.
+- Estado enorme: `PREMIO DISPONIBLE` o `FALTAN X SELLOS`.
+- 10 sellos visuales grandes.
+- Botones grandes para sumar/restar cantidad de sellos.
+- Botón `SELLAR +N` muy visible.
+- Botón `Premio usado` para canjear rápido.
 
-## Cambios de esta versión
+### Cálculo correcto de premios con sobrantes
 
-- `index.html` montado desde la versión buena con Firebase.
-- `manifest.json` final con `scope: ./`.
-- `sw.js` con caché subida a `gelateria-v2-2` para forzar actualización en móviles.
-- Texto del cliente ajustado: “Mi Tarjeta de fidelidad”.
-- Póster QR rehecho con QR más grande y texto más natural.
+Ejemplo: cliente tiene 8/10 y compra 5 helados.
 
-## Checklist de prueba rápida
+- 8 + 5 = 13.
+- Gana 1 premio.
+- La nueva tarjeta queda en 3/10.
+- No se pierden sellos.
 
-1. Abrir la URL cliente desde el móvil.
-2. Crear una tarjeta con un teléfono de prueba.
-3. Abrir `staff.html`, entrar con el usuario de staff y escanear el QR.
-4. Añadir 1 sello.
-5. Confirmar que el móvil del cliente actualiza los sellos.
-6. Probar “Añadir a pantalla de inicio” en el móvil y en el iPad.
+Ejemplo: cliente tiene 9/10 y compra 22 helados.
+
+- 9 + 22 = 31.
+- Gana 3 premios.
+- La nueva tarjeta queda en 1/10.
+
+La fórmula interna es:
+
+```js
+const total = sellosAntes + sellosCompra;
+const premios = Math.floor(total / 10);
+const sellosRestantes = total % 10;
+```
+
+### Cliente
+
+- QR siempre visible.
+- Sellos visuales.
+- Premios pendientes visibles.
+- Botón `Compartir / guardar tarjeta`.
+- Instrucciones para iPhone: Compartir → Añadir a pantalla de inicio.
+- Instrucciones para Android: menú ⋮ → Añadir a pantalla de inicio / Instalar app.
+
+## Subida
+
+1. Descomprime el ZIP.
+2. Edita `firebase-config.js` y pega tu configuración real.
+3. Sube todos los archivos al root del repo GitHub Pages.
+4. En Firebase Console, pega `firestore.rules` en Firestore → Reglas → Publicar.
+5. Abre:
+   - Cliente: `https://terulet.github.io/Tarjeta-de-Fidelitat/`
+   - Staff: `https://terulet.github.io/Tarjeta-de-Fidelitat/staff.html`
+
+## Prueba rápida
+
+1. Crear tarjeta desde el móvil.
+2. Abrir Staff en iPad.
+3. Escanear QR del cliente.
+4. Poner cliente en 8/10.
+5. Sellar +5.
+6. Confirmar que sale 1 premio y queda 3/10.
+7. Pulsar `Premio usado` y confirmar que baja el monedero.
