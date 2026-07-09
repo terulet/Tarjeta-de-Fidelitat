@@ -1,10 +1,11 @@
-const CACHE = 'gelateria-fidelidad-staff-final-escaneo-ok-v1';
+const CACHE = 'gelateria-fidelidad-google-wallet-v1';
 const FILES = [
   './',
   './index.html',
   './staff.html',
   './privacidad.html',
   './firebase-config.js',
+  './wallet-config.js',
   './manifest.json',
   './manifest-staff.json',
   './icon-192.png',

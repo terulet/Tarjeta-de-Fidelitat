@@ -15,6 +15,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="firebase-config.js?v=cliente-staff-sync-final"></script>
+<script src="wallet-config.js?v=google-wallet-v1"></script>
 <style>
 :root{--teal:#0B7E7C;--deep:#033E3C;--gold:#F0B429;--gold2:#FFD45E;--cream:#FFFCF5;--ink:#193936;--muted:#5C7B79;--danger:#B4423A}
 *{box-sizing:border-box;margin:0;padding:0}html,body{min-height:100%}body{font-family:Inter,sans-serif;background:radial-gradient(circle at 10% 0%,rgba(255,212,94,.12),transparent 38%),linear-gradient(160deg,#033E3C,#075d59 70%,#0B7E7C);color:var(--cream);padding:24px 16px;display:flex;justify-content:center}.app{width:100%;max-width:430px}.langs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}.langs button{border:1px solid rgba(240,180,41,.4);background:transparent;color:rgba(255,252,245,.72);border-radius:20px;padding:6px 10px;font-size:11px;font-weight:800}.langs button.on{background:var(--gold);color:var(--deep)}header{text-align:center;margin-bottom:18px}.logo{width:70px;height:70px;margin:0 auto 10px}.logo img{width:100%;height:100%;object-fit:contain;border-radius:18px}h1{font-family:'Cormorant Garamond',serif;font-size:33px;line-height:1;color:var(--cream)}h1 span{color:var(--gold);font-style:italic}.subtop{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold2);font-weight:800;margin-bottom:8px}.card{background:var(--cream);color:var(--ink);border-radius:24px;padding:24px 20px;box-shadow:0 22px 60px rgba(0,0,0,.25);border:1px solid rgba(240,180,41,.5);text-align:center}.screen{display:none}.screen.on{display:block;animation:up .25s ease both}@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}.intro{font-size:15px;color:var(--muted);line-height:1.5;margin-bottom:18px}.field{text-align:left;margin-bottom:12px}.field label{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:6px}input{width:100%;font-size:18px;font-weight:700;padding:14px;border-radius:14px;border:1.5px solid rgba(11,126,124,.25);background:#FAF6EB;color:var(--ink);outline:none}.row{display:flex;gap:8px}.row select{width:110px;border-radius:14px;border:1.5px solid rgba(11,126,124,.25);background:#FAF6EB;color:var(--ink);font-size:16px;font-weight:800;padding:12px 6px}.consent{display:flex;gap:10px;text-align:left;margin:12px 0 16px}.consent input{width:22px;height:22px;flex:none;accent-color:var(--teal)}.consent span{font-size:12px;color:var(--muted);line-height:1.45}.consent a{color:var(--teal);font-weight:800}.btn{width:100%;border:0;border-radius:15px;background:var(--deep);color:var(--gold2);font-size:16px;font-weight:900;padding:16px;cursor:pointer}.btn.secondary{background:#fff;border:1.5px solid rgba(11,126,124,.25);color:var(--deep)}.hello{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--deep);margin-bottom:4px}.status{font-size:14px;font-weight:800;color:var(--muted);margin-bottom:14px}.status.prize{font-size:24px;color:var(--gold);background:rgba(240,180,41,.12);border:1.5px solid var(--gold);border-radius:16px;padding:12px}.stamps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:12px auto;max-width:315px}.stamp{aspect-ratio:1;border-radius:50%;border:2px dashed rgba(11,126,124,.25);display:grid;place-items:center;font-size:24px}.stamp.f{background:linear-gradient(135deg,var(--gold2),var(--gold));border:2px solid #C4910E;box-shadow:0 4px 12px rgba(196,145,14,.3)}.stamp.pop{animation:pop .45s ease both}@keyframes pop{0%{transform:scale(.1)}70%{transform:scale(1.18)}100%{transform:scale(1)}}.progress{height:12px;border-radius:20px;background:rgba(11,126,124,.12);overflow:hidden;margin:10px 0 8px}.bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));width:0;transition:.3s}.count{font-size:16px;font-weight:900;color:var(--deep);margin-bottom:14px}.wallet{display:none;border:2px solid var(--gold);border-radius:18px;background:rgba(240,180,41,.13);padding:14px;margin:12px 0}.wallet.show{display:block}.wallet b{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--deep)}.wallet p{font-size:13px;color:var(--muted);line-height:1.4;margin-top:3px}.qrbox{background:#fff;display:inline-block;padding:14px;border-radius:18px;border:1px solid rgba(11,126,124,.18);margin:12px 0}.note{font-size:13px;color:var(--muted);line-height:1.45}.install{display:none;text-align:left;margin-top:14px;padding:14px;border-radius:16px;background:rgba(240,180,41,.13);border:1.5px solid rgba(240,180,41,.45);font-size:13px;color:var(--muted);line-height:1.5}.install.show{display:block}.install b{display:block;color:var(--deep);font-size:16px;margin-bottom:5px}.small{font-size:11px;color:var(--muted);margin-top:16px;background:none;border:0;text-decoration:underline}.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#032B29;color:#fff;padding:13px 18px;border-radius:14px;opacity:0;pointer-events:none;transition:.2s;font-weight:800;z-index:99}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.cele{position:fixed;inset:0;background:rgba(3,43,41,.88);display:none;align-items:center;justify-content:center;padding:24px;z-index:60}.cele.show{display:flex}.celebox{background:var(--cream);color:var(--ink);border:2px solid var(--gold);border-radius:28px;max-width:350px;width:100%;padding:32px 22px;text-align:center;animation:pop .35s ease both}.celebox .big{font-size:60px}.celebox h2{font-family:'Cormorant Garamond',serif;font-size:31px;color:var(--deep)}.celebox p{font-size:15px;color:var(--muted);line-height:1.45;margin-top:8px}footer{text-align:center;color:rgba(255,252,245,.45);font-size:12px;margin-top:18px}footer a{color:rgba(255,252,245,.65)}
@@ -195,6 +196,20 @@
   .client-final-title { font-size: 36px; }
 }
 
+/* ======================================================
+   WALLET · Añadir a Google Wallet (+ Apple Wallet futuro)
+   ====================================================== */
+.wallet-save-box{margin:16px 0 4px;padding:16px;border-radius:20px;background:linear-gradient(135deg,rgba(11,126,124,.10),rgba(255,255,255,.9));border:1.5px solid rgba(11,126,124,.22);text-align:center}
+.wallet-save-box .wallet-save-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:800;color:#073b38;margin-bottom:4px}
+.wallet-save-box .wallet-save-help{font-size:13px;color:#5C7B79;line-height:1.4;margin-bottom:12px}
+.btn-wallet{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;cursor:pointer;border-radius:16px;padding:14px 16px;font-size:15px;font-weight:900;background:#000;color:#fff;text-decoration:none;box-shadow:0 8px 20px rgba(0,0,0,.22)}
+.btn-wallet:disabled{cursor:default;opacity:.55;box-shadow:none}
+.btn-wallet .wallet-ico{width:26px;height:26px;flex:none;display:grid;place-items:center;border-radius:7px;background:#fff}
+.btn-wallet .wallet-ico svg{width:18px;height:18px;display:block}
+.btn-wallet.apple{background:#f3f3f3;color:#111;border:1.5px solid rgba(0,0,0,.12);margin-top:9px}
+.btn-wallet.apple .wallet-ico{background:#111}
+.wallet-apple-note{font-size:11px;color:#6f8582;margin-top:8px;line-height:1.35}
+
 </style>
 </head>
 <body>
@@ -219,6 +234,21 @@
       <div class="qrbox"><div id="qr"></div></div>
       <p class="note" data-t="qrnote">Enséñanos este QR cada vez que compres.</p>
       <button class="btn secondary" id="shareBtn">📲 Compartir / guardar tarjeta</button>
+
+      <div class="wallet-save-box" id="walletSaveBox">
+        <div class="wallet-save-title" data-t="walletSaveTitle">Guarda tu tarjeta</div>
+        <div class="wallet-save-help" data-t="walletSaveHelp">Guarda tu tarjeta en Google Wallet para encontrarla fácilmente.</div>
+        <button type="button" class="btn-wallet" id="gwalletBtn">
+          <span class="wallet-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M4 5h16a2 2 0 0 1 2 2v3H2V7a2 2 0 0 1 2-2z"/><path fill="#34A853" d="M2 10h20v7a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-7z"/><rect x="14" y="12.5" width="8" height="4" rx="2" fill="#FBBC05"/><circle cx="16.5" cy="14.5" r="1.15" fill="#EA4335"/></svg></span>
+          <span data-t="walletBtn">Añadir a Google Wallet</span>
+        </button>
+        <button type="button" class="btn-wallet apple" id="awalletBtn" disabled>
+          <span class="wallet-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M17.05 12.04c-.03-2.6 2.13-3.85 2.22-3.91-1.21-1.77-3.09-2.01-3.76-2.04-1.6-.16-3.12.94-3.93.94-.81 0-2.06-.92-3.39-.9-1.74.03-3.35 1.01-4.25 2.57-1.81 3.14-.46 7.79 1.3 10.34.86 1.25 1.88 2.65 3.22 2.6 1.29-.05 1.78-.83 3.34-.83 1.56 0 2 .83 3.37.81 1.39-.03 2.27-1.27 3.12-2.53.98-1.45 1.39-2.85 1.41-2.92-.03-.01-2.7-1.04-2.73-4.13z"/><path fill="#fff" d="M14.53 4.86c.71-.86 1.19-2.05 1.06-3.24-1.02.04-2.26.68-2.99 1.54-.66.76-1.23 1.98-1.08 3.14 1.14.09 2.3-.58 3.01-1.44z"/></svg></span>
+          <span data-t="appleBtn">Añadir a Apple Wallet · Próximamente</span>
+        </button>
+        <div class="wallet-apple-note" data-t="appleNote">Apple Wallet estará disponible en cuanto se apruebe la cuenta Apple Developer.</div>
+      </div>
+
       <div class="install" id="install"><b id="installTitle"></b><div id="installText"></div></div>
       
       <div class="client-final-card" id="clientFinalVisual">
@@ -287,14 +317,15 @@ const $ = id => document.getElementById(id);
 let db = null;
 let unsub = null;
 let currentCardId = null;
+let currentCard = {};
 let lastSellos = 0;
 let lang = localStorage.getItem('gelateria_lang') || 'es';
 
 const TXT = {
-  es:{intro:'Crea tu tarjeta en 10 segundos. Cada compra suma sellos, sin papel y sin perderla.',name:'Nombre opcional',phone:'Móvil',consent:'Acepto que La Gelateria de Roses use mi nombre y móvil solo para gestionar mi tarjeta. <a href="privacidad.html" target="_blank">Política de privacidad</a>.',create:'Crear mi tarjeta',qrnote:'Enséñanos este QR cada vez que compres.',delete:'Eliminar mi tarjeta de este móvil',missing:'Faltan {n} sellos',missing1:'Falta 1 sello',prize:'🎁 PREMIO DISPONIBLE',count:'{s}/10 sellos',wallet1:'1 premio pendiente',walletN:'{n} premios pendientes',saved:'¡Felicidades! Ya tienes tu tarjeta',installTitle:'Guárdala como app',installIos:'iPhone: toca Compartir → Añadir a pantalla de inicio. También puedes guardar esta página en favoritos.',installAndroid:'Android: toca el menú ⋮ → Añadir a pantalla de inicio o Instalar app.',cele:'¡Tarjeta creada!',celeText:'Enséñanos este QR cada vez que compres.'},
-  ca:{intro:'Crea la teva targeta en 10 segons. Cada compra suma segells, sense paper i sense perdre-la.',name:'Nom opcional',phone:'Mòbil',consent:'Accepto que La Gelateria de Roses faci servir el meu nom i mòbil només per gestionar la targeta. <a href="privacidad.html" target="_blank">Política de privacitat</a>.',create:'Crear la meva targeta',qrnote:'Ensenya aquest QR cada vegada que compris.',delete:'Eliminar la targeta d’aquest mòbil',missing:'Falten {n} segells',missing1:'Falta 1 segell',prize:'🎁 PREMI DISPONIBLE',count:'{s}/10 segells',wallet1:'1 premi pendent',walletN:'{n} premis pendents',saved:'Felicitats! Ja tens la teva targeta',installTitle:'Guarda-la com app',installIos:'iPhone: toca Compartir → Afegir a pantalla d’inici.',installAndroid:'Android: toca el menú ⋮ → Afegir a pantalla d’inici o Instal·lar app.',cele:'Targeta creada!',celeText:'Ensenya aquest QR cada vegada que compris.'},
-  fr:{intro:'Créez votre carte en 10 secondes. Chaque achat ajoute des tampons, sans papier.',name:'Nom optionnel',phone:'Mobile',consent:'J’accepte que La Gelateria de Roses utilise mon nom et mon mobile uniquement pour gérer ma carte. <a href="privacidad.html" target="_blank">Confidentialité</a>.',create:'Créer ma carte',qrnote:'Montrez ce QR à chaque achat.',delete:'Supprimer ma carte de ce téléphone',missing:'Encore {n} tampons',missing1:'Encore 1 tampon',prize:'🎁 RÉCOMPENSE DISPONIBLE',count:'{s}/10 tampons',wallet1:'1 récompense en attente',walletN:'{n} récompenses en attente',saved:'Félicitations ! Votre carte est prête',installTitle:'Ajoutez-la à l’écran d’accueil',installIos:'iPhone : Partager → Sur l’écran d’accueil.',installAndroid:'Android : menu ⋮ → Ajouter à l’écran d’accueil ou Installer.',cele:'Carte créée !',celeText:'Montrez ce QR à chaque achat.'},
-  en:{intro:'Create your card in 10 seconds. Every purchase adds stamps, no paper needed.',name:'Optional name',phone:'Mobile',consent:'I accept that La Gelateria de Roses uses my name and mobile only to manage my loyalty card. <a href="privacidad.html" target="_blank">Privacy policy</a>.',create:'Create my card',qrnote:'Show us this QR whenever you buy.',delete:'Remove my card from this phone',missing:'{n} stamps to go',missing1:'1 stamp to go',prize:'🎁 REWARD AVAILABLE',count:'{s}/10 stamps',wallet1:'1 reward pending',walletN:'{n} rewards pending',saved:'Congratulations! Your card is ready',installTitle:'Save it as an app',installIos:'iPhone: tap Share → Add to Home Screen.',installAndroid:'Android: tap ⋮ → Add to Home screen or Install app.',cele:'Card created!',celeText:'Show us this QR whenever you buy.'}
+  es:{intro:'Crea tu tarjeta en 10 segundos. Cada compra suma sellos, sin papel y sin perderla.',name:'Nombre opcional',phone:'Móvil',consent:'Acepto que La Gelateria de Roses use mi nombre y móvil solo para gestionar mi tarjeta. <a href="privacidad.html" target="_blank">Política de privacidad</a>.',create:'Crear mi tarjeta',qrnote:'Enséñanos este QR cada vez que compres.',delete:'Eliminar mi tarjeta de este móvil',missing:'Faltan {n} sellos',missing1:'Falta 1 sello',prize:'🎁 PREMIO DISPONIBLE',count:'{s}/10 sellos',wallet1:'1 premio pendiente',walletN:'{n} premios pendientes',saved:'¡Felicidades! Ya tienes tu tarjeta',installTitle:'Guárdala como app',installIos:'iPhone: toca Compartir → Añadir a pantalla de inicio. También puedes guardar esta página en favoritos.',installAndroid:'Android: toca el menú ⋮ → Añadir a pantalla de inicio o Instalar app.',cele:'¡Tarjeta creada!',celeText:'Enséñanos este QR cada vez que compres.',walletSaveTitle:'Guarda tu tarjeta',walletSaveHelp:'Guarda tu tarjeta en Google Wallet para encontrarla fácilmente.',walletBtn:'Añadir a Google Wallet',appleBtn:'Añadir a Apple Wallet · Próximamente',appleNote:'Apple Wallet estará disponible en cuanto se apruebe la cuenta Apple Developer.',walletSoon:'Google Wallet estará disponible muy pronto.',walletErr:'No se pudo abrir Google Wallet. Inténtalo de nuevo.',walletLoading:'Preparando…'},
+  ca:{intro:'Crea la teva targeta en 10 segons. Cada compra suma segells, sense paper i sense perdre-la.',name:'Nom opcional',phone:'Mòbil',consent:'Accepto que La Gelateria de Roses faci servir el meu nom i mòbil només per gestionar la targeta. <a href="privacidad.html" target="_blank">Política de privacitat</a>.',create:'Crear la meva targeta',qrnote:'Ensenya aquest QR cada vegada que compris.',delete:'Eliminar la targeta d’aquest mòbil',missing:'Falten {n} segells',missing1:'Falta 1 segell',prize:'🎁 PREMI DISPONIBLE',count:'{s}/10 segells',wallet1:'1 premi pendent',walletN:'{n} premis pendents',saved:'Felicitats! Ja tens la teva targeta',installTitle:'Guarda-la com app',installIos:'iPhone: toca Compartir → Afegir a pantalla d’inici.',installAndroid:'Android: toca el menú ⋮ → Afegir a pantalla d’inici o Instal·lar app.',cele:'Targeta creada!',celeText:'Ensenya aquest QR cada vegada que compris.',walletSaveTitle:'Desa la teva targeta',walletSaveHelp:'Desa la teva targeta a Google Wallet per trobar-la fàcilment.',walletBtn:'Afegir a Google Wallet',appleBtn:'Afegir a Apple Wallet · Pròximament',appleNote:'Apple Wallet estarà disponible quan s’aprovi el compte Apple Developer.',walletSoon:'Google Wallet estarà disponible molt aviat.',walletErr:'No s’ha pogut obrir Google Wallet. Torna-ho a provar.',walletLoading:'Preparant…'},
+  fr:{intro:'Créez votre carte en 10 secondes. Chaque achat ajoute des tampons, sans papier.',name:'Nom optionnel',phone:'Mobile',consent:'J’accepte que La Gelateria de Roses utilise mon nom et mon mobile uniquement pour gérer ma carte. <a href="privacidad.html" target="_blank">Confidentialité</a>.',create:'Créer ma carte',qrnote:'Montrez ce QR à chaque achat.',delete:'Supprimer ma carte de ce téléphone',missing:'Encore {n} tampons',missing1:'Encore 1 tampon',prize:'🎁 RÉCOMPENSE DISPONIBLE',count:'{s}/10 tampons',wallet1:'1 récompense en attente',walletN:'{n} récompenses en attente',saved:'Félicitations ! Votre carte est prête',installTitle:'Ajoutez-la à l’écran d’accueil',installIos:'iPhone : Partager → Sur l’écran d’accueil.',installAndroid:'Android : menu ⋮ → Ajouter à l’écran d’accueil ou Installer.',cele:'Carte créée !',celeText:'Montrez ce QR à chaque achat.',walletSaveTitle:'Enregistrez votre carte',walletSaveHelp:'Enregistrez votre carte dans Google Wallet pour la retrouver facilement.',walletBtn:'Ajouter à Google Wallet',appleBtn:'Ajouter à Apple Wallet · Bientôt',appleNote:'Apple Wallet sera disponible dès l’approbation du compte Apple Developer.',walletSoon:'Google Wallet sera disponible très bientôt.',walletErr:'Impossible d’ouvrir Google Wallet. Réessayez.',walletLoading:'Préparation…'},
+  en:{intro:'Create your card in 10 seconds. Every purchase adds stamps, no paper needed.',name:'Optional name',phone:'Mobile',consent:'I accept that La Gelateria de Roses uses my name and mobile only to manage my loyalty card. <a href="privacidad.html" target="_blank">Privacy policy</a>.',create:'Create my card',qrnote:'Show us this QR whenever you buy.',delete:'Remove my card from this phone',missing:'{n} stamps to go',missing1:'1 stamp to go',prize:'🎁 REWARD AVAILABLE',count:'{s}/10 stamps',wallet1:'1 reward pending',walletN:'{n} rewards pending',saved:'Congratulations! Your card is ready',installTitle:'Save it as an app',installIos:'iPhone: tap Share → Add to Home Screen.',installAndroid:'Android: tap ⋮ → Add to Home screen or Install app.',cele:'Card created!',celeText:'Show us this QR whenever you buy.',walletSaveTitle:'Save your card',walletSaveHelp:'Save your card to Google Wallet so you can find it easily.',walletBtn:'Add to Google Wallet',appleBtn:'Add to Apple Wallet · Coming soon',appleNote:'Apple Wallet will be available once the Apple Developer account is approved.',walletSoon:'Google Wallet will be available very soon.',walletErr:'Could not open Google Wallet. Please try again.',walletLoading:'Preparing…'}
 };
 
 function t(k,p={}) {
@@ -388,6 +419,7 @@ async function resolveCardId(phone) {
 
 function renderLocalCreatedCard(cardId, data) {
   currentCardId = cardId;
+  currentCard = {cardId:cardId, nombre:data.nombre||'', telefono:data.telefono||'', sellos:0, monedero:0};
   show('card');
 
   $('hello').textContent = data.nombre ? `¡Hola, ${data.nombre}!` : '¡Hola!';
@@ -532,6 +564,7 @@ async function openExisting(cardOrPhone) {
 function renderCard(c) {
   const sellos=Number(c.sellos||0);
   const mon=Number(c.monedero||0);
+  currentCard = {cardId:currentCardId, nombre:c.nombre||'', telefono:c.telefono||'', sellos:sellos, monedero:mon};
 
   $('hello').textContent=c.nombre?`¡Hola, ${c.nombre}!`:'¡Hola!';
   $('status').className='status'+(mon>0?' prize':'');
@@ -575,6 +608,66 @@ function renderInstall() {
   $('installText').textContent=ios?t('installIos'):t('installAndroid');
 }
 
+function currentWalletPayload() {
+  return {
+    cardId: currentCardId,
+    nombre: currentCard.nombre || '',
+    telefono: currentCard.telefono || localStorage.getItem('gelateria_phone') || (currentCardId ? String(currentCardId).split('_')[0] : ''),
+    sellos: Number(currentCard.sellos || 0),
+    monedero: Number(currentCard.monedero || 0)
+  };
+}
+
+async function saveToGoogleWallet() {
+  const cfg = window.WALLET_CONFIG || {};
+  if(!currentCardId) { toast(t('walletErr')); return; }
+  const apiBase = String(cfg.apiBase || '').replace(/\/+$/,'');
+  // Sin backend configurado: aviso amable, la app no se rompe.
+  if(!apiBase) { toast(t('walletSoon')); return; }
+
+  const btn = $('gwalletBtn');
+  const label = btn.querySelector('span[data-t="walletBtn"]');
+  const oldText = label ? label.textContent : '';
+  btn.disabled = true;
+  if(label) label.textContent = t('walletLoading');
+
+  try {
+    const res = await withTimeout(fetch(apiBase + '/api/wallet/google', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(currentWalletPayload())
+    }), 9000, 'wallet timeout');
+
+    if(!res.ok) {
+      toast(res.status === 503 ? t('walletSoon') : t('walletErr'));
+      return;
+    }
+    const data = await res.json();
+    if(data && data.saveUrl) window.location.href = data.saveUrl;
+    else toast(t('walletErr'));
+  } catch(e) {
+    console.warn('google wallet', e);
+    toast(t('walletErr'));
+  } finally {
+    btn.disabled = false;
+    if(label) label.textContent = oldText;
+  }
+}
+
+function initWalletUI() {
+  const cfg = window.WALLET_CONFIG || {};
+  const box = $('walletSaveBox');
+  const g = $('gwalletBtn');
+  const a = $('awalletBtn');
+  if(g) {
+    if(cfg.googleWalletEnabled === false) g.style.display = 'none';
+    else g.onclick = saveToGoogleWallet;
+  }
+  // Apple Wallet: preparado pero deshabilitado hasta la aprobación de Apple Developer.
+  if(a) a.disabled = !cfg.appleWalletEnabled;
+  if(box && cfg.googleWalletEnabled === false && !cfg.appleWalletEnabled) box.style.display = 'none';
+}
+
 $('create').onclick=create;
 $('shareBtn').onclick=async()=>{
   renderInstall();
@@ -594,6 +687,7 @@ $('cele').onclick=()=>$('cele').classList.remove('show');
 
 renderLangs();
 applyLang();
+initWalletUI();
 if('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js?v=cliente-rapido-final').catch(()=>{});
 }
