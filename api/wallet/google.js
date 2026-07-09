@@ -32,12 +32,13 @@ function applyCors(req, res) {
   const origin = req.headers.origin;
 
   if (origin && (allowed.length === 0 || allowed.includes(origin))) {
+    // Origen permitido (o lista sin configurar → se refleja el origen concreto,
+    // nunca un comodín "*").
     res.setHeader('Access-Control-Allow-Origin', origin);
   } else if (allowed.length) {
     res.setHeader('Access-Control-Allow-Origin', allowed[0]);
-  } else {
-    res.setHeader('Access-Control-Allow-Origin', '*');
   }
+  // Sin cabecera ACAO si no hay origen y no hay lista: el navegador bloquea por defecto.
   res.setHeader('Vary', 'Origin');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');

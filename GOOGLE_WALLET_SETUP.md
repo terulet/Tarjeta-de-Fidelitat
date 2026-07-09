@@ -171,6 +171,12 @@ Y en `wallet-config.js` apunta temporalmente `apiBase` a `http://localhost:3000`
 - El endpoint **valida** el `cardId` y limita los campos (`sellos` 0-10, etc.).
 - Sin credenciales, el endpoint responde **503 controlado** y el botón del cliente
   muestra “disponible pronto”: la app **no se rompe**.
+- **Nota:** el endpoint es público (sin login), igual que el resto de la web del
+  cliente. El pase de Wallet es una **foto cosmética** de los sellos; el saldo real
+  vive en Firestore y no se ve afectado. Aun así, para producción se recomienda
+  añadir **rate limiting** (en Vercel, mediante su configuración o un middleware) y,
+  si se quiere endurecer más, verificar contra Firestore que el `cardId` existe antes
+  de firmar (requiere el Admin SDK y su credencial).
 
 ---
 

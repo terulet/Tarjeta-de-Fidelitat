@@ -96,7 +96,8 @@ function normalizeCard(input = {}) {
 
   let monedero = Number(input.monedero);
   if (!Number.isFinite(monedero) || monedero < 0) monedero = 0;
-  monedero = Math.floor(monedero);
+  // Tope defensivo: evita incrustar enteros absurdos en el pase.
+  monedero = Math.min(Math.floor(monedero), 999);
 
   return { cardId, nombre, telefono, sellos, monedero };
 }
