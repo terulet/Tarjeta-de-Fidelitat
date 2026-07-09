@@ -173,3 +173,16 @@ Flujo esperado:
 4. La ficha grande se abre al momento.
 
 Después de subir, abrir Staff con: `staff.html?v=staff-final-escaneo-ok` para evitar caché vieja.
+
+
+## CLIENTE VISUAL RESTAURADO
+
+Esta versión mantiene Staff funcionando y recupera el bloque visual del cliente:
+- Instagram
+- Web oficial
+- Google Reviews
+- instrucciones para guardar como app en iPhone/Android
+- estética premium de La Gelateria
+
+Abrir cliente con `?v=cliente-visual-final` para evitar caché.
+Abrir staff con `staff.html?v=staff-final-escaneo-ok`.
