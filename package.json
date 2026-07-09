@@ -1,0 +1,18 @@
+{
+  "name": "gelateria-wallet-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API de Google Wallet (Loyalty Card) para la Tarjeta de Fidelidad de La Gelateria de Roses. El frontend cliente sigue siendo HTML/JS estático en GitHub Pages; esto es solo el backend que firma el JWT.",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test",
+    "create-wallet-class": "node scripts/create-wallet-class.js"
+  },
+  "dependencies": {
+    "google-auth-library": "^9.14.1",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
