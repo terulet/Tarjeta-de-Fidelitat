@@ -1,4 +1,4 @@
-const CACHE = 'gelateria-fidelidad-cliente-rapido-final-v1';
+const CACHE = 'gelateria-fidelidad-staff-final-escaneo-ok-v1';
 const FILES = [
   './',
   './index.html',

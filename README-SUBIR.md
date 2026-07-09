@@ -161,5 +161,15 @@ Después de subir, publica también las reglas `firestore.rules` en Firebase Con
 Si GitHub Pages enseña versión antigua, abre en incógnito o borra caché.
 
 
-## STAFF CARDID EXACTO FINAL
-Busca exactamente `clientes/+34..._TOKEN`. Si falta el `+`, prueba automáticamente con `+`. Abrir staff con `staff.html?v=cardid-exacto-final`.
+## FINAL STAFF ESCANEO OK
+
+Cambio clave: se ha reescrito el flujo Staff para que el escaneo no destruya el token del QR.
+Antes el Staff limpiaba el QR y dejaba solo el teléfono; ahora respeta el formato exacto `+34..._TOKEN` y busca directamente `clientes/{cardId}`.
+
+Flujo esperado:
+1. Cliente crea tarjeta.
+2. Firestore muestra documento tipo `+34647319686_7SB4MU`.
+3. Staff escanea ese QR.
+4. La ficha grande se abre al momento.
+
+Después de subir, abrir Staff con: `staff.html?v=staff-final-escaneo-ok` para evitar caché vieja.

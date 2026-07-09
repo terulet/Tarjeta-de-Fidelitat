@@ -14,7 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/@zxing/browser@0.1.5"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="firebase-config.js?v=cliente-staff-sync-final"></script>
+<script src="firebase-config.js?v=staff-final-escaneo-ok"></script>
 <style>
 :root{--bg:#032B29;--bg2:#06413E;--bg3:#0A5350;--teal:#0B7E7C;--deep:#033E3C;--gold:#F0B429;--gold2:#FFD45E;--cream:#FFFCF5;--soft:rgba(255,252,245,.67);--ok:#3FA372;--warn:#D9902A;--danger:#C4574E}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}html,body,button{touch-action:manipulation;user-select:none}input{user-select:text}html,body{height:100%}body{font-family:Inter,sans-serif;background:linear-gradient(170deg,#032B29,#043835 60%,#054541);color:var(--cream);min-height:100vh;overflow:hidden}.view{display:none;height:100vh}.view.on{display:flex;flex-direction:column}.center{display:flex;align-items:center;justify-content:center;padding:22px;height:100vh}.panel{width:100%;max-width:430px;background:var(--bg2);border:1px solid rgba(240,180,41,.25);border-radius:22px;padding:24px}.panel h2{font-family:'Cormorant Garamond',serif;font-size:30px}.panel p{color:var(--soft);font-size:14px;line-height:1.5;margin:6px 0 14px}label{font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);display:block;margin:14px 0 6px}input,select{width:100%;font-size:18px;font-weight:800;padding:15px;border-radius:14px;border:1.5px solid rgba(255,252,245,.15);background:rgba(3,43,41,.65);color:var(--cream);outline:none}.btn{width:100%;border:0;border-radius:16px;background:var(--gold);color:var(--deep);font-size:18px;font-weight:900;padding:17px;margin-top:14px;cursor:pointer}.btn.dark{background:var(--bg3);color:var(--cream);border:1px solid rgba(255,252,245,.15)}.btn.danger{background:var(--danger);color:white}.top{display:flex;align-items:center;gap:10px;padding:12px 14px;padding-top:max(12px,env(safe-area-inset-top));background:rgba(3,32,30,.82);border-bottom:1px solid rgba(240,180,41,.22)}.logo{width:40px;height:40px;border:2px solid var(--gold);border-radius:50%;display:grid;place-items:center;font-size:22px}.brand{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;line-height:1}.pill{margin-left:auto;font-size:12px;color:var(--gold2);border:1px solid rgba(240,180,41,.35);padding:7px 10px;border-radius:20px;background:rgba(240,180,41,.1);font-weight:900}.content{flex:1;overflow:auto;padding:14px 14px 102px;max-width:760px;width:100%;margin:0 auto}.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(4,1fr);background:rgba(3,32,30,.98);border-top:1px solid rgba(240,180,41,.25);padding-bottom:env(safe-area-inset-bottom)}.tab{border:0;background:none;color:var(--soft);padding:11px 4px 10px;font-weight:900;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:3px}.tab .ic{font-size:34px;line-height:1}.tab.on{color:var(--gold2)}.sec{display:none}.sec.on{display:block}.cam{position:relative;border-radius:24px;overflow:hidden;border:2px solid rgba(240,180,41,.38);background:#021d1c;aspect-ratio:4/3}.cam video{width:100%;height:100%;object-fit:cover}.frame{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}.frame div{width:58%;aspect-ratio:1;border:4px solid rgba(255,212,94,.92);border-radius:28px;box-shadow:0 0 0 2000px rgba(2,29,28,.42)}.camBtns{position:absolute;right:12px;top:12px;display:flex;gap:8px}.round{width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,252,245,.35);background:rgba(3,43,41,.75);color:var(--cream);font-size:24px}.flash{position:absolute;inset:0;display:grid;place-items:center;background:var(--ok);opacity:0;pointer-events:none;font-size:90px}.flash.go{animation:fl .45s ease}@keyframes fl{0%{opacity:.9}100%{opacity:0}}.hint{text-align:center;color:var(--soft);font-size:15px;line-height:1.45;margin:12px 0}.hint b{color:var(--gold2)}.manual{display:flex;gap:8px;margin-top:12px}.manual input{flex:1}.manual .btn{width:128px;margin:0;padding:14px;font-size:16px}.qrPanel{display:none;position:fixed;inset:0;z-index:70;background:linear-gradient(170deg,#032B29,#075d59);padding:24px;align-items:center;justify-content:center;text-align:center}.qrPanel.show{display:flex}.qrCard{background:var(--cream);color:#193936;border:3px solid var(--gold);border-radius:30px;padding:26px 20px;max-width:520px;width:100%}.qrCard h2{font-family:'Cormorant Garamond',serif;font-size:38px;color:var(--deep)}.qrCard p{font-size:20px;color:#5C7B79;font-weight:800;line-height:1.35;margin:10px 0 16px}.qrBig{display:inline-block;background:white;padding:18px;border-radius:18px}.qrClose{position:absolute;right:18px;top:18px;width:62px;height:62px;border-radius:50%;border:1px solid rgba(255,252,245,.3);background:rgba(3,43,41,.72);color:white;font-size:28px}.searchRow{display:flex;gap:8px}.searchRow select{width:104px;font-size:16px;padding:14px 6px}.searchRow input{flex:1}.result,.event{background:var(--bg2);border:1px solid rgba(240,180,41,.25);border-radius:18px;padding:16px;margin-top:12px}.result{display:flex;align-items:center;gap:12px;cursor:pointer}.result .name{font-size:20px;font-weight:900}.result .phone{font-size:14px;color:var(--soft);margin-top:3px}.result .right{margin-left:auto;color:var(--gold2);font-size:18px;font-weight:900;white-space:nowrap}.bigtitle{font-family:'Cormorant Garamond',serif;font-size:32px;margin:3px 0 12px}.event{display:grid;grid-template-columns:70px 44px 1fr auto;gap:10px;align-items:center;font-size:17px}.event .time{color:var(--soft);font-size:14px;font-weight:800}.event .ic{font-size:28px}.event .who{font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.event .amt{color:var(--gold2);font-size:20px;font-weight:900}.empty{text-align:center;color:var(--soft);font-size:17px;line-height:1.5;padding:36px 12px}.sheetMask{position:fixed;inset:0;background:rgba(2,25,24,.72);z-index:40;display:none}.sheetMask.show{display:block}.sheet{position:fixed;left:0;right:0;bottom:0;background:var(--bg2);border-radius:28px 28px 0 0;border-top:3px solid var(--gold);z-index:41;display:none;max-height:94vh;overflow:auto;padding:18px 16px calc(20px + env(safe-area-inset-bottom))}.sheet.show{display:block;animation:up .22s ease both}@keyframes up{from{transform:translateY(80px);opacity:0}to{transform:none;opacity:1}}.sheetIn{max-width:680px;margin:0 auto}.head{display:flex;gap:12px;align-items:flex-start}.avatar{width:58px;height:58px;border-radius:18px;background:rgba(240,180,41,.14);display:grid;place-items:center;font-size:32px;border:1px solid rgba(240,180,41,.35)}.sname{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:700;line-height:1}.sphone{color:var(--soft);font-size:17px;font-weight:800}.close{margin-left:auto;width:50px;height:50px;border-radius:50%;background:var(--bg3);color:white;border:1px solid rgba(255,252,245,.2);font-size:25px}.prizeState{margin:14px 0;border-radius:22px;padding:16px;text-align:center;font-weight:900;border:2px solid rgba(240,180,41,.45);background:rgba(240,180,41,.11)}.prizeState .main{font-size:30px;color:var(--gold2)}.prizeState .sub{font-size:18px;color:var(--cream);margin-top:4px}.prizeState.no .main{color:var(--cream)}.stampGrid{display:grid;grid-template-columns:repeat(10,1fr);gap:7px;margin:12px 0}.stamp{aspect-ratio:1;border-radius:50%;background:rgba(255,252,245,.1);border:2px dashed rgba(255,252,245,.23);display:grid;place-items:center;font-size:18px}.stamp.f{background:linear-gradient(135deg,var(--gold2),var(--gold));border:2px solid #C4910E;box-shadow:0 3px 10px rgba(240,180,41,.24)}.stamp.pop{animation:pop .25s ease both}@keyframes pop{0%{transform:scale(.1)}70%{transform:scale(1.18)}100%{transform:scale(1)}}.prog{height:16px;background:rgba(255,252,245,.12);border-radius:20px;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));width:0}.stepLabel{text-align:center;font-size:16px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold2);font-weight:900;margin-top:16px}.stepper{display:grid;grid-template-columns:1fr 130px 1fr;gap:12px;align-items:center;margin:10px 0}.stepper button{min-height:112px;border-radius:24px;border:2px solid rgba(240,180,41,.65);background:rgba(10,83,80,.98);color:var(--gold2);font-size:62px;font-weight:900}.stepper button:active{transform:scale(.97);background:var(--gold);color:var(--deep)}.num{font-size:74px;font-weight:900;color:var(--gold2);text-align:center;line-height:1}.num.bump{animation:bump .13s ease}@keyframes bump{50%{transform:scale(1.2)}}.btnSell{min-height:78px;font-size:25px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions .btn{font-size:18px;min-height:58px}.summary{position:fixed;inset:0;background:rgba(3,43,41,.92);display:none;align-items:center;justify-content:center;z-index:80;padding:24px}.summary.show{display:flex}.sumBox{background:var(--cream);color:#193936;border:3px solid var(--gold);border-radius:30px;padding:30px 22px;text-align:center;max-width:420px;width:100%;animation:pop .2s ease both}.sumBox .plus{font-size:58px;font-weight:900;color:var(--deep)}.sumBox .prize{font-size:36px;font-weight:900;color:#C4910E;margin-top:8px}.sumBox .left{font-size:24px;font-weight:900;color:#193936;margin-top:10px}.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%) translateY(20px);background:#021d1c;color:white;border:1px solid rgba(240,180,41,.35);border-radius:16px;padding:14px 18px;font-weight:900;z-index:99;opacity:0;transition:.2s;text-align:center}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}@media(min-width:720px){.content{padding-left:22px;padding-right:22px}.tab .ic{font-size:38px}.tab{font-size:13px}.cam{max-height:58vh}.sheet{left:50%;transform:translateX(-50%);max-width:760px;border-radius:28px 28px 0 0}.sheet.show{animation:none}}
@@ -357,65 +357,387 @@
   font-size: 34px !important;
 }
 
-</style>
 
-<style>
-#fixPanel{position:fixed;inset:0;background:rgba(3,30,28,.92);z-index:999999;display:none;align-items:center;justify-content:center;padding:24px}
-#fixPanel.show{display:flex}
-#fixBox{background:#fffdf4;color:#073b38;border:4px solid #f0b429;border-radius:34px;padding:28px;width:min(720px,94vw);text-align:center}
-#fixName{font-size:44px;font-weight:1000}
-#fixStatus{font-size:36px;font-weight:1000;margin:18px 0;padding:18px;border-radius:24px;background:#eaf8f6}
-#fixStatus.prize{background:#fff1b8;border:3px solid #f0b429}
-#fixStamps{display:grid;grid-template-columns:repeat(10,1fr);gap:10px;margin:18px 0}
-.fixStamp{aspect-ratio:1;border-radius:50%;border:3px dashed rgba(7,59,56,.25);display:grid;place-items:center;font-size:28px}
-.fixStamp.full{background:linear-gradient(135deg,#ffd45e,#f0b429);border:3px solid #c4910e}
-.fixActions{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
-.fixActions button,#fixClose{border:0;border-radius:22px;padding:18px 10px;font-size:24px;font-weight:1000;background:#073b38;color:#ffd45e}
-#fixClose{background:#eee2c7;color:#073b38;width:100%;margin-top:14px}
+/* STAFF FINAL SIN LOGIN */
+#login{display:none!important}
 </style>
-
 </head>
 <body>
 <section class="view on" id="login"><div class="center"><div class="panel"><h2>Gelateria Staff</h2><p>Entra una vez en el iPad. Después la app queda lista para escanear tarjetas rápido.</p><label>Email staff</label><input id="email" type="email" value="staff@lagelateria.app"><label>Contraseña</label><input id="pass" type="password"><button class="btn" id="loginBtn">Entrar</button><p id="loginErr" style="display:none;color:#FF9B93;font-weight:800">No se ha podido entrar.</p></div></div></section>
-<section class="view" id="app"><div class="top"><div class="logo"><img src="logo-gelateria.png" alt="La Gelateria de Roses"></div><div><div class="brand">La Gelateria Staff</div><div style="font-size:12px;color:var(--soft);font-weight:800">Modo rápido · sin admin</div></div><div class="pill" id="localPill">Roses</div></div><main class="content"><section class="sec on" id="camSec"><div class="cam"><video id="video" muted playsinline></video><div class="frame"><div></div></div><div class="camBtns"><button class="round" id="restartCam">📷</button></div><div class="flash" id="flash">✓</div></div><div class="hint"><b>Cámara abierta al iniciar.</b><br>Escanea el QR del cliente y sale su ficha grande.</div><div class="manual"><input id="manualCode" placeholder="Pegar móvil si falla cámara"><button class="btn" id="manualBtn">Abrir</button></div></section><section class="sec" id="searchSec"><div class="bigtitle">🔍 Buscar cliente</div><div class="searchRow"><select id="prefix"><option value="+34">+34</option><option value="+33">+33</option><option value="+376">+376</option><option value="+49">+49</option><option value="+31">+31</option></select><input id="searchPhone" type="tel" inputmode="numeric" placeholder="6XX XXX XXX"></div><button class="btn" id="searchBtn">Buscar y abrir</button><div id="searchResults"></div></section><section class="sec" id="histSec"><div class="bigtitle">📜 Historial de hoy</div><div id="histList"><div class="empty">Cargando historial…</div></div></section><section class="sec" id="qrSec"><div class="bigtitle">📱 QR para clientes</div><button class="btn" id="showSignupQr">Mostrar QR gigante</button><p class="hint">El cliente lo escanea para crear su tarjeta en su móvil.</p></section></main><nav class="tabs"><button class="tab on" data-tab="camSec"><span class="ic">📷</span>Cámara</button><button class="tab" data-tab="searchSec"><span class="ic">🔍</span>Lupa</button><button class="tab" data-tab="histSec"><span class="ic">📜</span>Historial</button><button class="tab" data-tab="qrSec"><span class="ic">📱</span>QR</button></nav></section>
+<section class="view" id="app"><div class="top"><div class="logo"><img src="logo-gelateria.png" alt="La Gelateria de Roses"></div><div><div class="brand">La Gelateria Staff</div><div style="font-size:12px;color:var(--soft);font-weight:800">Modo rápido · sin admin</div></div><div class="pill" id="localPill">Roses</div></div><main class="content"><section class="sec on" id="camSec"><div class="cam"><video id="video" muted playsinline></video><div class="frame"><div></div></div><div class="camBtns"><button class="round" id="restartCam">📷</button></div><div class="flash" id="flash">✓</div></div><div class="hint"><b>Cámara abierta al iniciar.</b><br>Escanea el QR del cliente y sale su ficha grande.</div><div class="manual"><input id="manualCode" placeholder="Pegar QR o móvil"><button class="btn" id="manualBtn">Abrir</button></div></section><section class="sec" id="searchSec"><div class="bigtitle">🔍 Buscar cliente</div><div class="searchRow"><select id="prefix"><option value="+34">+34</option><option value="+33">+33</option><option value="+376">+376</option><option value="+49">+49</option><option value="+31">+31</option></select><input id="searchPhone" type="tel" inputmode="numeric" placeholder="6XX XXX XXX"></div><button class="btn" id="searchBtn">Buscar y abrir</button><div id="searchResults"></div></section><section class="sec" id="histSec"><div class="bigtitle">📜 Historial de hoy</div><div id="histList"><div class="empty">Cargando historial…</div></div></section><section class="sec" id="qrSec"><div class="bigtitle">📱 QR para clientes</div><button class="btn" id="showSignupQr">Mostrar QR gigante</button><p class="hint">El cliente lo escanea para crear su tarjeta en su móvil.</p></section></main><nav class="tabs"><button class="tab on" data-tab="camSec"><span class="ic">📷</span>Cámara</button><button class="tab" data-tab="searchSec"><span class="ic">🔍</span>Lupa</button><button class="tab" data-tab="histSec"><span class="ic">📜</span>Historial</button><button class="tab" data-tab="qrSec"><span class="ic">📱</span>QR</button></nav></section>
 <div class="sheetMask" id="mask"></div><div class="sheet" id="sheet"><div class="sheetIn"><div class="head"><div class="avatar">👤</div><div><div class="sname" id="sname">Cliente</div><div class="sphone" id="sphone"></div></div><button class="close" id="closeSheet">×</button></div><div class="prizeState" id="prizeState"><div class="main" id="prizeMain"></div><div class="sub" id="prizeSub"></div></div><div class="stampGrid" id="stampGrid"></div><div class="prog"><div class="bar" id="sheetBar"></div></div><div class="stepLabel">Sellos de esta compra</div><div class="stepper"><button id="minus">−</button><div class="num" id="qty">1</div><button id="plus">+</button></div><button class="btn btnSell" id="sellBtn">SELLAR +1</button><div class="actions"><button class="btn dark" id="savePrize">Guardar premio</button><button class="btn" id="redeemBtn">🎁 Premio usado</button></div></div></div>
 <div class="qrPanel" id="qrPanel"><button class="qrClose" id="qrClose">×</button><div class="qrCard"><h2>Escanea para crear tu tarjeta</h2><p>Gratis. Solo tarda unos segundos.</p><div class="qrBig"><div id="signupQr"></div></div></div></div>
 <div class="summary" id="summary"><div class="sumBox"><div class="plus" id="sumPlus">+1 SELLO</div><div class="prize" id="sumPrize"></div><div class="left" id="sumLeft"></div></div></div><div class="toast" id="toast"></div>
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import {initializeFirestore,persistentLocalCache,doc,getDoc,setDoc,updateDoc,runTransaction,collection,addDoc,query,orderBy,limit,onSnapshot,serverTimestamp,Timestamp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-import {getAuth,signInWithEmailAndPassword,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-const $=id=>document.getElementById(id); const OBJ=10; let db,auth,user,reader,scanning=false,sheet=null,step=1,lastScan='',lastScanAt=0,unsubHist=null;
-const signupUrl=location.href.replace(/staff\.html.*$/,'');
-function toast(m){$('toast').textContent=m;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1500)}
-function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id))}
-function showSec(id){document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('on',s.id===id));document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.tab===id)); if(id==='camSec') startCam(); else stopCam(); if(id==='histSec') startHist();}
+import {
+  initializeFirestore,persistentLocalCache,doc,getDoc,setDoc,updateDoc,runTransaction,
+  collection,addDoc,query,orderBy,limit,onSnapshot,serverTimestamp
+} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+const $ = id => document.getElementById(id);
+const OBJ = 10;
+let db = null;
+let reader = null;
+let scanning = false;
+let sheet = null;
+let step = 1;
+let lastScan = '';
+let lastScanAt = 0;
+let unsubHist = null;
+const STAFF_USER = 'staff-ipad';
+const signupUrl = location.href.replace(/staff\.html.*$/,'');
+
+function toast(m, ms=1500){
+  const el=$('toast');
+  if(!el) return;
+  el.textContent=m;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),ms);
+}
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));
+}
+function stopCam(){
+  scanning=false;
+  try{reader && reader.reset && reader.reset()}catch(e){}
+  reader=null;
+}
+function showSec(id){
+  // QR directo: icono QR -> QR gigante, sin pantalla intermedia.
+  if(id==='qrSec'){
+    buildSignupQr();
+    $('qrPanel').classList.add('show');
+    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.tab==='qrSec'));
+    return;
+  }
+  document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('on',s.id===id));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.tab===id));
+  if(id==='camSec') startCam(); else stopCam();
+  if(id==='histSec') startHist();
+}
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>showSec(t.dataset.tab));
-function initFirebase(){const cfg=window.FIREBASE_CONFIG||{}; if(!cfg.apiKey||String(cfg.apiKey).includes('PEGAR')){$('login').querySelector('.panel').innerHTML='<h2>Falta Firebase</h2><p>Pega tu firebaseConfig real en <b>firebase-config.js</b>.</p>';return false} const app=initializeApp(cfg); try{db=initializeFirestore(app,{localCache:persistentLocalCache()});}catch(e){db=initializeFirestore(app,{})} auth=getAuth(app); return true;}
-$('loginBtn').onclick=async()=>{try{$('loginErr').style.display='none';await signInWithEmailAndPassword(auth,$('email').value.trim(),$('pass').value)}catch(e){$('loginErr').style.display='block'}};
-function afterLogin(){showView('app'); showSec('camSec'); buildSignupQr();}
-async function startCam(){if(scanning||!user)return; scanning=true; try{reader=new ZXingBrowser.BrowserQRCodeReader(); const devices=await ZXingBrowser.BrowserCodeReader.listVideoInputDevices(); const back=devices.find(d=>/back|rear|environment|trasera/i.test(d.label))||devices[0]; await reader.decodeFromVideoDevice(back&&back.deviceId,$('video'),(res,err)=>{if(res) handleScan(String(res.getText()).trim())});}catch(e){$('video').poster=''; toast('Cámara no disponible. Usa lupa o pega móvil.');}}
-function stopCam(){scanning=false; try{reader&&reader.reset&&reader.reset()}catch(e){} reader=null;}
-$('restartCam').onclick=()=>{stopCam();setTimeout(startCam,200)};
-function normalize(raw){let x=String(raw||'').trim(); try{const u=new URL(x); const p=u.searchParams.get('card')||u.searchParams.get('phone')||u.searchParams.get('id'); if(p)x=p;}catch(e){} x=x.replace(/[^+0-9]/g,''); if(!x.startsWith('+')&&x.length===9)x='+34'+x; return x;}
-async function handleScan(raw){const code=normalize(raw); if(!code||code.length<8)return; const now=Date.now(); if(code===lastScan&&now-lastScanAt<1400)return; lastScan=code; lastScanAt=now; $('flash').classList.add('go'); setTimeout(()=>$('flash').classList.remove('go'),480); openClient(code);}
-async function openClient(phone){try{const ref=doc(db,'clientes',phone); const snap=await getDoc(ref); if(!snap.exists()){toast('Buscando tarjeta…');return} sheet={id:phone,data:snap.data()}; step=1; renderSheet(); $('mask').classList.add('show'); $('sheet').classList.add('show'); stopCam();}catch(e){toast('Error al abrir cliente')}}
-function renderSheet(){const c=sheet.data, sellos=c.sellos||0, mon=c.monedero||0; $('sname').textContent=c.nombre||'Cliente'; $('sphone').textContent=sheet.id; $('prizeState').classList.toggle('no',mon<1); $('prizeMain').textContent=mon>0?'🎁 PREMIO DISPONIBLE':'⭐ FALTAN '+(OBJ-sellos)+' SELLOS'; $('prizeSub').textContent=mon>0?(mon+' premio'+(mon>1?'s':'')+' pendiente'+(mon>1?'s':'')):(sellos+'/10 sellos actuales'); $('stampGrid').innerHTML=''; for(let i=1;i<=OBJ;i++){const d=document.createElement('div');d.className='stamp '+(i<=sellos?'f':'');d.textContent=i<=sellos?'⭐':'';$('stampGrid').appendChild(d)} $('sheetBar').style.width=(sellos*10)+'%'; updateStep();}
-function updateStep(){if(step<0)step=0;if(step>20)step=20;$('qty').textContent=step;$('qty').classList.remove('bump');void $('qty').offsetWidth;$('qty').classList.add('bump');$('sellBtn').textContent=step===0?'SIN SELLOS':'SELLAR +'+step; $('sellBtn').disabled=step===0;}
-$('plus').onclick=()=>{step++;updateStep()}; $('minus').onclick=()=>{step--;updateStep()};
-$('closeSheet').onclick=closeSheet; $('mask').onclick=closeSheet; function closeSheet(){$('mask').classList.remove('show');$('sheet').classList.remove('show');sheet=null; if(document.getElementById('camSec').classList.contains('on')) setTimeout(startCam,180)}
-function addMov(c,m){const arr=Array.isArray(c.movimientos)?c.movimientos.slice(-29):[]; arr.push(m); return arr;}
-async function log(tipo,phone,nombre,qty,premios=0,restos=0){try{await addDoc(collection(db,'eventos'),{tipo,telefono:phone,nombre:nombre||'',qty,premios,restos,ts:serverTimestamp(),tsMs:Date.now(),local:'Roses',staff:user&&user.email||'staff'});}catch(e){}}
-$('sellBtn').onclick=async()=>{if(!sheet||step<1)return; const qty=step, phone=sheet.id; $('sellBtn').disabled=true; try{const ref=doc(db,'clientes',phone); const res=await runTransaction(db,async tx=>{const s=await tx.get(ref); if(!s.exists())throw new Error('no-card'); const c=s.data(); const before=c.sellos||0; const total=before+qty; const premios=Math.floor(total/OBJ); const restos=total%OBJ; const mon=(c.monedero||0)+premios; const mov={tipo:'sello',qty,antes:before,despues:restos,premios,ts:Date.now(),texto:'+'+qty+' sellos'}; if(premios>0) mov.texto+=' · '+premios+' premio'; const data={sellos:restos,monedero:mon,premiosGanados:(c.premiosGanados||0)+premios,totalSellos:(c.totalSellos||0)+qty,ultimoSello:serverTimestamp(),movimientos:addMov(c,mov),lastPremioFlash:premios>0?Date.now():0,lastPremioQty:premios}; tx.update(ref,data); return {premios,restos,data:Object.assign({},c,data)};}); sheet.data=res.data; renderSheet(); showSummary(qty,res.premios,res.restos); await log('sello',phone,sheet.data.nombre,qty,res.premios,res.restos); step=1; if(res.premios===0)setTimeout(closeSheet,900); }catch(e){toast('Error al sellar')}finally{setTimeout(()=>{$('sellBtn').disabled=false;updateStep()},600)}};
-function showSummary(q,p,r){$('sumPlus').textContent='+'+q+' SELLO'+(q>1?'S':''); $('sumPrize').textContent=p>0?'🎁 '+p+' PREMIO'+(p>1?'S':''):''; $('sumLeft').textContent='Tarjeta actual: '+r+'/10'; $('summary').classList.add('show'); setTimeout(()=>$('summary').classList.remove('show'),1200)}
+
+function initFirebase(){
+  const cfg=window.FIREBASE_CONFIG||{};
+  if(!cfg.apiKey||String(cfg.apiKey).includes('PEGAR')){
+    toast('Falta Firebase');
+    return false;
+  }
+  try{
+    const app=initializeApp(cfg);
+    try{db=initializeFirestore(app,{localCache:persistentLocalCache()});}
+    catch(e){db=initializeFirestore(app,{})}
+    return true;
+  }catch(e){
+    console.error('Firebase init',e);
+    toast('Error Firebase');
+    return false;
+  }
+}
+
+async function startCam(){
+  if(scanning) return;
+  scanning=true;
+  try{
+    reader=new ZXingBrowser.BrowserQRCodeReader();
+    const devices=await ZXingBrowser.BrowserCodeReader.listVideoInputDevices();
+    const back=devices.find(d=>/back|rear|environment|trasera|cámara trasera/i.test(d.label))||devices[0];
+    await reader.decodeFromVideoDevice(back&&back.deviceId,$('video'),(res,err)=>{
+      if(res) handleScan(String(res.getText()).trim());
+    });
+  }catch(e){
+    console.error('camera', e);
+    toast('Cámara no disponible. Usa lupa o pega QR.');
+  }
+}
+$('restartCam').onclick=()=>{stopCam();setTimeout(startCam,180)};
+
+function normalize(raw){
+  let x=String(raw||'').trim();
+  try{
+    const u=new URL(x);
+    const p=u.searchParams.get('card')||u.searchParams.get('cardId')||u.searchParams.get('id')||u.searchParams.get('phone');
+    if(p) x=p;
+  }catch(e){}
+  try{x=decodeURIComponent(x)}catch(e){}
+  x=String(x||'').trim();
+
+  // Si un + viene convertido en espacio por URL/query.
+  if(x.startsWith(' ')) x='+'+x.trim();
+  x=x.replace(/\s+/g,'');
+
+  // Formato nuevo: +34647319686_7SB4MU. NO quitar el token.
+  if(/^[+]?\d{8,15}_[A-Z2-9]{6}$/.test(x)){
+    if(!x.startsWith('+')) x='+'+x;
+    return x;
+  }
+
+  // Formato URL/hash con texto extra: buscar dentro el cardId.
+  const embedded=x.match(/[+]?\d{8,15}_[A-Z2-9]{6}/);
+  if(embedded){
+    let id=embedded[0];
+    if(!id.startsWith('+')) id='+'+id;
+    return id;
+  }
+
+  // Formato antiguo: solo teléfono.
+  let phone=x.replace(/[^+0-9]/g,'');
+  if(!phone.startsWith('+') && phone.length===9) phone='+34'+phone;
+  if(!phone.startsWith('+') && phone.startsWith('34') && phone.length>=11) phone='+'+phone;
+  return phone;
+}
+
+async function findCard(raw){
+  const id=normalize(raw);
+  if(!id) return null;
+
+  // 1. Buscar documento exacto clientes/{+34..._TOKEN}
+  let snap=await getDoc(doc(db,'clientes',id));
+  if(snap.exists()) return {id,data:snap.data()};
+
+  // 2. Por si el lector pierde el +.
+  if(!id.startsWith('+')){
+    const plus='+'+id;
+    snap=await getDoc(doc(db,'clientes',plus));
+    if(snap.exists()) return {id:plus,data:snap.data()};
+  }
+
+  // 3. Por si viene solo teléfono: resolver telefonos/{telefono}.
+  if(!id.includes('_')){
+    let tel=id;
+    let telSnap=await getDoc(doc(db,'telefonos',tel));
+    if(!telSnap.exists() && !tel.startsWith('+')) telSnap=await getDoc(doc(db,'telefonos','+'+tel));
+    if(telSnap.exists() && telSnap.data().cardId){
+      const realId=telSnap.data().cardId;
+      snap=await getDoc(doc(db,'clientes',realId));
+      if(snap.exists()) return {id:realId,data:snap.data()};
+    }
+  }
+
+  return null;
+}
+
+async function handleScan(raw){
+  const code=normalize(raw);
+  if(!code||code.length<8) return;
+  const now=Date.now();
+  if(code===lastScan && now-lastScanAt<1300) return;
+  lastScan=code; lastScanAt=now;
+  $('flash').classList.add('go');
+  setTimeout(()=>$('flash').classList.remove('go'),480);
+  await openClient(code);
+}
+
+async function openClient(raw){
+  try{
+    toast('Buscando tarjeta…',800);
+    let found=null;
+    // Reintento corto para tarjetas recién creadas que tardan un segundo en sincronizar.
+    for(let i=0;i<10;i++){
+      found=await findCard(raw);
+      if(found) break;
+      if(i===1) toast('Sincronizando tarjeta…',1000);
+      await new Promise(r=>setTimeout(r,300));
+    }
+    if(!found){
+      console.warn('Tarjeta no encontrada. Raw:', raw, 'Normalizado:', normalize(raw));
+      toast('Tarjeta no encontrada');
+      return;
+    }
+    sheet={id:found.id,data:found.data};
+    step=1;
+    renderSheet();
+    $('mask').classList.add('show');
+    $('sheet').classList.add('show');
+    stopCam();
+  }catch(e){
+    console.error('openClient',e);
+    toast('Error al abrir cliente');
+  }
+}
+
+function renderSheet(){
+  const c=sheet.data;
+  const sellos=Number(c.sellos||0);
+  const mon=Number(c.monedero||0);
+  $('sname').textContent=c.nombre||'Cliente';
+  $('sphone').textContent=sheet.id;
+  $('prizeState').classList.toggle('no',mon<1);
+  $('prizeMain').textContent=mon>0?'🎁 PREMIO DISPONIBLE':'⭐ FALTAN '+(OBJ-sellos)+' SELLOS';
+  $('prizeSub').textContent=mon>0?(mon+' premio'+(mon>1?'s':'')+' pendiente'+(mon>1?'s':'')):(sellos+'/10 sellos actuales');
+  $('stampGrid').innerHTML='';
+  for(let i=1;i<=OBJ;i++){
+    const d=document.createElement('div');
+    d.className='stamp '+(i<=sellos?'f':'');
+    d.textContent=i<=sellos?'⭐':'';
+    $('stampGrid').appendChild(d);
+  }
+  $('sheetBar').style.width=(sellos*10)+'%';
+  updateStep();
+}
+function updateStep(){
+  if(step<0)step=0;
+  if(step>20)step=20;
+  $('qty').textContent=step;
+  $('qty').classList.remove('bump');
+  void $('qty').offsetWidth;
+  $('qty').classList.add('bump');
+  $('sellBtn').textContent=step===0?'SIN SELLOS':'SELLAR +'+step;
+  $('sellBtn').disabled=step===0;
+}
+$('plus').onclick=()=>{step++;updateStep()};
+$('minus').onclick=()=>{step--;updateStep()};
+$('closeSheet').onclick=closeSheet;
+$('mask').onclick=closeSheet;
+function closeSheet(){
+  $('mask').classList.remove('show');
+  $('sheet').classList.remove('show');
+  sheet=null;
+  if(document.getElementById('camSec').classList.contains('on')) setTimeout(startCam,180);
+}
+function addMov(c,m){
+  const arr=Array.isArray(c.movimientos)?c.movimientos.slice(-79):[];
+  arr.push(m);
+  return arr;
+}
+async function log(tipo,cardId,nombre,qty,premios=0,restos=0){
+  try{
+    await addDoc(collection(db,'eventos'),{tipo,telefono:cardId,nombre:nombre||'',qty,premios,restos,ts:serverTimestamp(),tsMs:Date.now(),local:'Roses',staff:STAFF_USER});
+  }catch(e){}
+}
+
+$('sellBtn').onclick=async()=>{
+  if(!sheet||step<1)return;
+  const qty=step;
+  const cardId=sheet.id;
+  $('sellBtn').disabled=true;
+  try{
+    const ref=doc(db,'clientes',cardId);
+    const res=await runTransaction(db,async tx=>{
+      const s=await tx.get(ref);
+      if(!s.exists()) throw new Error('no-card');
+      const c=s.data();
+      const before=Number(c.sellos||0);
+      const total=before+qty;
+      const premios=Math.floor(total/OBJ);
+      const restos=total%OBJ;
+      const mon=Number(c.monedero||0)+premios;
+      const mov={tipo:'sello',qty,antes:before,despues:restos,premios,ts:Date.now(),texto:'+'+qty+' sellos'};
+      if(premios>0) mov.texto+=' · '+premios+' premio';
+      const data={
+        sellos:restos,
+        monedero:mon,
+        premiosGanados:Number(c.premiosGanados||0)+premios,
+        totalSellos:Number(c.totalSellos||0)+qty,
+        ultimoSello:serverTimestamp(),
+        actualizado:serverTimestamp(),
+        movimientos:addMov(c,mov),
+        lastPremioFlash:premios>0?Date.now():0,
+        lastPremioQty:premios
+      };
+      tx.update(ref,data);
+      return {premios,restos,data:Object.assign({},c,data)};
+    });
+    sheet.data=res.data;
+    renderSheet();
+    showSummary(qty,res.premios,res.restos);
+    await log('sello',cardId,sheet.data.nombre,qty,res.premios,res.restos);
+    step=1;
+    if(res.premios===0) setTimeout(closeSheet,850);
+  }catch(e){
+    console.error('sell',e);
+    toast('Error al sellar');
+  }finally{
+    setTimeout(()=>{$('sellBtn').disabled=false;updateStep()},550);
+  }
+};
+function showSummary(q,p,r){
+  $('sumPlus').textContent='+'+q+' SELLO'+(q>1?'S':'');
+  $('sumPrize').textContent=p>0?'🎁 '+p+' PREMIO'+(p>1?'S':''):'';
+  $('sumLeft').textContent='Tarjeta actual: '+r+'/10';
+  $('summary').classList.add('show');
+  setTimeout(()=>$('summary').classList.remove('show'),1200);
+}
 $('savePrize').onclick=()=>{toast('Premio guardado'); closeSheet();};
-$('redeemBtn').onclick=async()=>{if(!sheet||((sheet.data.monedero||0)<1)){toast('Sin premio pendiente');return} try{const ref=doc(db,'clientes',sheet.id); const newMon=(sheet.data.monedero||0)-1; await updateDoc(ref,{monedero:newMon,premiosCanjeados:(sheet.data.premiosCanjeados||0)+1,movimientos:addMov(sheet.data,{tipo:'premio_usado',qty:1,ts:Date.now(),texto:'Premio usado'})}); await log('premio_usado',sheet.id,sheet.data.nombre,1,0,sheet.data.sellos||0); toast('✅ Premio entregado'); sheet.data.monedero=newMon; sheet.data.premiosCanjeados=(sheet.data.premiosCanjeados||0)+1; renderSheet(); setTimeout(closeSheet,700);}catch(e){toast('Error al canjear')}};
-$('manualBtn').onclick=()=>openClient(normalize($('manualCode').value)); $('searchBtn').onclick=()=>{const p=$('prefix').value+$('searchPhone').value.replace(/\D/g,''); searchOne(p)}; $('searchPhone').addEventListener('keydown',e=>{if(e.key==='Enter')$('searchBtn').click()});
-async function searchOne(phone){$('searchResults').innerHTML=''; if(phone.length<8){toast('Móvil incompleto');return} const s=await getDoc(doc(db,'clientes',phone)); if(!s.exists()){$('searchResults').innerHTML='<div class="empty">No encontrado.</div>';return} const c=s.data(); const div=document.createElement('div'); div.className='result'; div.innerHTML=`<div><div class="name">${c.nombre||'Cliente'}</div><div class="phone">${phone}</div></div><div class="right">${c.monedero>0?'🎁 ':''}${c.sellos||0}/10</div>`; div.onclick=()=>openClient(phone); $('searchResults').appendChild(div);}
-function startHist(){if(unsubHist)return; const q=query(collection(db,'eventos'),orderBy('ts','desc'),limit(60)); unsubHist=onSnapshot(q,snap=>{if(snap.empty){$('histList').innerHTML='<div class="empty">Aún no hay movimientos.</div>';return} const today=new Date().toDateString(); let html=''; snap.forEach(d=>{const e=d.data(); const date=e.ts&&e.ts.toDate?e.ts.toDate():new Date(e.tsMs||Date.now()); if(date.toDateString()!==today)return; const time=date.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); const ic=e.tipo==='premio_usado'?'🎁':(e.premios>0?'🎉':'⭐'); const amt=e.tipo==='premio_usado'?'Usado':('+'+(e.qty||0)); html+=`<div class="event"><div class="time">${time}</div><div class="ic">${ic}</div><div class="who">${e.nombre||'Cliente'}<div style="font-size:12px;color:var(--soft)">${e.telefono||''}</div></div><div class="amt">${amt}</div></div>`}); $('histList').innerHTML=html||'<div class="empty">Aún no hay movimientos hoy.</div>';})}
-function buildSignupQr(){$('signupQr').innerHTML=''; new QRCode($('signupQr'),{text:signupUrl,width:310,height:310,colorDark:'#033E3C',colorLight:'#ffffff'});} $('showSignupQr').onclick=()=>{$('qrPanel').classList.add('show');buildSignupQr()}; $('qrClose').onclick=()=>$('qrPanel').classList.remove('show'); $('qrPanel').onclick=e=>{if(e.target.id==='qrPanel')$('qrPanel').classList.remove('show')};
-window.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.activeElement===document.body){const v=$('manualCode').value.trim(); if(v)openClient(normalize(v));}});
-if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{}); if(initFirebase()){onAuthStateChanged(auth,u=>{user=u;if(u)afterLogin();else{showView('login');stopCam();}})}
+$('redeemBtn').onclick=async()=>{
+  if(!sheet||Number(sheet.data.monedero||0)<1){toast('Sin premio pendiente');return}
+  try{
+    const ref=doc(db,'clientes',sheet.id);
+    const newMon=Number(sheet.data.monedero||0)-1;
+    const mov={tipo:'premio_usado',qty:1,ts:Date.now(),texto:'Premio usado'};
+    await updateDoc(ref,{monedero:newMon,premiosCanjeados:Number(sheet.data.premiosCanjeados||0)+1,movimientos:addMov(sheet.data,mov),actualizado:serverTimestamp()});
+    await log('premio_usado',sheet.id,sheet.data.nombre,1,0,sheet.data.sellos||0);
+    toast('✅ Premio entregado');
+    sheet.data.monedero=newMon;
+    sheet.data.premiosCanjeados=Number(sheet.data.premiosCanjeados||0)+1;
+    sheet.data.movimientos=addMov(sheet.data,mov);
+    renderSheet();
+    setTimeout(closeSheet,700);
+  }catch(e){
+    console.error('redeem',e);
+    toast('Error al canjear');
+  }
+};
+
+$('manualBtn').onclick=()=>openClient($('manualCode').value);
+$('manualCode').addEventListener('keydown',e=>{if(e.key==='Enter')openClient($('manualCode').value)});
+$('searchBtn').onclick=()=>{
+  const p=$('prefix').value+$('searchPhone').value.replace(/\D/g,'');
+  searchOne(p);
+};
+$('searchPhone').addEventListener('keydown',e=>{if(e.key==='Enter')$('searchBtn').click()});
+async function searchOne(phone){
+  $('searchResults').innerHTML='';
+  if(phone.length<8){toast('Móvil incompleto');return}
+  let found=await findCard(phone);
+  if(!found){$('searchResults').innerHTML='<div class="empty">No encontrado.</div>';return}
+  const c=found.data;
+  const div=document.createElement('div');
+  div.className='result';
+  div.innerHTML=`<div><div class="name">${c.nombre||'Cliente'}</div><div class="phone">${found.id}</div></div><div class="right">${c.monedero>0?'🎁 ':''}${c.sellos||0}/10</div>`;
+  div.onclick=()=>openClient(found.id);
+  $('searchResults').appendChild(div);
+}
+
+function startHist(){
+  if(unsubHist)return;
+  const q=query(collection(db,'eventos'),orderBy('ts','desc'),limit(60));
+  unsubHist=onSnapshot(q,snap=>{
+    if(snap.empty){$('histList').innerHTML='<div class="empty">Aún no hay movimientos.</div>';return}
+    const today=new Date().toDateString();
+    let html='';
+    snap.forEach(d=>{
+      const e=d.data();
+      const date=e.ts&&e.ts.toDate?e.ts.toDate():new Date(e.tsMs||Date.now());
+      if(date.toDateString()!==today)return;
+      const time=date.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+      const ic=e.tipo==='premio_usado'?'🎁':(e.premios>0?'🎉':'⭐');
+      const amt=e.tipo==='premio_usado'?'Usado':('+'+(e.qty||0));
+      html+=`<div class="event"><div class="time">${time}</div><div class="ic">${ic}</div><div class="who">${e.nombre||'Cliente'}<div style="font-size:12px;color:var(--soft)">${e.telefono||''}</div></div><div class="amt">${amt}</div></div>`;
+    });
+    $('histList').innerHTML=html||'<div class="empty">Aún no hay movimientos hoy.</div>';
+  });
+}
+function buildSignupQr(){
+  $('signupQr').innerHTML='';
+  new QRCode($('signupQr'),{text:signupUrl,width:310,height:310,colorDark:'#033E3C',colorLight:'#ffffff'});
+}
+$('showSignupQr').onclick=()=>{$('qrPanel').classList.add('show');buildSignupQr()};
+$('qrClose').onclick=()=>$('qrPanel').classList.remove('show');
+$('qrPanel').onclick=e=>{if(e.target.id==='qrPanel')$('qrPanel').classList.remove('show')};
+window.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&document.activeElement===document.body){
+    const v=$('manualCode').value.trim();
+    if(v) openClient(v);
+  }
+});
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js?v=staff-final-escaneo-ok').catch(()=>{});
+if(initFirebase()){
+  showView('app');
+  showSec('camSec');
+  buildSignupQr();
+}
 </script>
 
 <script>
@@ -601,149 +923,6 @@ document.addEventListener('DOMContentLoaded', function () {
   window.addEventListener('gelateria:qr-scan', function(e){
     if (e && e.detail) staffOpenCardFixed(e.detail);
   });
-});
-</script>
-
-
-<script type="module">
-import {initializeApp, getApps} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import {getFirestore, doc, getDoc, setDoc, serverTimestamp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-
-let db=null, currentId=null, currentData=null;
-const OBJ=10;
-
-function getDb(){
-  if(db) return db;
-  const app=getApps().length?getApps()[0]:initializeApp(window.FIREBASE_CONFIG);
-  db=getFirestore(app);
-  return db;
-}
-function toast(msg){
-  let el=document.getElementById('toast');
-  if(!el){el=document.createElement('div');el.id='toast';document.body.appendChild(el);}
-  el.textContent=msg;
-  el.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#032B29;color:#fff;padding:14px 20px;border-radius:16px;font-weight:900;z-index:9999999;opacity:1';
-  setTimeout(()=>{el.style.opacity='0'},1800);
-}
-function norm(raw){
-  let txt=String(raw||'').trim();
-  try{
-    const u=new URL(txt);
-    txt=u.searchParams.get('card')||u.searchParams.get('cardId')||u.searchParams.get('id')||u.hash.replace('#','')||txt;
-  }catch(e){}
-  try{txt=decodeURIComponent(txt)}catch(e){}
-  txt=txt.trim();
-  if(txt.startsWith(' ')) txt='+'+txt.trim();
-  return txt;
-}
-async function findCard(raw){
-  const id=norm(raw);
-  const d=getDb();
-  let s=await getDoc(doc(d,'clientes',id));
-  if(s.exists()) return {id:id,data:s.data()};
-  if(/^\d+_[A-Z2-9]{6}$/.test(id)){
-    const plus='+'+id;
-    s=await getDoc(doc(d,'clientes',plus));
-    if(s.exists()) return {id:plus,data:s.data()};
-  }
-  if(!id.includes('_')){
-    let t=await getDoc(doc(d,'telefonos',id));
-    if(!t.exists()&&!id.startsWith('+')) t=await getDoc(doc(d,'telefonos','+'+id));
-    if(t.exists()&&t.data().cardId){
-      const real=t.data().cardId;
-      s=await getDoc(doc(d,'clientes',real));
-      if(s.exists()) return {id:real,data:s.data()};
-    }
-  }
-  return null;
-}
-function ensurePanel(){
-  let p=document.getElementById('fixPanel');
-  if(p) return p;
-  p=document.createElement('div');
-  p.id='fixPanel';
-  p.innerHTML=`<div id="fixBox">
-    <div id="fixName">Cliente</div>
-    <div id="fixStatus">0/10 sellos</div>
-    <div id="fixStamps"></div>
-    <div class="fixActions">
-      <button data-q="1">+1</button><button data-q="2">+2</button><button data-q="3">+3</button><button data-q="5">+5</button>
-    </div>
-    <div class="fixActions">
-      <button data-q="-1">-1</button><button id="fixPrize">🎁 Usar</button><button id="fixHist">📜 Hist.</button><button id="fixCam">📷 Cam.</button>
-    </div>
-    <button id="fixClose">Cerrar</button>
-  </div>`;
-  document.body.appendChild(p);
-  p.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>add(Number(b.dataset.q)));
-  p.querySelector('#fixPrize').onclick=usePrize;
-  p.querySelector('#fixClose').onclick=()=>p.classList.remove('show');
-  p.querySelector('#fixCam').onclick=()=>p.classList.remove('show');
-  p.querySelector('#fixHist').onclick=()=>{
-    const movs=(currentData&&currentData.movimientos)||[];
-    alert(movs.slice(-12).reverse().map(m=>`${new Date(m.ts||Date.now()).toLocaleString()} · ${m.texto||m.tipo||''}`).join('\n')||'Sin historial');
-  };
-  return p;
-}
-function render(){
-  const p=ensurePanel(), c=currentData||{};
-  const sellos=Number(c.sellos||0), mon=Number(c.monedero||0);
-  p.querySelector('#fixName').textContent=c.nombre||c.telefono||'Cliente';
-  const st=p.querySelector('#fixStatus');
-  st.className=mon>0?'prize':'';
-  st.textContent=mon>0?`🎁 PREMIO DISPONIBLE · ${mon}`:`${sellos}/10 sellos · faltan ${10-sellos}`;
-  const stamps=p.querySelector('#fixStamps'); stamps.innerHTML='';
-  for(let i=1;i<=10;i++){
-    const div=document.createElement('div');
-    div.className='fixStamp'+(i<=sellos?' full':'');
-    div.textContent=i<=sellos?'⭐':'';
-    stamps.appendChild(div);
-  }
-  p.classList.add('show');
-}
-async function openExact(raw){
-  toast('Buscando tarjeta…');
-  let found=null;
-  for(let i=0;i<8;i++){
-    try{found=await findCard(raw)}catch(e){console.error(e)}
-    if(found) break;
-    if(i===0) toast('Sincronizando tarjeta…');
-    await new Promise(r=>setTimeout(r,500));
-  }
-  if(!found){toast('Tarjeta no encontrada'); console.warn('QR no encontrado',raw,norm(raw)); return false;}
-  currentId=found.id; currentData=found.data; render(); return true;
-}
-async function add(qty){
-  if(!currentId||!currentData) return;
-  const oldS=Number(currentData.sellos||0), oldM=Number(currentData.monedero||0);
-  let total=Math.max(0,oldS+qty);
-  const premios=Math.floor(total/OBJ), sellos=total%OBJ, mon=oldM+premios;
-  const mov={tipo:qty>=0?'sellos':'resta',qty,ts:Date.now(),texto:`${qty>0?'+':''}${qty} sellos${premios?` · ${premios} premio`:''}`};
-  const up={sellos,monedero:mon,totalSellos:Number(currentData.totalSellos||0)+Math.max(qty,0),premiosGanados:Number(currentData.premiosGanados||0)+premios,actualizado:serverTimestamp(),movimientos:[...(currentData.movimientos||[]),mov].slice(-80)};
-  await setDoc(doc(getDb(),'clientes',currentId),up,{merge:true});
-  currentData={...currentData,...up,actualizado:Date.now()}; render();
-  toast(premios?`🎁 ${premios} premio · quedan ${sellos}/10`:`${sellos}/10 sellos`);
-}
-async function usePrize(){
-  if(!currentId||!currentData) return;
-  const mon=Number(currentData.monedero||0);
-  if(mon<=0){toast('No tiene premio disponible');return;}
-  const mov={tipo:'premio_usado',qty:-1,ts:Date.now(),texto:'Premio usado'};
-  const up={monedero:mon-1,premiosCanjeados:Number(currentData.premiosCanjeados||0)+1,actualizado:serverTimestamp(),movimientos:[...(currentData.movimientos||[]),mov].slice(-80)};
-  await setDoc(doc(getDb(),'clientes',currentId),up,{merge:true});
-  currentData={...currentData,...up,actualizado:Date.now()}; render(); toast('✅ Premio usado');
-}
-
-window.openExactFromQr=openExact;
-window.staffOpenCardFixed=openExact;
-window.openClient=openExact;
-window.openCard=openExact;
-window.handleQr=openExact;
-
-document.addEventListener('DOMContentLoaded',()=>{
-  const btn=document.getElementById('manualBtn'), input=document.getElementById('manualCode');
-  if(btn&&input){btn.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();openExact(input.value)},true);}
-  if(input){input.addEventListener('input',()=>{if(String(input.value).includes('_')) openExact(input.value)},false);}
 });
 </script>
 
