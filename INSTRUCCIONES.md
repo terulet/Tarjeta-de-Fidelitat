@@ -96,3 +96,17 @@ En 1-2 minutos GitHub Pages sirve la nueva versión:
 **¿Un cliente pide que borréis sus datos?** Búscalo por teléfono → Gestionar → Eliminar tarjeta (PIN). O él mismo desde su app.
 
 **¿Se corta el WiFi?** El iPad sigue funcionando con la caché local y sincroniza cuando vuelve la conexión.
+
+---
+
+## Google Wallet (nuevo)
+
+La tarjeta del cliente ya incluye el botón **“Añadir a Google Wallet”** para que
+los clientes guarden la tarjeta en su móvil sin líos. Mientras no lo configures,
+el botón avisa amablemente de que estará disponible pronto (la app no se rompe).
+
+Para activarlo hay que desplegar un pequeño backend gratuito que firma el pase.
+Todo el paso a paso está en **`GOOGLE_WALLET_SETUP.md`**.
+
+El botón de **Apple Wallet** aparece deshabilitado (*Próximamente*): queda a la
+espera de la aprobación de la cuenta Apple Developer.
