@@ -186,3 +186,9 @@ Esta versión mantiene Staff funcionando y recupera el bloque visual del cliente
 
 Abrir cliente con `?v=cliente-visual-final` para evitar caché.
 Abrir staff con `staff.html?v=staff-final-escaneo-ok`.
+
+
+## GOOGLE RESEÑAS DIRECTO
+
+El botón de reseñas apunta directamente a:
+https://g.page/r/CaVSamGk-7L3EBM/review
