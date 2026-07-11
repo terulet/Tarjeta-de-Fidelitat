@@ -195,6 +195,37 @@
   .client-final-title { font-size: 36px; }
 }
 
+/* ======================================================
+   APPLE WALLET (solo iPhone/iPad) · pase .pkpass firmado
+   Servidor: https://gelateria-wallet.onrender.com
+   ====================================================== */
+.applewallet { display: none; margin: 14px 0 4px; }
+.applewallet.show { display: block; }
+.applewallet-btn {
+  width: 100%;
+  border: 0;
+  border-radius: 15px;
+  background: #000;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  padding: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.applewallet-btn:disabled { opacity: .65; cursor: default; }
+.applewallet-status {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.4;
+  margin-top: 8px;
+  min-height: 15px;
+}
+.applewallet-status.err { color: var(--danger); font-weight: 700; }
+
 </style>
 </head>
 <body>
@@ -218,6 +249,10 @@
       <div class="wallet" id="wallet"><b id="walletTitle"></b><p data-t="walletText">Enséñalo en el mostrador cuando quieras canjearlo. No caduca.</p></div>
       <div class="qrbox"><div id="qr"></div></div>
       <p class="note" data-t="qrnote">Enséñanos este QR cada vez que compres.</p>
+      <div class="applewallet" id="appleWallet">
+        <button class="applewallet-btn" id="appleWalletBtn" type="button"> Añadir a Apple Wallet</button>
+        <div class="applewallet-status" id="appleWalletStatus" aria-live="polite"></div>
+      </div>
       <button class="btn secondary" id="shareBtn">📲 Compartir / guardar tarjeta</button>
       <div class="install" id="install"><b id="installTitle"></b><div id="installText"></div></div>
       
@@ -287,8 +322,14 @@ const $ = id => document.getElementById(id);
 let db = null;
 let unsub = null;
 let currentCardId = null;
+let currentCardData = null;
 let lastSellos = 0;
 let lang = localStorage.getItem('gelateria_lang') || 'es';
+
+// ── Apple Wallet (solo iPhone/iPad) ────────────────────────────────
+// Servidor que firma el pase .pkpass con el certificado de Apple.
+const WALLET_SERVER = 'https://gelateria-wallet.onrender.com';
+const IS_APPLE_WALLET = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
 const TXT = {
   es:{intro:'Crea tu tarjeta en 10 segundos. Cada compra suma sellos, sin papel y sin perderla.',name:'Nombre opcional',phone:'Móvil',consent:'Acepto que La Gelateria de Roses use mi nombre y móvil solo para gestionar mi tarjeta. <a href="privacidad.html" target="_blank">Política de privacidad</a>.',create:'Crear mi tarjeta',qrnote:'Enséñanos este QR cada vez que compres.',delete:'Eliminar mi tarjeta de este móvil',missing:'Faltan {n} sellos',missing1:'Falta 1 sello',prize:'🎁 PREMIO DISPONIBLE',count:'{s}/10 sellos',wallet1:'1 premio pendiente',walletN:'{n} premios pendientes',saved:'¡Felicidades! Ya tienes tu tarjeta',installTitle:'Guárdala como app',installIos:'iPhone: toca Compartir → Añadir a pantalla de inicio. También puedes guardar esta página en favoritos.',installAndroid:'Android: toca el menú ⋮ → Añadir a pantalla de inicio o Instalar app.',cele:'¡Tarjeta creada!',celeText:'Enséñanos este QR cada vez que compres.'},
@@ -388,6 +429,7 @@ async function resolveCardId(phone) {
 
 function renderLocalCreatedCard(cardId, data) {
   currentCardId = cardId;
+  currentCardData = data;
   show('card');
 
   $('hello').textContent = data.nombre ? `¡Hola, ${data.nombre}!` : '¡Hola!';
@@ -410,6 +452,7 @@ function renderLocalCreatedCard(cardId, data) {
   new QRCode($('qr'),{text:cardId,width:210,height:210,colorDark:'#033E3C',colorLight:'#ffffff'});
 
   renderInstall();
+  updateAppleWalletVisibility();
 }
 
 async function create() {
@@ -527,9 +570,11 @@ async function openExisting(cardOrPhone) {
   new QRCode($('qr'),{text:cardId,width:210,height:210,colorDark:'#033E3C',colorLight:'#ffffff'});
   startRealtime(cardId);
   renderInstall();
+  updateAppleWalletVisibility();
 }
 
 function renderCard(c) {
+  currentCardData = c;
   const sellos=Number(c.sellos||0);
   const mon=Number(c.monedero||0);
 
@@ -554,6 +599,8 @@ function renderCard(c) {
   if(c.lastPremioFlash && Date.now()-c.lastPremioFlash<7000){
     showPrize(c.lastPremioQty||1,sellos);
   }
+
+  updateAppleWalletVisibility();
 }
 
 function showCeleSimple() {
@@ -575,7 +622,74 @@ function renderInstall() {
   $('installText').textContent=ios?t('installIos'):t('installAndroid');
 }
 
+/* ── Apple Wallet ──────────────────────────────────────────────────
+   Solo iPhone/iPad. Genera un pase .pkpass firmado con el estado
+   ACTUAL de la tarjeta (sellos y premios en el momento de pulsar).
+   No promete actualizaciones push automáticas. */
+function updateAppleWalletVisibility(){
+  const box=$('appleWallet');
+  if(!box) return;
+  box.classList.toggle('show', IS_APPLE_WALLET && !!currentCardId);
+}
+
+function walletPassURL(){
+  const c=currentCardData||{};
+  const params=new URLSearchParams({
+    cardId: currentCardId||'',
+    name: c.nombre||'',
+    stamps: String(Number(c.sellos||0)),
+    rewards: String(Number(c.monedero||0))
+  });
+  return WALLET_SERVER+'/api/wallet/pass?'+params.toString();
+}
+
+// El plan gratuito de Render puede estar dormido: lo despertamos consultando
+// /health hasta que responda (o agotar el tiempo), mostrando feedback.
+async function warmUpWalletServer(onProgress){
+  const deadline=Date.now()+75000; // hasta ~75s por si el dyno estaba dormido
+  let lastErr=null, attempt=0;
+  while(Date.now()<deadline){
+    attempt++;
+    if(onProgress && attempt>1) onProgress();
+    try{
+      const r=await withTimeout(fetch(WALLET_SERVER+'/health',{cache:'no-store'}),9000,'health timeout');
+      if(r.ok){
+        const j=await r.json().catch(()=>({}));
+        if(j && j.canSign===false) throw new Error('cert no configurado');
+        return true;
+      }
+    }catch(e){ lastErr=e; }
+    await new Promise(res=>setTimeout(res,2500));
+  }
+  throw lastErr||new Error('timeout');
+}
+
+async function addToAppleWallet(){
+  const btn=$('appleWalletBtn'), st=$('appleWalletStatus');
+  if(!currentCardId){ toast('Abre tu tarjeta primero'); return; }
+  const orig=btn.innerHTML;
+  btn.disabled=true;
+  st.className='applewallet-status';
+  st.textContent='Preparando tu tarjeta…';
+  try{
+    // 1) Despertar el servidor (Render Free puede tardar en arrancar).
+    await warmUpWalletServer(()=>{ st.textContent='Preparando tu tarjeta… (esto puede tardar unos segundos)'; });
+    // 2) Servidor listo: abrir el pase. Safari muestra "Añadir a Apple Wallet".
+    st.textContent='Generando tu pase…';
+    window.location.href=walletPassURL();
+    // 3) Reponer el botón por si el usuario cancela la hoja de Wallet.
+    setTimeout(()=>{ if(st){ st.textContent=''; } if(btn){ btn.disabled=false; btn.innerHTML=orig; } },5000);
+  }catch(e){
+    console.warn('AppleWallet', e && (e.message||e));
+    st.className='applewallet-status err';
+    st.textContent='No hemos podido preparar tu tarjeta ahora mismo. Inténtalo de nuevo en unos segundos.';
+    btn.disabled=false;
+    btn.innerHTML=orig;
+  }
+}
+
 $('create').onclick=create;
+$('appleWalletBtn').onclick=addToAppleWallet;
 $('shareBtn').onclick=async()=>{
   renderInstall();
   if(navigator.share){
@@ -595,7 +709,7 @@ $('cele').onclick=()=>$('cele').classList.remove('show');
 renderLangs();
 applyLang();
 if('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=cliente-rapido-final').catch(()=>{});
+  navigator.serviceWorker.register('./sw.js?v=apple-wallet-v2').catch(()=>{});
 }
 if(initFirebase()) {
   const c=localStorage.getItem('gelateria_cardId');

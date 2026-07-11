@@ -1,0 +1,19 @@
+# Nunca subir certificados ni secretos a este repositorio.
+# El certificado de Apple Wallet vive SOLO como variable de entorno en Render,
+# nunca aquí. Esta tarjeta es un sitio estático y no necesita ningún secreto.
+*.p12
+*.pfx
+*.pem
+*.key
+*.cer
+*.der
+*.crt
+.env
+.env.*
+secrets*.json
+service-account*.json
+
+# Sistema
+.DS_Store
+Thumbs.db
+node_modules/
