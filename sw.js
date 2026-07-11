@@ -1,4 +1,4 @@
-const CACHE = 'gelateria-fidelidad-staff-final-escaneo-ok-v1';
+const CACHE = 'gelateria-fidelidad-apple-wallet-v2';
 const FILES = [
   './',
   './index.html',
