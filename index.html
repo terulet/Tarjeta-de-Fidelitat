@@ -709,13 +709,33 @@ $('cele').onclick=()=>$('cele').classList.remove('show');
 renderLangs();
 applyLang();
 if('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js?v=apple-wallet-v2').catch(()=>{});
+  navigator.serviceWorker.register('./sw.js?v=open-by-cardid-v4').catch(()=>{});
 }
+
+// Apertura por URL: ?card=<cardId> (p. ej. desde el pase de Apple Wallet).
+// URLSearchParams ya decodifica (%2B -> "+"). Validación mínima para evitar
+// valores vacíos o absurdos. Sin parámetro válido: comportamiento actual intacto.
+function readCardIdFromURL(){
+  try{
+    const raw=new URLSearchParams(location.search).get('card');
+    if(raw==null) return null;
+    const card=raw.trim();
+    if(!/^[A-Za-z0-9+_-]{3,64}$/.test(card)) return null;
+    return card;
+  }catch(e){ return null; }
+}
+
 if(initFirebase()) {
-  const c=localStorage.getItem('gelateria_cardId');
-  const p=localStorage.getItem('gelateria_phone');
-  if(c) openExisting(c);
-  else if(p) openExisting(p);
+  const urlCard=readCardIdFromURL();
+  if(urlCard){
+    localStorage.setItem('gelateria_cardId',urlCard);
+    openExisting(urlCard);
+  } else {
+    const c=localStorage.getItem('gelateria_cardId');
+    const p=localStorage.getItem('gelateria_phone');
+    if(c) openExisting(c);
+    else if(p) openExisting(p);
+  }
 }
 </script>
 </body>
