@@ -3,8 +3,8 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     function esStaff() {
-      // Versión sin login por decisión de uso en iPad de tienda.
-      return true;
+      return request.auth != null
+        && request.auth.token.email == 'staff@lagelateria.app';
     }
 
     match /clientes/{cardId} {
@@ -19,17 +19,19 @@ service cloud.firestore {
         && request.resource.data.monedero == 0
         && request.resource.data.consentimiento == true;
 
-      // Staff sin login puede sellar.
+      // Only the authenticated shop account may modify cards.
       allow update: if esStaff();
-      allow delete: if esStaff();
+      allow delete: if false;
     }
 
     match /telefonos/{telefono} {
       allow get: if true;
       allow list: if esStaff();
 
-      allow create, update: if request.resource.data.cardId is string;
-      allow delete: if esStaff();
+      allow create: if request.resource.data.cardId is string
+        && request.resource.data.telefono == telefono;
+      allow update: if esStaff();
+      allow delete: if false;
     }
 
     match /eventos/{eventoId} {

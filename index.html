@@ -422,7 +422,10 @@ async function resolveCardId(phone) {
     const telSnap = await withTimeout(getDoc(doc(db,'telefonos',phone)), 3500, 'lectura lenta');
     if(telSnap.exists() && telSnap.data().cardId) return telSnap.data().cardId;
   } catch(e) {
-    console.warn('No se pudo mirar telefono existente, crearé nueva tarjeta si hace falta:', e);
+    // Never create a new card when the lookup failed: that can duplicate a
+    // record and make the original stamps appear to have disappeared.
+    console.warn('No se pudo comprobar el teléfono existente:', e);
+    throw new Error('No se ha podido comprobar tu tarjeta. Revisa la conexión e inténtalo de nuevo.');
   }
   return null;
 }
@@ -481,6 +484,21 @@ async function create() {
 
   try {
     let cardId = await resolveCardId(phone);
+
+    // Recover an existing card after browser data is cleared or the customer
+    // changes device. Do not overwrite its stamps, rewards or movement log.
+    if(cardId) {
+      const existing = await withTimeout(getDoc(doc(db,'clientes',cardId)), 3500, 'lectura lenta');
+      if(existing.exists()) {
+        localStorage.setItem('gelateria_phone',phone);
+        localStorage.setItem('gelateria_cardId',cardId);
+        toast('Tarjeta recuperada. Tus sellos siguen guardados.');
+        await openExisting(cardId);
+        return;
+      }
+      // Never replace a broken phone index: a member of staff must repair it.
+      throw new Error('Esta tarjeta necesita revisión en tienda. No se ha modificado ningún sello.');
+    }
 
     let token = '';
     if(!cardId) {

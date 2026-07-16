@@ -370,6 +370,7 @@
 <div class="summary" id="summary"><div class="sumBox"><div class="plus" id="sumPlus">+1 SELLO</div><div class="prize" id="sumPrize"></div><div class="left" id="sumLeft"></div></div></div><div class="toast" id="toast"></div>
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import {getAuth,onAuthStateChanged,signInWithEmailAndPassword} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import {
   initializeFirestore,persistentLocalCache,doc,getDoc,setDoc,updateDoc,runTransaction,
   collection,addDoc,query,orderBy,limit,onSnapshot,serverTimestamp
@@ -378,6 +379,8 @@ import {
 const $ = id => document.getElementById(id);
 const OBJ = 10;
 let db = null;
+let auth = null;
+let staffStarted = false;
 let reader = null;
 let scanning = false;
 let sheet = null;
@@ -426,6 +429,7 @@ function initFirebase(){
   }
   try{
     const app=initializeApp(cfg);
+    auth=getAuth(app);
     try{db=initializeFirestore(app,{localCache:persistentLocalCache()});}
     catch(e){db=initializeFirestore(app,{})}
     return true;
@@ -733,17 +737,39 @@ window.addEventListener('keydown',e=>{
   }
 });
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js?v=staff-final-escaneo-ok').catch(()=>{});
-if(initFirebase()){
+function startStaffApp(){
+  if(staffStarted) return;
+  staffStarted=true;
   showView('app');
   showSec('camSec');
   buildSignupQr();
+}
+
+if(initFirebase()){
+  $('loginBtn').onclick=async()=>{
+    const email=$('email').value.trim();
+    const password=$('pass').value;
+    $('loginErr').style.display='none';
+    try{
+      await signInWithEmailAndPassword(auth,email,password);
+    }catch(e){
+      console.error('staff sign-in',e);
+      $('loginErr').textContent='Email o contraseña incorrectos.';
+      $('loginErr').style.display='block';
+    }
+  };
+  onAuthStateChanged(auth,user=>{
+    if(user && user.email==='staff@lagelateria.app') startStaffApp();
+    else showView('login');
+  });
 }
 </script>
 
 <script>
 /* Staff sin login: fuerza entrada directa a cámara */
-window.STAFF_NO_LOGIN = true;
+window.STAFF_NO_LOGIN = false;
 document.addEventListener('DOMContentLoaded', function () {
+  if (!window.STAFF_NO_LOGIN) return;
   ['login','loginSec','auth','authSec','passwordSec','staffLogin'].forEach(function(id){
     var el = document.getElementById(id);
     if (el) el.style.display = 'none';
