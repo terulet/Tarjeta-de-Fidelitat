@@ -324,26 +324,6 @@
 }
 
 
-/* ============================
-   STAFF SIN LOGIN
-   Al abrir staff.html entra directo al modo cámara.
-   No se muestra usuario/contraseña ni pantalla de acceso.
-   ============================ */
-#login, #loginSec, #auth, #authSec, #passwordSec, #staffLogin,
-.login, .loginSec, .auth, .authSec, .passwordSec, .staffLogin,
-[data-login], [data-auth] {
-  display: none !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
-#app, .app, .view {
-  display: grid !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-
 /* QR directo: no enseñar pantalla intermedia del QR */
 #qrSec.on {
   justify-content: center !important;
@@ -357,9 +337,6 @@
   font-size: 34px !important;
 }
 
-
-/* STAFF FINAL SIN LOGIN */
-#login{display:none!important}
 </style>
 </head>
 <body>
